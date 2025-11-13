@@ -3,8 +3,8 @@
 3. rename `librechat.yaml.example` to `librechat.yaml`
 4. run `docker compose up`
 
-the included `.env` sets the config file to `local-dev/librechat.yaml`. Any changes should be made here.
+The included `.env` sets the config file to `local-dev/librechat.yaml`. Any changes should be made here.
 
 Hot reload is working.
 
-client is reachable at http://localhost:3090 by default
+Client is reachable at http://localhost:3090 by default. The backend is reachable at http://localhost:3080 and has a copy of the frontend, though this does not perform hot reloads.

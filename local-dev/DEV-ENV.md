@@ -1,6 +1,7 @@
-1. rename `.env.example` to `.env`
-2. rename `librechat.yaml.example` to `librechat.yaml`
-3. run `docker compose up`
+1. cd `local-dev`
+2. rename `.env.example` to `.env`
+3. rename `librechat.yaml.example` to `librechat.yaml`
+4. run `docker compose up`
 
 the included `.env` sets the config file to `local-dev/librechat.yaml`. Any changes should be made here.
 

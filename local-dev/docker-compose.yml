@@ -22,7 +22,7 @@ services:
       - MEILI_HOST=http://meilisearch:7700
       - RAG_PORT=${RAG_PORT:-8000}
       - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
-    command: sh -c "rm -rf node_modules api/node_modules; npm install --include=optional; (cd api && npm install --include=optional || true); nodemon --watch . --ext js,ts,jsx,json --exec 'npm run backend:dev'"
+    command: sh -c "npm install --include=optional; (cd api && npm install --include=optional || true); nodemon --watch . --ext js,ts,jsx,json --exec 'npm run backend:dev'"
     volumes:
       - ..:/app
       - /app/node_modules
@@ -37,7 +37,7 @@ services:
     container_name: LibreChatClient
     user: "${UID}:${GID}"
     working_dir: /app
-    command: sh -c "rm -rf node_modules client/node_modules; npm install --include=optional; (cd client && npm install); npm run dev --workspace @librechat/frontend -- --port 3090 --host 0.0.0.0"
+    command: sh -c "npm install --include=optional; (cd client && npm install); npm run dev --workspace @librechat/frontend -- --port 3090 --host 0.0.0.0"
     volumes:
       - ..:/app
       - /app/node_modules

@@ -9,7 +9,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 const backendPort = process.env.BACKEND_PORT && Number(process.env.BACKEND_PORT) || 3080;
-const backendURL = process.env.HOST ? `http://${process.env.HOST}:${backendPort}` : `http://localhost:${backendPort}`;
+const backendURL = process.env.BACKEND_HOST ? `http://${process.env.BACKEND_HOST}:${backendPort}` : `http://localhost:${backendPort}`;
 
 export default defineConfig(({ command }) => ({
   base: '',

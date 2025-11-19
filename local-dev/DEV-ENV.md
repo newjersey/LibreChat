@@ -7,12 +7,22 @@ Mac:
 1. `brew install colima`
 2. `colima start --cpu 4 --memory 4` # Alternatively, use `colima template` to set defaults. Then you can use `colima start` without arguments.
 
+##### Teardown
+1. `colima stop`
+2. `colima delete` # Clears the colima VM for clean spin-up
+
 #### Running the docker compose
+At the root level, you must first install npm packages locally with `npm install`. This will create the `node_modules/` directory used by the containers.
+
 1. `cd local-dev`
 2. `cp .env.example .env`
 3. `cp librechat.yaml.example librechat.yaml`
-4. `docker compose up`
+4. `docker-compose build --no-cache`
+5. `docker-compose up`
 
 The included `.env` sets the config file to `local-dev/librechat.yaml`. Any changes should be made here.
 
 Client is reachable at http://localhost:3090 and the backend is reachable at http://localhost:3080.
+
+#### Troubleshooting
+

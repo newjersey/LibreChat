@@ -29,7 +29,7 @@
  */
 
 import * as cdk from "aws-cdk-lib";
-import { CdkStack } from "../lib/cdk-stack.js";
+import { CdkStack } from "../lib/cdk-stack"; // removed .js extension
 
 /**
  * Main CDK application instance

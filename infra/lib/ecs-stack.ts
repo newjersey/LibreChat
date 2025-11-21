@@ -35,14 +35,14 @@ export class EcsStack extends cdk.Stack {
 
     const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(
       this,
-      "PingApiFargateService",
+      "AiAssistantFargateService",
       {
         cluster,
         memoryLimitMiB: 512,
         cpu: 256,
         desiredCount: 1,
         taskImageOptions: {
-          image: ecs.ContainerImage.fromAsset("../infra"),
+          image: ecs.ContainerImage.fromAsset("./"),
           containerPort: 3080,
           environment: {
             NODE_ENV: "production",

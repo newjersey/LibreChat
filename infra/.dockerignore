@@ -1,0 +1,46 @@
+**/.circleci
+**/.editorconfig
+**/.dockerignore
+**/.git
+**/.DS_Store
+**/.vscode
+**/node_modules
+
+# Specific patterns to ignore
+data-node
+meili_data*
+librechat*
+Dockerfile*
+docs
+
+# Ignore all hidden files
+.*
+# Exclude CDK output and infrastructure sources from Docker build context
+infra/cdk.out
+infra/dist
+infra/node_modules
+infra/bin
+infra/lib
+infra/*.ts
+infra/tsconfig.json
+infra/cdk.json
+
+# Node modules (root or nested)
+**/node_modules
+
+# Git & metadata
+.git
+.gitignore
+
+# Local dev artifacts
+*.log
+
+# Docs / tests not needed in image
+docs
+**/*.md
+**/*.spec.ts
+**/*.spec.js
+**/__tests__
+
+# OS / editor junk
+.DS_Store

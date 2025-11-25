@@ -1,4 +1,4 @@
-import { RecoilState, selector } from 'recoil';
+import { AtomOptions, RecoilState, selector } from 'recoil';
 
 /**
  * Returns a RecoilState<T> that *always* returns the defaultValue (and throws away `set()` calls)
@@ -15,4 +15,11 @@ export function constRecoilState<T>(key: string, defaultValue: T): RecoilState<T
     get: () => defaultValue,
     set: () => {},
   });
+}
+
+/**
+ * Same as `constRecoilState()`, but uses `AtomOptions` for its parameters.
+ */
+export function constRecoilStateOpts<T>(options: AtomOptions<T>): RecoilState<T> {
+  return constRecoilState(options.key, options['default']);
 }

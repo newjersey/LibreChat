@@ -7,7 +7,7 @@ import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { Construct } from "constructs";
 
 export interface ApigStackProps extends cdk.StackProps {
-  vpc: ec2.IVpc;
+  vpcId?: string;          // replaced vpc: ec2.IVpc
   listener: elbv2.ApplicationListener;
   domainName: string;
 }
@@ -15,6 +15,15 @@ export interface ApigStackProps extends cdk.StackProps {
 export class ApigStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: ApigStackProps) {
     super(scope, id, props);
+    const vpc = ec2.Vpc.fromLookup(this, "ExistingVpcForApi", {
+      vpcId: props.vpcId ?? "vpc-06ea0349e255c4c59",
+    });
+    // use local vpc instead of props.vpc
+    const vpcLink = new apigatewayv2.VpcLink(this, "ServiceVpcLink", {
+      vpc,
+      subnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
+      vpcLinkName: "service-vpc-link",
+    });
 
     const certificate = new acm.Certificate(this, "ServiceCertificate", {
       domainName: props.domainName,
@@ -24,12 +33,6 @@ export class ApigStack extends cdk.Stack {
     const domain = new apigatewayv2.DomainName(this, "ServiceDomain", {
       domainName: props.domainName,
       certificate,
-    });
-
-    const vpcLink = new apigatewayv2.VpcLink(this, "ServiceVpcLink", {
-      vpc: props.vpc,
-      subnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-      vpcLinkName: "service-vpc-link",
     });
 
     const api = new apigatewayv2.HttpApi(this, "ServiceHttpApi", {
@@ -59,31 +62,23 @@ export class ApigStack extends cdk.Stack {
     );
 
     api.addRoutes({
-      path: "/rag/{proxy+}",
-      methods: [apigatewayv2.HttpMethod.ANY],
-      integration,
-    });
-
-    api.addRoutes({
-      path: "/search/{proxy+}",
-      methods: [apigatewayv2.HttpMethod.ANY],
-      integration,
-    });
-
-    api.addRoutes({
       path: "/",
       methods: [apigatewayv2.HttpMethod.ANY],
       integration,
     });
 
+    api.addRoutes({
+      path: "/{proxy+}",
+      methods: [apigatewayv2.HttpMethod.ANY],
+      integration,
+      // NOTE: Removed reliance on /rag/* and /search/* path routing. Those prefixes are not served by backend containers.
+      // External clients cannot directly reach rag_api or Meilisearch; only the main application is exposed.
+      // Internal calls use CloudMap hostnames (rag_api.internal, etc.).
+    });
+
     new cdk.CfnOutput(this, "ApiGatewayUrl", {
       value: `https://${domain.name}`,
       exportName: "ServiceApiGatewayUrl",
-    });
-
-    new cdk.CfnOutput(this, "ApiGatewayTimestampUrl", {
-      value: `https://${domain.name}/rag/health`,
-      exportName: "ServiceApiGatewayRagHealthExample",
     });
 
     new cdk.CfnOutput(this, "CustomDomainName", {

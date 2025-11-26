@@ -1,102 +1,152 @@
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
-import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as efs from "aws-cdk-lib/aws-efs";
+import * as iam from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 
-// Use an existing VPC by ID
-export interface EcsServicesProps extends cdk.StackProps { // extend StackProps
-    vpc: ec2.IVpc;
-    ragHostnames?: string[];
-    apiHostnames?: string[];        // hostnames for main API
-    meiliHostnames?: string[];      // hostnames for Meilisearch
+export interface EcsServicesProps extends cdk.StackProps {
+  vpcId?: string;
+  librechatImage?: string;
+  ragApiImage?: string;
+  meiliImage?: string;
+  mongoImage?: string;
+  postgresImage?: string;
 }
 
 export class EcsStack extends cdk.Stack {
-  public readonly listener: elbv2.ApplicationListener;          // added
-  public readonly loadBalancer: elbv2.ApplicationLoadBalancer;  // added
-  public readonly service: ecs.FargateService;                  // added
+  public readonly listener: elbv2.ApplicationListener;
+  public readonly loadBalancer: elbv2.ApplicationLoadBalancer;
+  public readonly service: ecs.FargateService;
+
   constructor(scope: Construct, id: string, props: EcsServicesProps) {
     super(scope, id, props);
+    const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
+      vpcId: props.vpcId ?? "vpc-06ea0349e255c4c59",
+    });
+
+    const librechatImage =
+      props.librechatImage ??
+      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat:latest";
+    const ragApiImage =
+      props.ragApiImage ??
+      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/rag-api:latest";
+    const meiliImage =
+      props.meiliImage ??
+      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/meilisearch:v1.12.3";
+    const mongoImage =
+      props.mongoImage ??
+      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/mongo:latest";
+    const postgresImage =
+      props.postgresImage ??
+      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie";
+
+    // Interface endpoints for private subnet ECR access (no NAT required)
+    const endpointsSg = new ec2.SecurityGroup(this, "VpcEndpointsSg", { vpc });
+    vpc.addInterfaceEndpoint("EcrDockerEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
+      securityGroups: [endpointsSg],
+    });
+    vpc.addInterfaceEndpoint("EcrApiEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR,
+      securityGroups: [endpointsSg],
+    });
+    vpc.addInterfaceEndpoint("CloudWatchLogsEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
+      securityGroups: [endpointsSg],
+    });
+    // ADD: S3 gateway endpoint required for ECR layer downloads when no NAT
+    vpc.addGatewayEndpoint("S3GatewayEndpoint", {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
+      // (Optional) specify subnets; leaving default to all route tables
+    });
+
     const cluster = new ecs.Cluster(this, "AIAssistantCluster", {
-      vpc: props.vpc,
+      vpc,
       clusterName: "ai-assistant-cluster",
     });
     cluster.addDefaultCloudMapNamespace({ name: "internal" });
 
-    const repository = ecr.Repository.fromRepositoryName( // removed 'new'
-      this,
-      "AIAssistantEcrRepo",
-      "librechat-ai-assistant",
+    // Shared execution role for all task definitions
+    const commonExecRole = new iam.Role(this, "CommonTaskExecutionRole", {
+      assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+      description: "Execution role for pulling ECR images and writing logs",
+    });
+    commonExecRole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonECSTaskExecutionRolePolicy")
     );
 
-    const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(
+    // Create LibreChat task definition using the shared execution role
+    const librechatTaskDef = new ecs.FargateTaskDefinition(this, "LibreChatTaskDef", {
+      cpu: 256,
+      memoryLimitMiB: 512,
+      executionRole: commonExecRole,
+    });
+
+    librechatTaskDef.addContainer("librechat", {
+      image: ecs.ContainerImage.fromRegistry(librechatImage),
+      logging: ecs.LogDrivers.awsLogs({ streamPrefix: "librechat" }),
+      environment: {
+        NODE_ENV: "production",
+        PORT: "3080",
+        HOST: "0.0.0.0",
+        LOG_LEVEL: "info",
+        MONGO_URI: "mongodb://mongodb.internal:27017/LibreChat",
+        MEILI_HOST: "http://rag_api.internal:7700",
+        RAG_API_URL: "http://rag_api.internal:8000",
+      },
+      portMappings: [{ containerPort: 3080 }],
+      command: ["npm","run","backend"], 
+    });
+
+    const librechatService = new ecsPatterns.ApplicationLoadBalancedFargateService(
       this,
-      "AiAssistantFargateService",
+      "LibreChatFargateService",
       {
         cluster,
-        memoryLimitMiB: 512,
-        cpu: 256,
         desiredCount: 1,
-        taskImageOptions: {
-          image: ecs.ContainerImage.fromAsset("./"),
-          containerPort: 3080,
-          environment: {
-            NODE_ENV: "production",
-            PORT: "3080",
-            HOST: "0.0.0.0",
-            LOG_LEVEL: "info",
-            MONGO_URI: "mongodb://mongodb.internal:27017/LibreChat",
-            MEILI_HOST: "http://meilisearch:7700",
-            RAG_API_URL: "http://rag_api.internal:8000",
-          },
-        },
-        publicLoadBalancer: false, // Internal ALB due to no public subnets
-        listenerPort: 80, // HTTP port - API Gateway handles HTTPS termination
-        taskSubnets: {
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-        },
-      },
+        taskDefinition: librechatTaskDef, // use custom task definition with shared exec role
+        publicLoadBalancer: false,
+        listenerPort: 80,
+        taskSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
+      }
     );
-    this.listener = fargateService.listener;       
-    this.loadBalancer = fargateService.loadBalancer;
-    this.service = fargateService.service;         
+    this.listener = librechatService.listener;
+    this.loadBalancer = librechatService.loadBalancer;
+    this.service = librechatService.service;
 
-    // RAG API service (separate task definition)
     const dependencyTaskDef = new ecs.FargateTaskDefinition(this, "RagApiTaskDef", {
       cpu: 1024,
       memoryLimitMiB: 4096,
       ephemeralStorageGiB: 50,
+      executionRole: commonExecRole,
     });
 
-    const ragContainer = dependencyTaskDef.addContainer("rag_api", {
-      image: ecs.ContainerImage.fromRegistry("ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest"), // or a different repo
+    dependencyTaskDef.addContainer("rag_api", {
+      image: ecs.ContainerImage.fromRegistry(ragApiImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "rag_api" }),
       environment: {
         NODE_ENV: "production",
         RAG_PORT: "8000",
-        DB_HOST: "vectordb.internal", // updated from vectordb
+        DB_HOST: "vectordb.internal",
       },
       portMappings: [{ containerPort: 8000 }],
     });
 
-    const meiliContainer = dependencyTaskDef.addContainer("meilisearch", {
-      image: ecs.ContainerImage.fromRegistry("getmeili/meilisearch:v1.12.3"),
+    dependencyTaskDef.addContainer("meilisearch", {
+      image: ecs.ContainerImage.fromRegistry(meiliImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "meilisearch" }),
       environment: {
         MEILI_HOST: "http://meilisearch:7700",
         MEILI_NO_ANALYTICS: "true",
-        // MEILI_MASTER_KEY can be injected via task env/secret if needed
       },
       portMappings: [{ containerPort: 7700 }],
-      essential: false,
+      essential: true,
     });
 
-    // Dedicated security group for rag service
-    const ragSg = new ec2.SecurityGroup(this, "RagServiceSg", { vpc: props.vpc });
+    const ragSg = new ec2.SecurityGroup(this, "RagServiceSg", { vpc });
     const ragService = new ecs.FargateService(this, "RagApiService", {
       cluster,
       taskDefinition: dependencyTaskDef,
@@ -106,9 +156,8 @@ export class EcsStack extends cdk.Stack {
       securityGroups: [ragSg],
     });
 
-    // --- MongoDB dedicated service ---
     const mongoFs = new efs.FileSystem(this, "MongoFs", {
-      vpc: props.vpc,
+      vpc,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       encrypted: true,
     });
@@ -116,6 +165,7 @@ export class EcsStack extends cdk.Stack {
     const mongoTaskDef = new ecs.FargateTaskDefinition(this, "MongoTaskDef", {
       cpu: 256,
       memoryLimitMiB: 1024,
+      executionRole: commonExecRole,
     });
 
     mongoTaskDef.addVolume({
@@ -127,11 +177,10 @@ export class EcsStack extends cdk.Stack {
     });
 
     const mongoContainer = mongoTaskDef.addContainer("mongodb", {
-      image: ecs.ContainerImage.fromRegistry("mongo:latest"),
+      image: ecs.ContainerImage.fromRegistry(mongoImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "mongodb" }),
       command: ["mongod", "--noauth"],
       portMappings: [{ containerPort: 27017 }],
-      // removed mountPoints from options
     });
     mongoContainer.addMountPoints({
       sourceVolume: "mongoData",
@@ -139,7 +188,7 @@ export class EcsStack extends cdk.Stack {
       readOnly: false,
     });
 
-    const mongoSg = new ec2.SecurityGroup(this, "MongoSg", { vpc: props.vpc });
+    const mongoSg = new ec2.SecurityGroup(this, "MongoSg", { vpc });
     const mongoService = new ecs.FargateService(this, "MongoService", {
       cluster,
       taskDefinition: mongoTaskDef,
@@ -149,9 +198,8 @@ export class EcsStack extends cdk.Stack {
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
 
-    // --- Postgres (vectordb) dedicated service ---
     const pgFs = new efs.FileSystem(this, "PgFs", {
-      vpc: props.vpc,
+      vpc,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       encrypted: true,
     });
@@ -159,6 +207,7 @@ export class EcsStack extends cdk.Stack {
     const pgTaskDef = new ecs.FargateTaskDefinition(this, "VectorDbTaskDef", {
       cpu: 256,
       memoryLimitMiB: 1024,
+      executionRole: commonExecRole,
     });
 
     pgTaskDef.addVolume({
@@ -170,7 +219,7 @@ export class EcsStack extends cdk.Stack {
     });
 
     const pgContainer = pgTaskDef.addContainer("vectordb", {
-      image: ecs.ContainerImage.fromRegistry("pgvector/pgvector:0.8.0-pg15-trixie"),
+      image: ecs.ContainerImage.fromRegistry(postgresImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "vectordb" }),
       environment: {
         POSTGRES_DB: "mydatabase",
@@ -178,7 +227,6 @@ export class EcsStack extends cdk.Stack {
         POSTGRES_PASSWORD: "mypassword",
       },
       portMappings: [{ containerPort: 5432 }],
-      // removed mountPoints from options
     });
     pgContainer.addMountPoints({
       sourceVolume: "pgData",
@@ -186,7 +234,7 @@ export class EcsStack extends cdk.Stack {
       readOnly: false,
     });
 
-    const pgSg = new ec2.SecurityGroup(this, "PgSg", { vpc: props.vpc });
+    const pgSg = new ec2.SecurityGroup(this, "PgSg", { vpc });
     const vectordbService = new ecs.FargateService(this, "VectorDbService", {
       cluster,
       taskDefinition: pgTaskDef,
@@ -196,95 +244,21 @@ export class EcsStack extends cdk.Stack {
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
 
-    // Security: allow only app & rag_api to DB ports
-    mongoService.connections.allowFrom(fargateService.service, ec2.Port.tcp(27017), "App -> MongoDB");
-    mongoService.connections.allowFrom(ragService, ec2.Port.tcp(27017), "RAG -> MongoDB (if needed)");
+    mongoService.connections.allowFrom(librechatService.service, ec2.Port.tcp(27017), "App to MongoDB");
+    mongoService.connections.allowFrom(ragService, ec2.Port.tcp(27017), "RAG to MongoDB");
+    vectordbService.connections.allowFrom(ragService, ec2.Port.tcp(5432), "RAG to Postgres");
+    vectordbService.connections.allowFrom(librechatService.service, ec2.Port.tcp(5432), "App to Postgres");
+    ragService.connections.allowFrom(librechatService.service, ec2.Port.tcp(8000), "App to rag_api");
+    ragService.connections.allowFrom(librechatService.service, ec2.Port.tcp(7700), "App to meilisearch");
 
-    vectordbService.connections.allowFrom(ragService, ec2.Port.tcp(5432), "RAG -> Postgres");
-    vectordbService.connections.allowFrom(fargateService.service, ec2.Port.tcp(5432), "App -> Postgres");
+    // FIX: allow NFS (2049) from ECS services to EFS
+    mongoFs.connections.allowDefaultPortFrom(mongoService);
+    pgFs.connections.allowDefaultPortFrom(vectordbService);
 
-    // Target group for rag_api
-    const ragTg = new elbv2.ApplicationTargetGroup(this, "RagApiTargetGroup", {
-      vpc: props.vpc,
-      port: 8000,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      targetType: elbv2.TargetType.IP,
-      healthCheck: {
-        path: "/health",
-        healthyHttpCodes: "200",
-        interval: cdk.Duration.seconds(30),
-        timeout: cdk.Duration.seconds(5),
-      },
-    });
-
-    // Attach service targets
-    ragTg.addTarget(ragService);
-
-    // Restrict ALB -> rag_api + meilisearch ports explicitly
-    const albSg = fargateService.loadBalancer.connections.securityGroups[0];
-    ragSg.addIngressRule(albSg, ec2.Port.tcp(8000), "ALB -> rag_api");
-    ragSg.addIngressRule(albSg, ec2.Port.tcp(7700), "ALB -> meilisearch");
-
-    // Host rule for main API (aiAssistant container)
-    fargateService.listener.addAction("ApiHostRule", {
-      priority: 5,
-      conditions: [
-        elbv2.ListenerCondition.hostHeaders(props.apiHostnames ?? ["api.internal"]),
-      ],
-      action: elbv2.ListenerAction.forward([fargateService.targetGroup]),
-    });
-
-    // Existing rag_api host rule (keep priority distinct)
-    fargateService.listener.addAction("RagApiHostRule", {
-      priority: 10,
-      conditions: [
-        elbv2.ListenerCondition.hostHeaders(props.ragHostnames ?? ["rag-api.internal"]),
-      ],
-      action: elbv2.ListenerAction.forward([ragTg]),
-    });
-
-    // Meilisearch target group (HTTP)
-    const meiliTg = new elbv2.ApplicationTargetGroup(this, "MeiliTargetGroup", {
-      vpc: props.vpc,
-      port: 7700,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      targetType: elbv2.TargetType.IP,
-      healthCheck: {
-        path: "/health",
-        healthyHttpCodes: "200",
-        interval: cdk.Duration.seconds(30),
-        timeout: cdk.Duration.seconds(5),
-      },
-    });
-    meiliTg.addTarget(ragService);
-
-    // Meilisearch host rule
-    fargateService.listener.addAction("MeiliHostRule", {
-      priority: 15,
-      conditions: [
-        elbv2.ListenerCondition.hostHeaders(props.meiliHostnames ?? ["search.internal"]),
-      ],
-      action: elbv2.ListenerAction.forward([meiliTg]),
-    });
-
-    // Path-based rule for rag_api (supports API Gateway /rag/* routes)
-    fargateService.listener.addAction("RagApiPathRule", {
-      priority: 20,
-      conditions: [elbv2.ListenerCondition.pathPatterns(["/rag/*"])],
-      action: elbv2.ListenerAction.forward([ragTg]),
-    });
-
-    // Path-based rule for meilisearch (supports API Gateway /search/* routes)
-    fargateService.listener.addAction("MeiliPathRule", {
-      priority: 25,
-      conditions: [elbv2.ListenerCondition.pathPatterns(["/search/*"])],
-      action: elbv2.ListenerAction.forward([meiliTg]),
-    });
-
-    // Notes:
-    // - Consider migrating credentials to Secrets Manager (ecs.Secret.fromSecretCompleteArn).
-    // - Use EFS Access Points for stronger isolation and enforce POSIX ownership.
-    // - Replace inline DB images with managed services (DocumentDB/RDS) later.
-    // - Add healthCheckGracePeriod to services with slower startup if needed.
-    }
+    new cdk.CfnOutput(this, "LibrechatImageUri", { value: librechatImage });
+    new cdk.CfnOutput(this, "RagApiImageUri", { value: ragApiImage });
+    new cdk.CfnOutput(this, "MeiliImageUri", { value: meiliImage });
+    new cdk.CfnOutput(this, "MongoImageUri", { value: mongoImage });
+    new cdk.CfnOutput(this, "PostgresImageUri", { value: postgresImage });
+  }
 }

@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// Deployment: npx cdk deploy EcsStack ApiGatewayStack
+// Synth only: npx cdk synth
+// Destroy: npx cdk destroy EcsStack ApiGatewayStack
+// Debug (optional): npx ts-node bin/cdk.ts
 
 /**
  * AWS CDK Application Entry Point for NJ AI Assistant Service
@@ -29,67 +33,34 @@
  */
 
 import * as cdk from "aws-cdk-lib";
-import { CdkStack } from "../lib/cdk-stack"; // removed .js extension
+import { EcsStack } from "../lib/ecs-stack";
+import { ApigStack } from "../lib/apig-stack";
 
-/**
- * Main CDK application instance
- *
- * Creates the root CDK application that serves as the container for all stacks and constructs in
- * this deployment. The app handles synthesis, deployment, and destruction of infrastructure.
- */
 const app = new cdk.App();
 
-/**
- * NJ AI Assistant Service Infrastructure Stack
- *
- * Deploys a complete, production-ready infrastructure for the NJ AI Assistant service including:
- *
- * - VPC with public/private subnets
- * - Application Load Balancer
- * - Security groups and IAM roles
- * - CloudWatch monitoring
- *
- * The stack is configured for the AWS account and region specified in the CDK context or AWS CLI
- * configuration. For production deployments, specify explicit account and region values.
- */
-new CdkStack(app, "AIAssistantStack", {
-  /**
-   * Environment Configuration
-   *
-   * For production deployments, uncomment and specify explicit account and region: env: { account:
-   * '123456789012', region: 'us-east-1' }
-   *
-   * For environment-agnostic deployments that work across accounts/regions: Leave env undefined
-   * (current configuration)
-   *
-   * To use current AWS CLI configuration: env: { account: process.env.CDK_DEFAULT_ACCOUNT, region:
-   * process.env.CDK_DEFAULT_REGION }
-   */
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION,
-  },
+const env = {
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+  region: process.env.CDK_DEFAULT_REGION,
+};
 
-  /**
-   * Stack Description
-   *
-   * Provides metadata about the stack purpose and contents for CloudFormation console and AWS
-   * resource management.
-   */
-  description:
-    "Production infrastructure for NJ AI Assistant Service - includes VPC, ALB, ECS, and monitoring",
-
-  /**
-   * Stack Tags
-   *
-   * Apply consistent tagging across all resources for cost allocation, resource management, and
-   * compliance tracking.
-   */
-  tags: {
-    Project: "AIAssistantService",
-    Owner: "NewJerseyInnovation",
-    Environment: process.env.NODE_ENV ?? "development",
-    ManagedBy: "CDK",
-    CostCenter: "Innovation",
-  },
+// VPC lookup moved into EcsStack; no lookup here.
+const ecsStack = new EcsStack(app, "EcsStack", {
+  env,
+  vpcId: "vpc-06ea0349e255c4c59",
+  librechatImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat:latest",
+  ragApiImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat-rag-api:latest",
+  meiliImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/meilisearch:v1.12.3",
+  mongoImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/mongo:latest",
+  postgresImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie",
 });
+
+new ApigStack(app, "ApiGatewayStack", {
+  env,
+  vpcId: "vpc-06ea0349e255c4c59",
+  listener: ecsStack.listener,
+  domainName: "dev.ai-assistant.nj.gov",
+});
+
+cdk.Tags.of(ecsStack).add("Project", "AIAssistantService");
+cdk.Tags.of(ecsStack).add("ManagedBy", "CDK");
+cdk.Tags.of(ecsStack).add("Environment", process.env.NODE_ENV ?? "development");

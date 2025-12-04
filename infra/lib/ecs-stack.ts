@@ -117,44 +117,44 @@ export class EcsStack extends cdk.Stack {
     this.loadBalancer = librechatService.loadBalancer;
     this.service = librechatService.service;
 
-    const dependencyTaskDef = new ecs.FargateTaskDefinition(this, "RagApiTaskDef", {
-      cpu: 1024,
-      memoryLimitMiB: 4096,
-      ephemeralStorageGiB: 50,
-      executionRole: commonExecRole,
-    });
+    // const dependencyTaskDef = new ecs.FargateTaskDefinition(this, "RagApiTaskDef", {
+    //   cpu: 1024,
+    //   memoryLimitMiB: 4096,
+    //   ephemeralStorageGiB: 50,
+    //   executionRole: commonExecRole,
+    // });
 
-    dependencyTaskDef.addContainer("rag_api", {
-      image: ecs.ContainerImage.fromRegistry(ragApiImage),
-      logging: ecs.LogDrivers.awsLogs({ streamPrefix: "rag_api" }),
-      environment: {
-        NODE_ENV: "production",
-        RAG_PORT: "8000",
-        DB_HOST: "vectordb.internal",
-      },
-      portMappings: [{ containerPort: 8000 }],
-    });
+    // dependencyTaskDef.addContainer("rag_api", {
+    //   image: ecs.ContainerImage.fromRegistry(ragApiImage),
+    //   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "rag_api" }),
+    //   environment: {
+    //     NODE_ENV: "production",
+    //     RAG_PORT: "8000",
+    //     DB_HOST: "vectordb.internal",
+    //   },
+    //   portMappings: [{ containerPort: 8000 }],
+    // });
 
-    dependencyTaskDef.addContainer("meilisearch", {
-      image: ecs.ContainerImage.fromRegistry(meiliImage),
-      logging: ecs.LogDrivers.awsLogs({ streamPrefix: "meilisearch" }),
-      environment: {
-        MEILI_HOST: "http://meilisearch:7700",
-        MEILI_NO_ANALYTICS: "true",
-      },
-      portMappings: [{ containerPort: 7700 }],
-      essential: true,
-    });
+    // dependencyTaskDef.addContainer("meilisearch", {
+    //   image: ecs.ContainerImage.fromRegistry(meiliImage),
+    //   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "meilisearch" }),
+    //   environment: {
+    //     MEILI_HOST: "http://meilisearch:7700",
+    //     MEILI_NO_ANALYTICS: "true",
+    //   },
+    //   portMappings: [{ containerPort: 7700 }],
+    //   essential: true,
+    // });
 
-    const ragSg = new ec2.SecurityGroup(this, "RagServiceSg", { vpc });
-    const ragService = new ecs.FargateService(this, "RagApiService", {
-      cluster,
-      taskDefinition: dependencyTaskDef,
-      desiredCount: 1,
-      cloudMapOptions: { name: "rag_api" },
-      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-      securityGroups: [ragSg],
-    });
+    // const ragSg = new ec2.SecurityGroup(this, "RagServiceSg", { vpc });
+    // const ragService = new ecs.FargateService(this, "RagApiService", {
+    //   cluster,
+    //   taskDefinition: dependencyTaskDef,
+    //   desiredCount: 1,
+    //   cloudMapOptions: { name: "rag_api" },
+    //   vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
+    //   securityGroups: [ragSg],
+    // });
 
     const mongoFs = new efs.FileSystem(this, "MongoFs", {
       vpc,
@@ -245,11 +245,11 @@ export class EcsStack extends cdk.Stack {
     });
 
     mongoService.connections.allowFrom(librechatService.service, ec2.Port.tcp(27017), "App to MongoDB");
-    mongoService.connections.allowFrom(ragService, ec2.Port.tcp(27017), "RAG to MongoDB");
-    vectordbService.connections.allowFrom(ragService, ec2.Port.tcp(5432), "RAG to Postgres");
+    // mongoService.connections.allowFrom(ragService, ec2.Port.tcp(27017), "RAG to MongoDB");
+    // vectordbService.connections.allowFrom(ragService, ec2.Port.tcp(5432), "RAG to Postgres");
     vectordbService.connections.allowFrom(librechatService.service, ec2.Port.tcp(5432), "App to Postgres");
-    ragService.connections.allowFrom(librechatService.service, ec2.Port.tcp(8000), "App to rag_api");
-    ragService.connections.allowFrom(librechatService.service, ec2.Port.tcp(7700), "App to meilisearch");
+    // ragService.connections.allowFrom(librechatService.service, ec2.Port.tcp(8000), "App to rag_api");
+    // ragService.connections.allowFrom(librechatService.service, ec2.Port.tcp(7700), "App to meilisearch");
 
     // FIX: allow NFS (2049) from ECS services to EFS
     mongoFs.connections.allowDefaultPortFrom(mongoService);

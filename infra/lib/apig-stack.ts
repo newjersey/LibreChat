@@ -16,7 +16,7 @@ export class ApigStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: ApigStackProps) {
     super(scope, id, props);
     const vpc = ec2.Vpc.fromLookup(this, "ExistingVpcForApi", {
-      vpcId: props.vpcId ?? "vpc-06ea0349e255c4c59",
+      vpcId: props.vpcId,
     });
     // use local vpc instead of props.vpc
     const vpcLink = new apigatewayv2.VpcLink(this, "ServiceVpcLink", {

@@ -25,7 +25,7 @@ export class EcsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: EcsServicesProps) {
     super(scope, id, props);
     const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
-      vpcId: props.vpcId ?? "vpc-06ea0349e255c4c59",
+      vpcId: props.vpcId,
     });
 
     const librechatImage =

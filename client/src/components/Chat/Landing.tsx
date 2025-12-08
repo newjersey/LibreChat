@@ -7,6 +7,7 @@ import { useGetEndpointsQuery, useGetStartupConfig } from '~/data-provider';
 import ConvoIcon from '~/components/Endpoints/ConvoIcon';
 import { useLocalize, useAuthContext } from '~/hooks';
 import { getIconEndpoint, getEntity } from '~/utils';
+import LandingText from '~/nj/components/LandingText';
 
 const containerClassName =
   'shadow-stroke relative flex h-full items-center justify-center rounded-full bg-white dark:bg-presentation dark:text-white text-black dark:after:shadow-none ';
@@ -166,6 +167,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
               <TooltipAnchor
                 className="absolute bottom-[27px] right-2"
                 description={localize('com_ui_happy_birthday')}
+                aria-label={localize('com_ui_happy_birthday')}
               >
                 <BirthdayIcon />
               </TooltipAnchor>
@@ -208,6 +210,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
             {description}
           </div>
         )}
+        <LandingText />
       </div>
     </div>
   );

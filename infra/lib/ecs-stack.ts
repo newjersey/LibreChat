@@ -5,6 +5,7 @@ import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as efs from "aws-cdk-lib/aws-efs";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 
 export interface EcsServicesProps extends cdk.StackProps {
@@ -75,7 +76,10 @@ export class EcsStack extends cdk.Stack {
       description: "Execution role for pulling ECR images and writing logs",
     });
     commonExecRole.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonECSTaskExecutionRolePolicy")
+      iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonECSTaskExecutionRolePolicy"),
+    );
+    commonExecRole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonS3ReadOnlyAccess")
     );
 
     // Create LibreChat task definition using the shared execution role
@@ -97,6 +101,9 @@ export class EcsStack extends cdk.Stack {
         MEILI_HOST: "http://rag_api.internal:7700",
         RAG_API_URL: "http://rag_api.internal:8000",
       },
+      environmentFiles: [
+        ecs.EnvironmentFile.fromBucket(s3.Bucket.fromBucketArn(this, "EnvFilesBucket", "arn:aws:s3:::nj-librechat-env-files"), 'dev.env'),
+      ],
       portMappings: [{ containerPort: 3080 }],
       command: ["npm","run","backend"], 
     });

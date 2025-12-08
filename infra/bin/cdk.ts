@@ -43,7 +43,6 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION,
 };
 
-// VPC lookup moved into EcsStack; no lookup here.
 const ecsStack = new EcsStack(app, "EcsStack", {
   env,
   vpcId: "vpc-06ea0349e255c4c59",
@@ -54,7 +53,7 @@ const ecsStack = new EcsStack(app, "EcsStack", {
   postgresImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie",
 });
 
-new ApigStack(app, "ApiGatewayStack", {
+const apiGatewayStack = new ApigStack(app, "ApiGatewayStack", {
   env,
   vpcId: "vpc-06ea0349e255c4c59",
   listener: ecsStack.listener,
@@ -64,3 +63,7 @@ new ApigStack(app, "ApiGatewayStack", {
 cdk.Tags.of(ecsStack).add("Project", "AIAssistantService");
 cdk.Tags.of(ecsStack).add("ManagedBy", "CDK");
 cdk.Tags.of(ecsStack).add("Environment", process.env.NODE_ENV ?? "development");
+
+cdk.Tags.of(apiGatewayStack).add("Project", "AIAssistantService");
+cdk.Tags.of(apiGatewayStack).add("ManagedBy", "CDK");
+cdk.Tags.of(apiGatewayStack).add("Environment", process.env.NODE_ENV ?? "development");

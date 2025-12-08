@@ -7,7 +7,7 @@ import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { Construct } from "constructs";
 
 export interface ApigStackProps extends cdk.StackProps {
-  vpcId?: string;          // replaced vpc: ec2.IVpc
+  vpcId?: string;
   listener: elbv2.ApplicationListener;
   domainName: string;
 }
@@ -71,9 +71,6 @@ export class ApigStack extends cdk.Stack {
       path: "/{proxy+}",
       methods: [apigatewayv2.HttpMethod.ANY],
       integration,
-      // NOTE: Removed reliance on /rag/* and /search/* path routing. Those prefixes are not served by backend containers.
-      // External clients cannot directly reach rag_api or Meilisearch; only the main application is exposed.
-      // Internal calls use CloudMap hostnames (rag_api.internal, etc.).
     });
 
     new cdk.CfnOutput(this, "ApiGatewayUrl", {

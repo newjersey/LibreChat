@@ -34,6 +34,7 @@ import EditBadges from './EditBadges';
 import BadgeRow from './BadgeRow';
 import Mention from './Mention';
 import store from '~/store';
+import { logEvent } from '~/nj/utils/LogEvent';
 
 const ChatForm = memo(({ index = 0 }: { index?: number }) => {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -133,6 +134,21 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
 
   const { submitMessage, submitPrompt } = useSubmitMessage();
 
+  /* NJ: Analytics - track user's first time submitting a prompt */
+  const handleUniqueUserPrompt = useCallback(
+    (data: { text: string }) => {
+      submitMessage(data);
+      const uniqueUserFlagKey: string = 'unique_user_prompt';
+      if (!window.localStorage.getItem(uniqueUserFlagKey)) {
+        // Log in place until GA dashboard is connected, will delete once implemented
+        console.log('fire unique_user_prompt');
+        logEvent('unique_user_prompt');
+        window.localStorage.setItem(uniqueUserFlagKey, 'true');
+      }
+    },
+    [submitMessage],
+  );
+
   const handleKeyUp = useHandleKeyUp({
     index,
     textAreaRef,
@@ -206,7 +222,11 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
 
   return (
     <form
-      onSubmit={methods.handleSubmit(submitMessage)}
+      /* NJ: Using a wrapper to fire a one-time GA4 event for a user's first unique prompt.
+        Leaving original onSubmit commented for upstream compatibility.
+       onSubmit={methods.handleSubmit(submitMessage)}
+     */
+      onSubmit={methods.handleSubmit(handleUniqueUserPrompt)}
       className={cn(
         'mx-auto flex w-full flex-row gap-3 transition-[max-width] duration-300 sm:px-2',
         maximizeChatSpace ? 'max-w-full' : 'md:max-w-3xl xl:max-w-4xl',

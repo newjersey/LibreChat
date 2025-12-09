@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import TagManager from 'react-gtm-module';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { LocalStorageKeys } from 'librechat-data-provider';
 import { useAvailablePluginsQuery } from 'librechat-data-provider/react-query';
@@ -117,6 +116,8 @@ export default function useAppStartup({
     setAvailableTools({ pluginStore, ...mapPlugins(tools) });
   }, [allPlugins, user, setAvailableTools]);
 
+  /*NJ: GTM snippet is manually inserted in <head> and <body>, and the use of a custom logEvent() function for analytics
+
   useEffect(() => {
     if (startupConfig?.analyticsGtmId != null && typeof window.google_tag_manager === 'undefined') {
       const tagManagerArgs = {
@@ -125,4 +126,5 @@ export default function useAppStartup({
       TagManager.initialize(tagManagerArgs);
     }
   }, [startupConfig?.analyticsGtmId]);
+  */
 }

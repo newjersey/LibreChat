@@ -3,7 +3,7 @@
     "target": "ES2020",
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "strict": false,
+    "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,

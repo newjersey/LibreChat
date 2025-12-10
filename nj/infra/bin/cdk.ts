@@ -40,17 +40,15 @@ const env = {
 };
 
 const ecsStack = new EcsStack(app, "EcsStack", {
-  env,
+  env: env,
   vpcId: "vpc-06ea0349e255c4c59",
   librechatImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat:latest",
-  ragApiImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat-rag-api:latest",
-  meiliImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/meilisearch:v1.12.3",
   mongoImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/mongo:latest",
   postgresImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie",
 });
 
 const apiGatewayStack = new ApigStack(app, "ApiGatewayStack", {
-  env,
+  env: env,
   vpcId: "vpc-06ea0349e255c4c59",
   listener: ecsStack.listener,
   domainName: "dev.ai-assistant.nj.gov",

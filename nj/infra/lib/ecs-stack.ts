@@ -9,12 +9,10 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 
 export interface EcsServicesProps extends cdk.StackProps {
-  vpcId?: string;
-  librechatImage?: string;
-  ragApiImage?: string;
-  meiliImage?: string;
-  mongoImage?: string;
-  postgresImage?: string;
+  vpcId: string;
+  librechatImage: string;
+  mongoImage: string;
+  postgresImage: string;
 }
 
 export class EcsStack extends cdk.Stack {
@@ -24,25 +22,12 @@ export class EcsStack extends cdk.Stack {
 
   constructor(scope: Construct, id: string, props: EcsServicesProps) {
     super(scope, id, props);
-    const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
+    const vpc = ec2.Vpc.fromLookup(this, "VpcId", {
       vpcId: props.vpcId,
     });
-
-    const librechatImage =
-      props.librechatImage ??
-      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat:latest";
-    const ragApiImage =
-      props.ragApiImage ??
-      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/rag-api:latest";
-    const meiliImage =
-      props.meiliImage ??
-      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/meilisearch:v1.12.3";
-    const mongoImage =
-      props.mongoImage ??
-      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/mongo:latest";
-    const postgresImage =
-      props.postgresImage ??
-      "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie";
+    const librechatImage = props.librechatImage;
+    const mongoImage = props.mongoImage;
+    const postgresImage = props.postgresImage;
 
     const endpointsSg = new ec2.SecurityGroup(this, "VpcEndpointsSg", { vpc });
     vpc.addInterfaceEndpoint("EcrDockerEndpoint", {
@@ -221,8 +206,6 @@ export class EcsStack extends cdk.Stack {
     pgEfs.connections.allowDefaultPortFrom(vectordbService);
 
     new cdk.CfnOutput(this, "LibrechatImageUri", { value: librechatImage });
-    new cdk.CfnOutput(this, "RagApiImageUri", { value: ragApiImage });
-    new cdk.CfnOutput(this, "MeiliImageUri", { value: meiliImage });
     new cdk.CfnOutput(this, "MongoImageUri", { value: mongoImage });
     new cdk.CfnOutput(this, "PostgresImageUri", { value: postgresImage });
   }

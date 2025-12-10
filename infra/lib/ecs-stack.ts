@@ -57,10 +57,14 @@ export class EcsStack extends cdk.Stack {
       service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
       securityGroups: [endpointsSg],
     });
+    vpc.addInterfaceEndpoint("BedrockRuntimeEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.BEDROCK_RUNTIME,
+      securityGroups: [endpointsSg],
+    });
     vpc.addGatewayEndpoint("S3GatewayEndpoint", {
       service: ec2.GatewayVpcEndpointAwsService.S3,
     });
-
+    
     const cluster = new ecs.Cluster(this, "AIAssistantCluster", {
       vpc,
       clusterName: "ai-assistant-cluster",

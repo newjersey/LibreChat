@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-// Deployment: npx cdk deploy EcsStack ApiGatewayStack
-// Synth only: npx cdk synth
-// Destroy: npx cdk destroy EcsStack ApiGatewayStack
-// Debug (optional): npx ts-node bin/cdk.ts
 
 /**
  * AWS CDK Application Entry Point for NJ AI Assistant Service

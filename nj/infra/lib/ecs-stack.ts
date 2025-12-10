@@ -126,7 +126,7 @@ export class EcsStack extends cdk.Stack {
     this.loadBalancer = librechatService.loadBalancer;
     this.service = librechatService.service;
 
-    const mongoFs = new efs.FileSystem(this, "MongoFs", {
+    const mongoEfs = new efs.FileSystem(this, "MongoEfs", {
       vpc,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       encrypted: true,
@@ -141,7 +141,7 @@ export class EcsStack extends cdk.Stack {
     mongoTaskDef.addVolume({
       name: "mongoData",
       efsVolumeConfiguration: {
-        fileSystemId: mongoFs.fileSystemId,
+        fileSystemId: mongoEfs.fileSystemId,
         transitEncryption: "ENABLED",
       },
     });
@@ -168,7 +168,7 @@ export class EcsStack extends cdk.Stack {
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
 
-    const pgFs = new efs.FileSystem(this, "PgFs", {
+    const pgEfs = new efs.FileSystem(this, "PgEfs", {
       vpc,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       encrypted: true,
@@ -183,7 +183,7 @@ export class EcsStack extends cdk.Stack {
     pgTaskDef.addVolume({
       name: "pgData",
       efsVolumeConfiguration: {
-        fileSystemId: pgFs.fileSystemId,
+        fileSystemId: pgEfs.fileSystemId,
         transitEncryption: "ENABLED",
       },
     });
@@ -217,8 +217,8 @@ export class EcsStack extends cdk.Stack {
     mongoService.connections.allowFrom(librechatService.service, ec2.Port.tcp(27017), "App to MongoDB");
     vectordbService.connections.allowFrom(librechatService.service, ec2.Port.tcp(5432), "App to Postgres");
 
-    mongoFs.connections.allowDefaultPortFrom(mongoService);
-    pgFs.connections.allowDefaultPortFrom(vectordbService);
+    mongoEfs.connections.allowDefaultPortFrom(mongoService);
+    pgEfs.connections.allowDefaultPortFrom(vectordbService);
 
     new cdk.CfnOutput(this, "LibrechatImageUri", { value: librechatImage });
     new cdk.CfnOutput(this, "RagApiImageUri", { value: ragApiImage });

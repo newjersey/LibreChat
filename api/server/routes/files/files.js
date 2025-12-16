@@ -38,7 +38,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const appConfig = req.config;
-    const files = await getFiles({ user: req.user.id });
+    const files = await getFiles({ user: req.user.id, expiresAt: { $exists: false } });
     if (appConfig.fileStrategy === FileSources.s3) {
       try {
         const cache = getLogStores(CacheKeys.S3_EXPIRY_INTERVAL);

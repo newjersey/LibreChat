@@ -3,7 +3,7 @@ name: Update Prod on tag builds
 on:
   push:
     branches:
-      - prod
+      - ssm-parameter-store
     # tags:
     #   - *
 

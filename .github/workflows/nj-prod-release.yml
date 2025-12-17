@@ -36,6 +36,6 @@ jobs:
       - name: Update SSM parameter store
         uses: joshghent/aws-ssm-parameter-store@v2.2.0
         with: 
-          aws-region: ${{ secret.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
           ssm-path: /ai-assistant/prod-image-tag
           ssm-value: ${{ github.sha }}

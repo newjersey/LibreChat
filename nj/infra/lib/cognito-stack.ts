@@ -30,6 +30,9 @@ export class CognitoStack extends cdk.Stack {
                     required: true,
                     mutable: false,
                 },
+                email: {
+                    required: true,
+                }
             },
             userVerification: {
                 emailSubject: 'Verify your email for NJ AI Assistant!',

@@ -33,6 +33,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+
       - name: Update SSM parameter store
         uses: joshghent/aws-ssm-parameter-store@v2.2.0
         with: 

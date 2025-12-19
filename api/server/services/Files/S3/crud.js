@@ -45,7 +45,9 @@ if (process.env.S3_REFRESH_EXPIRY_MS !== null && process.env.S3_REFRESH_EXPIRY_M
 /**
  * Constructs the S3 key based on the base path, user ID, and file name.
  */
-const getS3Key = (basePath, userId, fileName) => `${basePath}/${userId}/${fileName}`;
+const getS3Key = (basePath, userId, fileName, temporary) => {
+  return `${temporary ? 'tmp/' : ''}${basePath}/${userId}/${fileName}`;
+};
 
 /**
  * Uploads a buffer to S3 and returns a signed URL.
@@ -55,10 +57,11 @@ const getS3Key = (basePath, userId, fileName) => `${basePath}/${userId}/${fileNa
  * @param {Buffer} params.buffer - The buffer containing file data.
  * @param {string} params.fileName - The file name to use in S3.
  * @param {string} [params.basePath='images'] - The base path in the bucket.
+ * @param {boolean} [params.temporary] - If true, this file should be marked as temporary.
  * @returns {Promise<string>} Signed URL of the uploaded file.
  */
-async function saveBufferToS3({ userId, buffer, fileName, basePath = defaultBasePath }) {
-  const key = getS3Key(basePath, userId, fileName);
+async function saveBufferToS3({ userId, buffer, fileName, basePath = defaultBasePath, temporary }) {
+  const key = getS3Key(basePath, userId, fileName, temporary);
   const params = { Bucket: bucketName, Key: key, Body: buffer };
 
   try {
@@ -119,14 +122,15 @@ async function getS3URL({
  * @param {string} params.URL - The source URL of the file.
  * @param {string} params.fileName - The file name to use in S3.
  * @param {string} [params.basePath='images'] - The base path in the bucket.
+ * @param {boolean} [params.temporary] - If true, this file should be marked as temporary.
  * @returns {Promise<string>} Signed URL of the uploaded file.
  */
-async function saveURLToS3({ userId, URL, fileName, basePath = defaultBasePath }) {
+async function saveURLToS3({ userId, URL, fileName, basePath = defaultBasePath, temporary }) {
   try {
     const response = await fetch(URL);
     const buffer = await response.buffer();
     // Optionally you can call getBufferMetadata(buffer) if needed.
-    return await saveBufferToS3({ userId, buffer, fileName, basePath });
+    return await saveBufferToS3({ userId, buffer, fileName, basePath, temporary });
   } catch (error) {
     logger.error('[saveURLToS3] Error uploading file from URL to S3:', error.message);
     throw error;

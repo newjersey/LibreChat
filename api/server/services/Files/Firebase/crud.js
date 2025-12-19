@@ -45,18 +45,20 @@ async function deleteFile(basePath, fileName) {
  *                                   should include the file extension.
  * @param {string} [params.basePath='images'] - Optional. The base basePath in Firebase Storage where the file will
  *                                          be stored. Defaults to 'images' if not specified.
+ * @param {boolean} [params.temporary] - If true, this file should be marked as temporary.
  *
  * @returns {Promise<{ bytes: number, type: string, dimensions: Record<string, number>} | null>}
  *          A promise that resolves to the file metadata if the file is successfully saved, or null if there is an error.
  */
-async function saveURLToFirebase({ userId, URL, fileName, basePath = 'images' }) {
+async function saveURLToFirebase({ userId, URL, fileName, basePath = 'images', temporary }) {
   const storage = getFirebaseStorage();
   if (!storage) {
     logger.error('Firebase is not initialized. Cannot save file to Firebase Storage.');
     return null;
   }
 
-  const storageRef = ref(storage, `${basePath}/${userId.toString()}/${fileName}`);
+  const path = getPath(basePath, userId, fileName, temporary);
+  const storageRef = ref(storage, path);
   const response = await fetch(URL);
   const buffer = await response.buffer();
 
@@ -112,16 +114,18 @@ async function getFirebaseURL({ fileName, basePath = 'images' }) {
  * @param {string} params.buffer - The buffer to be uploaded.
  * @param {string} [params.basePath='images'] - Optional. The base basePath in Firebase Storage where the file will
  *                                          be stored. Defaults to 'images' if not specified.
+ * @param {boolean} [params.temporary] - If true, this file should be marked as temporary.
  *
  * @returns {Promise<string>} - A promise that resolves to the download URL of the uploaded file.
  */
-async function saveBufferToFirebase({ userId, buffer, fileName, basePath = 'images' }) {
+async function saveBufferToFirebase({ userId, buffer, fileName, basePath = 'images', temporary }) {
   const storage = getFirebaseStorage();
   if (!storage) {
     throw new Error('Firebase is not initialized');
   }
 
-  const storageRef = ref(storage, `${basePath}/${userId}/${fileName}`);
+  const path = getPath(basePath, userId, fileName, temporary);
+  const storageRef = ref(storage, path);
   await uploadBytes(storageRef, buffer);
 
   // Assuming you have a function to get the download URL
@@ -269,6 +273,10 @@ async function getFirebaseFileStream(_req, filepath) {
     logger.error('Error getting Firebase file stream:', error);
     throw error;
   }
+}
+
+function getPath(basePath, userId, fileName, temporary) {
+  return `${temporary ? 'tmp/' : ''}${basePath}/${userId}/${fileName}`;
 }
 
 module.exports = {

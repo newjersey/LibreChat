@@ -41,8 +41,8 @@ const env = {
 
 const ecsStack = new EcsStack(app, "EcsStack", {
   env: env,
-  vpcId: "vpc-06ea0349e255c4c59",
-  librechatImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat:latest",
+  vpcId: process.env.VPC_ID,
+  librechatImage: '152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat:${process.env.LIBRECHAT_IMAGE_TAG}',
   mongoImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/mongo:latest",
   postgresImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie",
 });

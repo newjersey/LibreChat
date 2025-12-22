@@ -85,7 +85,7 @@ const processCodeOutput = async ({
       source: appConfig.fileStrategy,
       context: FileContext.execute_code,
     };
-    createFile(file, true);
+    createFile(file);
     /** Note: `messageId` & `toolCallId` are not part of file DB schema; message object records associated file ID */
     return Object.assign(file, { messageId, toolCallId });
   } catch (error) {

@@ -19,6 +19,7 @@ const { AZURE_STORAGE_PUBLIC_ACCESS = 'true', AZURE_CONTAINER_NAME = 'files' } =
  * @param {Buffer} params.buffer - The buffer to upload.
  * @param {string} params.fileName - The name of the file.
  * @param {string} [params.basePath='images'] - The base folder within the container.
+ * @param {boolean} [params.temporary] - If true, this file should be marked as temporary.
  * @param {string} [params.containerName] - The Azure Blob container name.
  * @returns {Promise<string>} The URL of the uploaded blob.
  */
@@ -27,6 +28,7 @@ async function saveBufferToAzure({
   buffer,
   fileName,
   basePath = defaultBasePath,
+  temporary,
   containerName,
 }) {
   try {
@@ -34,7 +36,7 @@ async function saveBufferToAzure({
     const access = AZURE_STORAGE_PUBLIC_ACCESS?.toLowerCase() === 'true' ? 'blob' : undefined;
     // Create the container if it doesn't exist. This is done per operation.
     await containerClient.createIfNotExists({ access });
-    const blobPath = `${basePath}/${userId}/${fileName}`;
+    const blobPath = `${temporary ? 'tmp/' : ''}${basePath}/${userId}/${fileName}`;
     const blockBlobClient = containerClient.getBlockBlobClient(blobPath);
     await blockBlobClient.uploadData(buffer);
     return blockBlobClient.url;
@@ -52,6 +54,7 @@ async function saveBufferToAzure({
  * @param {string} params.URL - The URL of the file.
  * @param {string} params.fileName - The name of the file.
  * @param {string} [params.basePath='images'] - The base folder within the container.
+ * @param {boolean} [params.temporary] - If true, this file should be marked as temporary.
  * @param {string} [params.containerName] - The Azure Blob container name.
  * @returns {Promise<string>} The URL of the uploaded blob.
  */
@@ -60,12 +63,20 @@ async function saveURLToAzure({
   URL,
   fileName,
   basePath = defaultBasePath,
+  temporary,
   containerName,
 }) {
   try {
     const response = await fetch(URL);
     const buffer = await response.buffer();
-    return await saveBufferToAzure({ userId, buffer, fileName, basePath, containerName });
+    return await saveBufferToAzure({
+      userId,
+      buffer,
+      fileName,
+      basePath,
+      temporary,
+      containerName,
+    });
   } catch (error) {
     logger.error('[saveURLToAzure] Error uploading file from URL:', error);
     throw error;

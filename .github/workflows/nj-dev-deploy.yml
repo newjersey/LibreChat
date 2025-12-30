@@ -32,7 +32,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: AWS CDK GitHub Actions
         uses: youyo/aws-cdk-github-actions@v2.1.4
         with:

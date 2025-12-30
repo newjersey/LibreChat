@@ -32,11 +32,11 @@ export class EcsStack extends cdk.Stack {
     const postgresImage = props.postgresImage;
 
     const endpointsSg = new ec2.SecurityGroup(this, "VpcEndpointsSg", { vpc });
-    const ecrDockerEndpoint = vpc.addInterfaceEndpoint("EcrDockerEndpoint", {
+    vpc.addInterfaceEndpoint("EcrDockerEndpoint", {
       service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
       securityGroups: [endpointsSg],
     });
-    const ecrAPIEndpont = vpc.addInterfaceEndpoint("EcrApiEndpoint", {
+    vpc.addInterfaceEndpoint("EcrApiEndpoint", {
       service: ec2.InterfaceVpcEndpointAwsService.ECR,
       securityGroups: [endpointsSg],
     });

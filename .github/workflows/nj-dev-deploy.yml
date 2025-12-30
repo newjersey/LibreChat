@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: set AWS_ENV environment variable
-        run: echo "export AWS_ENV = ${github.event.deployment_status.environment}"
+        run: echo "export AWS_ENV = ${{ secrets.ENVIRONMENT_NAME }}"
 
       - name: AWS CDK GitHub Actions
         uses: youyo/aws-cdk-github-actions@v2.1.4
@@ -39,13 +39,12 @@ jobs:
         uses: actions/checkout@v4
         
       - name: set AWS_ENV environment variable
-        run: echo "export AWS_ENV = ${github.event.deployment_status.environment}"
+        run: echo "export AWS_ENV = ${{ secrets.ENVIRONMENT_NAME }}"
         
       - name: AWS CDK GitHub Actions
         uses: youyo/aws-cdk-github-actions@v2.1.4
         with:
           cdk_subcommand: 'deploy'
-          cdk_args: '--require-approval never'
           actions_comment: true
           working_dir: nj/infra/
         env:

@@ -34,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: dev-deploy
+    needs: cdk-diff
     steps:
       - name: Checkout
         uses: actions/checkout@v4

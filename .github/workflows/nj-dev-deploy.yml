@@ -44,10 +44,11 @@ jobs:
           issue-title: "Manual Approval Required for Terraform Apply"
           issue-body: "Please approve or deny the deployment."
 
-  cdk-apply:
+  cdk-deploy:
     runs-on: ubuntu-latest
     environment:
       name: dev
+    needs: manual-approval
     steps:
       - name: Checkout
         uses: actions/checkout@v4

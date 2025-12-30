@@ -12,12 +12,15 @@ jobs:
     environment:
       name: dev
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: AWS CDK GitHub Actions
         uses: youyo/aws-cdk-github-actions@v2.1.4
         with:
           cdk_subcommand: 'diff'
           actions_comment: true
-          working_dir: nj/infra/
+          working_dir: Librechat/nj/infra/
           cdk_stack: EcsStack
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

@@ -3,13 +3,13 @@ name: Deploy Dev Infrastructure
 on:
   push:
     branches:
-      - infra-cicd
+      - prod
 
 jobs:
   cdk-diff:
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      name: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
   cdk-deploy:
     runs-on: ubuntu-latest
     environment:
-      name: dev-deploy
+      name: prod-deploy
     steps:
       - name: Checkout
         uses: actions/checkout@v4

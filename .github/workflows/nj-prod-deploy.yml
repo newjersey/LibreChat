@@ -1,9 +1,11 @@
-name: Deploy Dev Infrastructure
+name: Deploy Prod Infrastructure
 
 on:
   push:
     branches:
       - prod
+    paths:
+      - nj/infra/**
 
 jobs:
   prod-cdk-diff:

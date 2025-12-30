@@ -41,6 +41,14 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION,
 };
 
+const isProd = process.env.AWS_ENV?.includes("prod"); // looks jank, but it's required for github actions reasons
+
+const envVars = {
+  vpcId: isProd ? "vpc-051d43046b343c516" : "vpc-06ea0349e255c4c59",
+  domainName : isProd ? "ai-assistant.nj.gov" : "dev.ai-assistant.nj.gov",
+  env: isProd ? "prod" : "dev", 
+}
+
 const ecsStack = new EcsStack(app, "EcsStack", {
   env: env,
   vpcId: "vpc-06ea0349e255c4c59",
@@ -59,8 +67,7 @@ const apiGatewayStack = new ApigStack(app, "ApiGatewayStack", {
 
 const cognitoStack = new CognitoStack(app, "CognitoStack", {
   env: env,
-  callback_urls: ["https://dev.ai-assistant.nj.gov/oauth/openid/callback"],
-  logout_urls: ["https://dev.ai-assistant.nj.gov/oauth/openid/logout"],
+  envVars: envVars,
   branding: branding,
   assets: assets,
 });

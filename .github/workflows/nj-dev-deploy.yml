@@ -3,7 +3,7 @@ name: Deploy Dev Infrastructure
 on:
   push:
     branches:
-      - infra-cicd
+      - prod
     paths:
       - nj/infra/**
 

@@ -51,7 +51,7 @@ const envVars = {
 
 const ecsStack = new EcsStack(app, "EcsStack", {
   env: env,
-  vpcId: "vpc-06ea0349e255c4c59",
+  envVars: envVars,
   librechatImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/librechat:latest",
   mongoImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/mongo:latest",
   postgresImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie",
@@ -60,9 +60,8 @@ const ecsStack = new EcsStack(app, "EcsStack", {
 
 const apiGatewayStack = new ApigStack(app, "ApiGatewayStack", {
   env: env,
-  vpcId: "vpc-06ea0349e255c4c59",
+  envVars: envVars,
   listener: ecsStack.listener,
-  domainName: "dev.ai-assistant.nj.gov",
 });
 
 const cognitoStack = new CognitoStack(app, "CognitoStack", {

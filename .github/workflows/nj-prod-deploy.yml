@@ -6,7 +6,7 @@ on:
       - prod
 
 jobs:
-  cdk-diff:
+  prod-cdk-diff:
     runs-on: ubuntu-latest
     environment:
       name: prod
@@ -28,7 +28,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
-  cdk-deploy:
+  prod-cdk-deploy:
     runs-on: ubuntu-latest
     environment:
       name: prod-deploy
@@ -38,7 +38,7 @@ jobs:
         
       - name: set AWS_ENV environment variable
         run: echo "export AWS_ENV = ${{ github.event.deployment_status.environment }}"
-        
+
       - name: AWS CDK GitHub Actions
         uses: youyo/aws-cdk-github-actions@v2.1.4
         with:

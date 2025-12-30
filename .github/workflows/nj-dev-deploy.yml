@@ -43,6 +43,7 @@ jobs:
           minimum-approvals: 1
           issue-title: "Manual Approval Required for Terraform Apply"
           issue-body: "Please approve or deny the deployment."
+          approvers: entropic489, dlew, AnJuHyppolite
 
   cdk-deploy:
     runs-on: ubuntu-latest

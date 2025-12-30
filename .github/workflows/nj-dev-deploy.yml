@@ -1,0 +1,25 @@
+name: Deploy Dev Infrastructure
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - infra-cicd
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+    steps:
+      - name: AWS CDK GitHub Actions
+        uses: youyo/aws-cdk-github-actions@v2.1.4
+        with:
+          cdk_subcommand: 'diff'
+          actions_comment: true
+          working_dir: nj/infra/
+          cdk_stack: EcsStack
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}

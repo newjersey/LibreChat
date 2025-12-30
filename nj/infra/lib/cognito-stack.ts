@@ -17,9 +17,9 @@ export interface CognitoStackProps extends cdk.StackProps {
 export class CognitoStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: CognitoStackProps) {
         super(scope, id, props);
-        const name_prefix = "nj-ai-assistant-${prop.envVars.env}}";
-        const callbackUrl = "https://${props.envVars.domainName}/oauth/openid/callback";
-        const logoutUrl = "https://${props.envVars.domainName}/oauth/openid/logout";
+        const name_prefix = `nj-ai-assistant-${props.envVars.env}`;
+        const callbackUrl = `https://${props.envVars.domainName}/oauth/openid/callback`;
+        const logoutUrl = `https://${props.envVars.domainName}/oauth/openid/logout`;
 
         const userPool = this.createUserPool(props);
         const userPoolClient = this.createUserPoolClient(props, userPool, callbackUrl, logoutUrl);

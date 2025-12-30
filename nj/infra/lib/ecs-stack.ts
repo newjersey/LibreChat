@@ -101,7 +101,7 @@ export class EcsStack extends cdk.Stack {
         CONFIG_PATH: "/app/nj/nj-librechat.yaml",
       },
       environmentFiles: [
-        ecs.EnvironmentFile.fromBucket(s3.Bucket.fromBucketArn(this, "EnvFilesBucket", "arn:aws:s3:::nj-librechat-env-files"), '${props.envVars.env}.env'),
+        ecs.EnvironmentFile.fromBucket(s3.Bucket.fromBucketArn(this, "EnvFilesBucket", "arn:aws:s3:::nj-librechat-env-files"), `${props.envVars.env}.env`),
       ],
       portMappings: [{ containerPort: 3080 }],
       command: ["npm","run","backend"], 

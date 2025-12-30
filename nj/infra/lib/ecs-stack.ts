@@ -57,6 +57,10 @@ export class EcsStack extends cdk.Stack {
     vpc.addInterfaceEndpoint("CognitoEndpoint", {
       service: ec2.InterfaceVpcEndpointAwsService.COGNITO_IDP,
       securityGroups: [endpointsSg],
+      subnets: {
+        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+        availabilityZones: ['us-east-1a']
+  }
     });
     vpc.addGatewayEndpoint("S3GatewayEndpoint", {
       service: ec2.GatewayVpcEndpointAwsService.S3,

@@ -3,7 +3,7 @@ name: Deploy Dev Infrastructure
 on:
   push:
     branches:
-      - prod
+      - infra-cicd
 
 jobs:
   cdk-diff:

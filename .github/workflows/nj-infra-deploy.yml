@@ -1,20 +1,29 @@
 name: Deploy Prod Infrastructure
 
 on:
-  push:
-    branches:
-      - prod
-    paths:
-      - nj/infra/**
-    tags:
-      - '*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the target environment'
+        type: choice
+        options:
+        - dev
+        - prod
+        required: true
+        default: dev
 
 jobs:
-  prod-cdk-diff:
+  cdk-diff:
     runs-on: ubuntu-latest
     environment:
-      name: prod
+      name: ${{ github.event.inputs.environment }}
     steps:
+      - name: Fail if branch is not prod
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/infra-cicd'
+        run: |
+          echo "This workflow should not be triggered with workflow_dispatch on a branch other than prod"
+          exit 1
+
       - name: Checkout
         uses: actions/checkout@v6
 
@@ -28,16 +37,16 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ENV: ${{ secrets.ENVIRONMENT_NAME }}
+          AWS_ENV: ${{ github.event.inputs.environment }}
 
-  prod-cdk-deploy:
+  cdk-deploy:
     runs-on: ubuntu-latest
     environment:
-      name: prod-deploy
-    needs: prod-cdk-diff
+      name: ${{ github.event.inputs.environment }}-deploy
+    needs: cdk-diff
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: AWS CDK GitHub Actions
         uses: youyo/aws-cdk-github-actions@v2.1.4
@@ -50,4 +59,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ENV: ${{ secrets.ENVIRONMENT_NAME }}
+          AWS_ENV: ${{ github.event.inputs.environment }}

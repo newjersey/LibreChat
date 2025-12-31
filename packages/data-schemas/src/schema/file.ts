@@ -72,7 +72,6 @@ const file: Schema<IMongoFile> = new Schema(
     },
     expiresAt: {
       type: Date,
-      expires: 3600, // 1 hour in seconds
     },
   },
   {
@@ -80,6 +79,7 @@ const file: Schema<IMongoFile> = new Schema(
   },
 );
 
+file.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 file.index({ createdAt: 1, updatedAt: 1 });
 
 export default file;

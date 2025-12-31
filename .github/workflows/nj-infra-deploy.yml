@@ -19,7 +19,7 @@ jobs:
       name: ${{ github.event.inputs.environment }}
     steps:
       - name: Fail if branch is not prod
-        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/infra-cicd'
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/prod'
         run: |
           echo "This workflow should not be triggered with workflow_dispatch on a branch other than prod"
           exit 1

@@ -7,8 +7,6 @@ import * as efs from "aws-cdk-lib/aws-efs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import * as acm from "aws-cdk-lib/aws-certificatemanager";
-import * as secrets from "aws-cdk-lib/aws-secretsmanager"
 import { Construct } from "constructs";
 
 export type EnvVars = {
@@ -22,7 +20,7 @@ export interface EcsServicesProps extends cdk.StackProps {
   envVars: EnvVars,
   mongoImage: string;
   postgresImage: string;
-  certificateArn: string;
+  // certificateArn: string; // Pending OIT
 }
 
 export class EcsStack extends cdk.Stack {

@@ -19,7 +19,7 @@
  *   cdk deploy˙
  *
  *   # Deploy to specific account and region
- *   cdk deploy --context account=123456789012 --context region=us-east-1
+ *   cdk deploy --context account=123456789012 --context region=${env.region}
  *
  *   # Synthesize CloudFormation template
  *   cdk synth
@@ -67,9 +67,8 @@ if (isProd) {
 const ecsStack = new EcsStack(app, "EcsStack", {
   env: env,
   envVars: envVars,
-  mongoImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/mongo:latest",
-  postgresImage: "152320432929.dkr.ecr.us-east-1.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie",
-  certificateArn: "arn:aws:acm:us-east-1:152320432929:certificate/b795286d-3044-4e95-ba06-21e81fc5022e"
+  mongoImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/mongo:latest`,
+  postgresImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie`,
 });
 
 const apiGatewayStack = new ApigStack(app, "ApiGatewayStack", {

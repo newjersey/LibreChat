@@ -10,7 +10,6 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
 export type EnvVars = {
-  vpcId: string,
   domainName: string,
   env: string,
   isProd: boolean
@@ -30,8 +29,10 @@ export class EcsStack extends cdk.Stack {
 
   constructor(scope: Construct, id: string, props: EcsServicesProps) {
     super(scope, id, props);
-    const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
-      vpcId: props.envVars.vpcId,
+    const vpc = ec2.Vpc.fromLookup(this, 'ExistingVpc', {
+      tags: {
+          'Name': 'VPC-Innov-Platform-*'
+      }
     });
     const isProd = props.envVars.env.includes("prod")
 

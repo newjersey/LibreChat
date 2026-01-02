@@ -29,6 +29,7 @@
  */
 
 import * as cdk from "aws-cdk-lib";
+import * as ec2 from "aws-cdk-lib/aws-ec2"
 import { DatabaseStack } from "../lib/db-stack";
 import { EcsStack } from "../lib/ecs-stack";
 import { ApigStack } from "../lib/apig-stack";
@@ -46,7 +47,6 @@ const isProd = process.env.AWS_ENV?.includes("prod") ? true : false; // looks ja
 const tagEnv = isProd ? "production" : "development";
 
 const envVars = {
-  vpcId: isProd ? "vpc-051d43046b343c516" : "vpc-06ea0349e255c4c59",
   domainName : isProd ? "ai-assistant.nj.gov" : "dev.ai-assistant.nj.gov",
   env: isProd ? "prod" : "dev", 
   isProd: isProd

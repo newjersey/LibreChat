@@ -6,9 +6,9 @@ import * as secrets from "aws-cdk-lib/aws-secretsmanager"
 import { Construct } from "constructs";
 
 export type EnvVars = {
-    vpcId: string,
     domainName: string,
     env: string, 
+    isProd: boolean,
 }
 
 export interface DatabaseStackProps extends cdk.StackProps {
@@ -19,8 +19,10 @@ export class DatabaseStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: DatabaseStackProps) {
         super(scope, id, props);
 
-        const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
-            vpcId: props.envVars.vpcId,
+        const vpc = ec2.Vpc.fromLookup(this, 'ExistingVPC', {
+            tags: {
+                'Name': 'VPC-Innov-Platform-*'
+            }
         });
 
         this.CreatePostgresRDSInstance(vpc);

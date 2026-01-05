@@ -19,7 +19,7 @@
  *   cdk deploy˙
  *
  *   # Deploy to specific account and region
- *   cdk deploy --context account=123456789012 --context region=${env.region}
+ *   cdk deploy --context account=123456789012 --context region=us-east-1
  *
  *   # Synthesize CloudFormation template
  *   cdk synth

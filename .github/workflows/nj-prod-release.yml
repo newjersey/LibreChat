@@ -3,7 +3,7 @@ name: Push to prod ECR and update SSM parameter store with latest tag
 on:
   push:
     tags:
-      - '*'
+      - 'release/*'
 
 jobs:
   docker:

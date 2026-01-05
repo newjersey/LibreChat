@@ -17,6 +17,16 @@ jobs:
           echo "This workflow should not be triggered with workflow_dispatch on a branch other than prod"
           exit 1
 
+      - name: Validate tag prefix
+        run: |
+          case "$GITHUB_REF_NAME" in
+            release/*) echo "Valid tag prefix" ;;
+            *)
+              echo "Invalid tag prefix: $GITHUB_REF_NAME"
+              exit 1
+              ;;
+          esac
+
       - name: Log in to ECR
         uses: docker/login-action@v3
         with:

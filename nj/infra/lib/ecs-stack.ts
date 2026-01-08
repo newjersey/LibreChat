@@ -123,13 +123,8 @@ export class EcsStack extends cdk.Stack {
   };
 
   private CreateLibrechatService(props: EcsServicesProps, cluster: ecs.Cluster, commonExecRole: iam.Role, isProd: boolean) {
-    var mongoUri = "mongodb://mongodb.internal:27017/LibreChat"
-    var librechatTag = "latest"
-    if (isProd) {
-      const docdbSecret = secrets.Secret.fromSecretNameV2(this, "DocdbSecret", "ai-assistant/docdb/uri");
-
-      librechatTag = ssm.StringParameter.valueForStringParameter(this, '/ai-assistant/prod-image-tag');
-    }
+    const docdbSecret = secrets.Secret.fromSecretNameV2(this, "DocdbSecret", "ai-assistant/docdb/uri");
+    const librechatTag = isProd ? ssm.StringParameter.valueForStringParameter(this, '/ai-assistant/prod-image-tag') : "latest";
     const librechatImage = `${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/librechat:${librechatTag}`;
 
     const librechatTaskDef = new ecs.FargateTaskDefinition(this, "LibreChatTaskDef", {

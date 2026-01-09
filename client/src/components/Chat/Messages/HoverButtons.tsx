@@ -8,6 +8,7 @@ import MessageAudio from './MessageAudio';
 import Feedback from './Feedback';
 import { cn } from '~/utils';
 import store from '~/store';
+import { logCopyEvent } from '~/nj/analytics/logHelpers';
 
 type THoverButtons = {
   isEditing: boolean;
@@ -182,7 +183,10 @@ const HoverButtons = ({
     enterEdit();
   };
 
-  const handleCopy = () => copyToClipboard(setIsCopied);
+  const handleCopy = () => {
+    logCopyEvent(isCreatedByUser);
+    copyToClipboard(setIsCopied);
+  };
 
   return (
     <div className="group visible flex justify-center gap-0.5 self-end focus-within:outline-none lg:justify-start">

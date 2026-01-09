@@ -3,10 +3,12 @@ import HoverButtons from '~/components/Chat/Messages/HoverButtons';
 import store from '~/store';
 import { RecoilRoot } from 'recoil';
 import { screen } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
+import * as njLog from '~/nj/analytics/logEvent';
 
 describe('HoverButtons NJ customizations', () => {
-  test('Disabled fork & feedback buttons', () => {
-    const dom = render(
+  const renderHoverButtons = () => {
+    return render(
       <RecoilRoot
         // Disable TTS (it's not needed for the test & complicates setup)
         initializeState={({ set }) => set(store.textToSpeech, false)}
@@ -35,6 +37,10 @@ describe('HoverButtons NJ customizations', () => {
         />
       </RecoilRoot>,
     );
+  };
+
+  test('Disabled fork & feedback buttons', () => {
+    const dom = renderHoverButtons();
 
     // Expect hidden buttons NOT to be in the hover buttons
     const forkButton = dom.container.querySelector('[aria-label="Fork"]');
@@ -49,5 +55,17 @@ describe('HoverButtons NJ customizations', () => {
     // Assert that buttons are rendering *at all* (otherwise test might be buggy)
     const copyButton = screen.queryByTitle('Copy to clipboard');
     expect(copyButton).toBeInTheDocument();
+  });
+
+  test('Copy button fires analytics event', async () => {
+    const logEventSpy = jest.spyOn(njLog, 'logEvent');
+
+    renderHoverButtons();
+
+    const copyButton = await screen.findByTitle('Copy to clipboard');
+    await userEvent.click(copyButton);
+
+    expect(logEventSpy).toHaveBeenCalledWith('copy_response_text');
+    expect(logEventSpy).toHaveBeenCalledTimes(1);
   });
 });

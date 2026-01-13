@@ -12,7 +12,8 @@ export type EnvVars = {
 }
 
 export interface DatabaseStackProps extends cdk.StackProps {
-    envVars: EnvVars
+    envVars: EnvVars,
+    deployPG: boolean,
 }
 
 export class DatabaseStack extends cdk.Stack {
@@ -25,7 +26,9 @@ export class DatabaseStack extends cdk.Stack {
             }
         });
 
-        this.CreatePostgresRDSInstance(vpc);
+        if (props.deployPG) {
+            this.CreatePostgresRDSInstance(vpc);
+        }
         this.CreateDocumentDBInstance(vpc);
     }
 

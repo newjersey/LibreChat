@@ -56,6 +56,7 @@ if (isProd) {
   const databaseStack = new DatabaseStack(app, "DatabaseStack", {
     env: env,
     envVars: envVars,
+    deployPG: false
   });
 
   cdk.Tags.of(databaseStack).add("Project", "AIAssistantService");

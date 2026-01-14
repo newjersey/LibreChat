@@ -62,7 +62,8 @@ endpoints:
 
   # Workaround: we have to explicitly disable all agent capabilities (otherwise the agents UI won't go away)
   agents:
-    capabilities: []
+    capabilities:
+      - "context"
 
 # We explicitly spec our models (since we only have a few models and this makes the selector simpler)
 modelSpecs:

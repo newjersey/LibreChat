@@ -164,6 +164,7 @@ export class EcsStack extends cdk.Stack {
       {
         cluster,
         desiredCount: 1,
+        minHealthyPercent: 50,
         taskDefinition: librechatTaskDef,
         enableExecuteCommand: true,
         publicLoadBalancer: false,
@@ -172,6 +173,18 @@ export class EcsStack extends cdk.Stack {
         // certificate: aiAssistantCertificate,
       }
     );
+    const scalableTarget = librechatService.service.autoScaleTaskCount({
+      minCapacity: 1,
+      maxCapacity: 20,
+    });
+
+    scalableTarget.scaleOnCpuUtilization('CpuScaling', {
+      targetUtilizationPercent: 50,
+    });
+
+    scalableTarget.scaleOnMemoryUtilization('MemoryScaling', {
+      targetUtilizationPercent: 50,
+    });
 
     new cdk.CfnOutput(this, "LibrechatImageUri", { value: librechatImage });
     return librechatService;

@@ -7,6 +7,7 @@ import { CLOSE_SIDEBAR_ID, OPEN_SIDEBAR_ID } from '~/components/Chat/Menus/OpenS
 import { useLocalize, useNewConvo } from '~/hooks';
 import { clearMessagesCache } from '~/utils';
 import store from '~/store';
+import { logEvent } from '~/nj/analytics/logEvent';
 
 export default function NewChat({
   index = 0,
@@ -44,6 +45,7 @@ export default function NewChat({
       }
       clearMessagesCache(queryClient, conversation?.conversationId);
       queryClient.invalidateQueries([QueryKeys.messages]);
+      logEvent('click_clear_chat');
       newConvo();
       navigate('/c/new', { state: { focusChat: true } });
       if (isSmallScreen) {

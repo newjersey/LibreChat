@@ -21,6 +21,7 @@ import type { ActiveJobsResponse } from '~/data-provider';
 import { useAuthContext } from '~/hooks/AuthContext';
 import useEventHandlers from './useEventHandlers';
 import store from '~/store';
+import { logIfPromptLengthError, logSubmitPrompt } from '~/nj/analytics/logHelpers';
 
 const clearDraft = (conversationId?: string | null) => {
   if (conversationId) {
@@ -177,6 +178,7 @@ export default function useResumableSSE(
               hasResponseMessage: !!data.responseMessage,
             });
             clearDraft(currentSubmission.conversation?.conversationId);
+            logSubmitPrompt(userMessage, false);
             try {
               finalHandler(data, currentSubmission as EventSubmission);
             } catch (error) {
@@ -345,6 +347,8 @@ export default function useResumableSSE(
       sse.addEventListener('error', async (e: MessageEvent) => {
         (startupConfig?.balance?.enabled ?? false) && balanceQuery.refetch();
 
+        logSubmitPrompt(userMessage, true);
+
         /* @ts-ignore - sse.js types don't expose responseCode */
         const responseCode = e.responseCode;
 
@@ -405,6 +409,8 @@ export default function useResumableSSE(
                 isKnownError =
                   violationValues.includes(errorType) || errorTypeValues.includes(errorType);
               }
+
+              logIfPromptLengthError(parsed);
             } catch {
               // Not JSON or parsing failed - treat as generic error
             }

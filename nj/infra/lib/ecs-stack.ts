@@ -128,14 +128,16 @@ export class EcsStack extends cdk.Stack {
     const librechatImage = `${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/librechat:${librechatTag}`;
 
     const librechatTaskDef = new ecs.FargateTaskDefinition(this, "LibreChatTaskDef", {
-      cpu: 256,
-      memoryLimitMiB: 512,
+      cpu: 512,
+      memoryLimitMiB: 1024,
       executionRole: commonExecRole,
     });
 
     librechatTaskDef.addContainer("librechat", {
       image: ecs.ContainerImage.fromRegistry(librechatImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "librechat" }),
+      cpu: 512,
+      memoryLimitMiB: 1024,
       environment: {
         NODE_ENV: "production",
         PORT: "3080",

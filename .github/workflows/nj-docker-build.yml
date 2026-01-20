@@ -25,9 +25,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: 
-            - ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/newjersey/librechat:${{ github.sha }}
-            - ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/newjersey/librechat:latest
+          tags: |
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/newjersey/librechat:${{ github.sha }}
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/newjersey/librechat:latest
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

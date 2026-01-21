@@ -170,7 +170,7 @@ export class EcsStack extends cdk.Stack {
         taskDefinition: librechatTaskDef,
         enableExecuteCommand: true,
         publicLoadBalancer: false,
-        listenerPort: isProd ? 80 : 443, 
+        listenerPort: 443, 
         taskSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
         certificate: aiAssistantCertificate,
       }

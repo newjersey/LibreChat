@@ -86,7 +86,6 @@ Here's the basic processes:
 **Upstream merges** - Push LibreChat's `main` onto our `main`, then create a merge commit on `newjersey`. 
 Be sure to smoke test before merging!
 
-
 ## Releasing to Prod
 
 ### Cut a tag from the newjersey branch

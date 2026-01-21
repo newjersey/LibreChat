@@ -87,8 +87,11 @@ Here's the basic processes:
 Be sure to smoke test before merging!
 
 ## Releasing to Prod
+Prod release happens in two steps:
+1. Create a tag in Github, and wait for it to build and push
+2. Run the infra deploy workflow on the prod environment.
 
-### Cut a tag from the newjersey branch
+### Create a tag from the newjersey branch
 Tags are in YYYYMMDD format.
 
 From the `newjersey` branch, run `git tag <tag>`, then `git push --tags`. This will initiate the tag build and update the `ai-assistant/prod-image-tag` SSM parameter.

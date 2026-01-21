@@ -8,7 +8,7 @@ on:
         type: choice
         options:
           - dev
-          - newjersey
+          - prod
         required: true
         default: dev
 

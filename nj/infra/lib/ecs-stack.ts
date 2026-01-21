@@ -158,7 +158,7 @@ export class EcsStack extends cdk.Stack {
     });
 
     // Re-enable when OIT does load balancer things
-    // const aiAssistantCertificate = acm.Certificate.fromCertificateArn(this, 'aiAssistantCertificate', props.certificateArn);
+    const aiAssistantCertificate = acm.Certificate.fromCertificateArn(this, 'aiAssistantCertificate', props.certificateArn);
 
     const librechatService = new ecsPatterns.ApplicationLoadBalancedFargateService(
       this,
@@ -172,7 +172,7 @@ export class EcsStack extends cdk.Stack {
         publicLoadBalancer: false,
         listenerPort: isProd ? 80 : 443, 
         taskSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-        // certificate: aiAssistantCertificate,
+        certificate: aiAssistantCertificate,
       }
     );
     const scalableTarget = librechatService.service.autoScaleTaskCount({

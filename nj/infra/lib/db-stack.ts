@@ -12,7 +12,8 @@ export type EnvVars = {
 }
 
 export interface DatabaseStackProps extends cdk.StackProps {
-    envVars: EnvVars
+    envVars: EnvVars,
+    deployPG: boolean,
 }
 
 export class DatabaseStack extends cdk.Stack {
@@ -25,7 +26,9 @@ export class DatabaseStack extends cdk.Stack {
             }
         });
 
-        this.CreatePostgresRDSInstance(vpc);
+        if (props.deployPG) {
+            this.CreatePostgresRDSInstance(vpc);
+        }
         this.CreateDocumentDBInstance(vpc);
     }
 
@@ -82,7 +85,7 @@ export class DatabaseStack extends cdk.Stack {
 
     private CreateDocumentDBInstance(vpc: ec2.IVpc){
         const docDBSecurityGroup = new ec2.SecurityGroup(this, "DocDBSg", { vpc });
-        docDBSecurityGroup.addIngressRule(ec2.Peer.ipv4(vpc.vpcCidrBlock), ec2.Port.tcp(5432));
+        docDBSecurityGroup.addIngressRule(ec2.Peer.ipv4(vpc.vpcCidrBlock), ec2.Port.tcp(27017));
 
         const cluster = new docdb.DatabaseCluster(this, "DocDB", {
             vpc,

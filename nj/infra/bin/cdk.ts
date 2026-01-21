@@ -29,10 +29,8 @@
  */
 
 import * as cdk from "aws-cdk-lib";
-import * as ec2 from "aws-cdk-lib/aws-ec2"
 import { DatabaseStack } from "../lib/db-stack";
 import { EcsStack } from "../lib/ecs-stack";
-import { ApigStack } from "../lib/apig-stack";
 import { CognitoStack } from "../lib/cognito-stack";
 import {branding, assets} from "../lib/branding";
 
@@ -56,6 +54,7 @@ if (isProd) {
   const databaseStack = new DatabaseStack(app, "DatabaseStack", {
     env: env,
     envVars: envVars,
+    deployPG: false
   });
 
   cdk.Tags.of(databaseStack).add("Project", "AIAssistantService");
@@ -63,22 +62,13 @@ if (isProd) {
   cdk.Tags.of(databaseStack).add("Environment", tagEnv);
 }
 
-// TODO: Add SSM Parameter check for latest librechat version for prod
 const ecsStack = new EcsStack(app, "EcsStack", {
   env: env,
   envVars: envVars,
   mongoImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/mongo:latest`,
   postgresImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie`,
+  certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${process.env.ACM_CERTIFICATE_ID}`
 });
-
-const apiGatewayStack = new ApigStack(app, "ApiGatewayStack", {
-  env: env,
-  envVars: envVars,
-  listener: ecsStack.listener,
-});
-cdk.Tags.of(apiGatewayStack).add("Project", "AIAssistantService");
-cdk.Tags.of(apiGatewayStack).add("ManagedBy", "CDK");
-cdk.Tags.of(apiGatewayStack).add("Environment", tagEnv);
 
 const cognitoStack = new CognitoStack(app, "CognitoStack", {
   env: env,

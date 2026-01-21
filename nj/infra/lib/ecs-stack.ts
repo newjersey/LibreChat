@@ -7,6 +7,8 @@ import * as efs from "aws-cdk-lib/aws-efs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
+import * as acm from "aws-cdk-lib/aws-certificatemanager"
+import * as secrets from "aws-cdk-lib/aws-secretsmanager"
 import { Construct } from "constructs";
 
 export type EnvVars = {
@@ -19,7 +21,7 @@ export interface EcsServicesProps extends cdk.StackProps {
   envVars: EnvVars,
   mongoImage: string;
   postgresImage: string;
-  // certificateArn: string; // Pending OIT
+  certificateArn: string; 
 }
 
 export class EcsStack extends cdk.Stack {
@@ -52,6 +54,7 @@ export class EcsStack extends cdk.Stack {
 
   private CreateVPCEndpoints(isProd: boolean, vpc: ec2.IVpc) {
     const endpointsSg = new ec2.SecurityGroup(this, "VpcEndpointsSg", { vpc });
+    endpointsSg.addIngressRule(ec2.Peer.ipv4(vpc.vpcCidrBlock), ec2.Port.tcp(27017));
     vpc.addInterfaceEndpoint("EcrDockerEndpoint", {
       service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
       securityGroups: [endpointsSg],
@@ -120,35 +123,32 @@ export class EcsStack extends cdk.Stack {
   };
 
   private CreateLibrechatService(props: EcsServicesProps, cluster: ecs.Cluster, commonExecRole: iam.Role, isProd: boolean) {
-    var mongoUri = "mongodb://mongodb.internal:27017/LibreChat"
-    var librechatTag = "latest"
-    if (isProd) {
-      const docdbHost = cdk.Fn.importValue("DocumentDBHostname");
-      const docdbPort = cdk.Fn.importValue("DocDbEndpointPortExport");
-      mongoUri = `mongodb://${docdbHost}:${docdbPort}/Librechat`
-
-      librechatTag = ssm.StringParameter.valueForStringParameter(this, '/ai-assistant/prod-image-tag');
-    }
+    const docdbSecret = secrets.Secret.fromSecretNameV2(this, "DocdbSecret", "ai-assistant/docdb/uri");
+    const librechatTag = isProd ? ssm.StringParameter.valueForStringParameter(this, '/ai-assistant/prod-image-tag') : "latest";
     const librechatImage = `${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/librechat:${librechatTag}`;
 
     const librechatTaskDef = new ecs.FargateTaskDefinition(this, "LibreChatTaskDef", {
-      cpu: 256,
-      memoryLimitMiB: 512,
+      cpu: 512,
+      memoryLimitMiB: 1024,
       executionRole: commonExecRole,
     });
 
     librechatTaskDef.addContainer("librechat", {
       image: ecs.ContainerImage.fromRegistry(librechatImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "librechat" }),
+      cpu: 512,
+      memoryLimitMiB: 1024,
       environment: {
         NODE_ENV: "production",
         PORT: "3080",
         HOST: "0.0.0.0",
         LOG_LEVEL: "info",
-        MONGO_URI: mongoUri,
         MEILI_HOST: "http://rag_api.internal:7700",
         RAG_API_URL: "http://rag_api.internal:8000",
         CONFIG_PATH: "/app/nj/nj-librechat.yaml",
+      },
+      secrets: {
+        MONGO_URI: ecs.Secret.fromSecretsManager(docdbSecret, "uri")
       },
       environmentFiles: [
         ecs.EnvironmentFile.fromBucket(s3.Bucket.fromBucketArn(this, "EnvFilesBucket", "arn:aws:s3:::nj-librechat-env-files"), `${props.envVars.env}.env`),
@@ -166,13 +166,27 @@ export class EcsStack extends cdk.Stack {
       {
         cluster,
         desiredCount: 1,
+        minHealthyPercent: 50,
         taskDefinition: librechatTaskDef,
+        enableExecuteCommand: true,
         publicLoadBalancer: false,
-        listenerPort: 80, // change to 443 when OIT is done with imperva
+        listenerPort: isProd ? 80 : 443, 
         taskSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-        // certificate: aiAssistantCertificate, // uncomment when OIT is done with imperva
+        // certificate: aiAssistantCertificate,
       }
     );
+    const scalableTarget = librechatService.service.autoScaleTaskCount({
+      minCapacity: 1,
+      maxCapacity: 20,
+    });
+
+    scalableTarget.scaleOnCpuUtilization('CpuScaling', {
+      targetUtilizationPercent: 50,
+    });
+
+    scalableTarget.scaleOnMemoryUtilization('MemoryScaling', {
+      targetUtilizationPercent: 50,
+    });
 
     new cdk.CfnOutput(this, "LibrechatImageUri", { value: librechatImage });
     return librechatService;

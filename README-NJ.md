@@ -77,13 +77,28 @@ We use trunk-based development with a focus on merging changes from upstream. As
 
 `main` - mirrors [`LibreChat/main`](https://github.com/danny-avila/LibreChat/tree/main)
 
-`prod` - where our version of LibreChat lives & deploys from
+`newjersey` - where our version of LibreChat lives & deploys from
 
 Here's the basic processes:
 
-**Contributing code** - Create a pull request; once finished, squash & rebase it onto `prod`.
+**Contributing code** - Create a pull request; once finished, squash & rebase it onto `newjersey`.
 
-**Upstream merges** - Push LibreChat's `main` onto our `main`, then create a merge commit on `prod`. 
+**Upstream merges** - Push LibreChat's `main` onto our `main`, then create a merge commit on `newjersey`. 
 Be sure to smoke test before merging!
 
-**Pushing to prod** - *Exact process TBD (but will involve tagging commits on `prod`)* 
+
+## Releasing to Prod
+
+### Cut a tag from the newjersey branch
+Tags are in YYYYMMDD format.
+
+From the `newjersey` branch, run `git tag <tag>`, then `git push --tags`. This will initiate the tag build and update the `ai-assistant/prod-image-tag` SSM parameter.
+
+### Run the infra deploy workflow
+- From the Github Actions tab, select the Deploy AI Assistant Infrastructure workflow
+- Select Run Workflow
+   - Branch: `newjersey`
+   - Environment: `prod`
+- Wait for the cdk-diff job to complete
+- REVIEW THE OUTPUT. When you approve the cdk-deploy job, you are responsible for the changes that roll out.
+- Approve and wait for the fireworks. You can watch the deployment from the Cloudformation console if so desired.

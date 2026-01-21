@@ -2,15 +2,15 @@ name: Frontend Unit Tests
 
 on:
   pull_request:
-    branches: 
-      - main
-      - dev
-      - dev-staging
-      - release/*
-      - prod # NJ: our primary branch
+    branches:
+    - main
+    - dev
+    - dev-staging
+    - release/*
+    - newjersey # NJ: our primary branch
     paths:
-      - 'client/**'
-      - 'packages/data-provider/**'
+    - 'client/**'
+    - 'packages/data-provider/**'
 
 jobs:
   tests_frontend_ubuntu:
@@ -20,22 +20,22 @@ jobs:
     env:
       NODE_OPTIONS: '--max-old-space-size=${{ secrets.NODE_MAX_OLD_SPACE_SIZE || 6144 }}'
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+    - uses: actions/checkout@v4
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Build Client
-        run: npm run frontend:ci
+    - name: Build Client
+      run: npm run frontend:ci
 
-      - name: Run unit tests
-        run: npm run test:ci --verbose
-        working-directory: client
+    - name: Run unit tests
+      run: npm run test:ci --verbose
+      working-directory: client
 
   tests_frontend_windows:
     name: Run frontend unit tests on Windows
@@ -44,19 +44,19 @@ jobs:
     env:
       NODE_OPTIONS: '--max-old-space-size=${{ secrets.NODE_MAX_OLD_SPACE_SIZE || 6144 }}'
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+    - uses: actions/checkout@v4
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Build Client
-        run: npm run frontend:ci
+    - name: Build Client
+      run: npm run frontend:ci
 
-      - name: Run unit tests
-        run: npm run test:ci --verbose
-        working-directory: client
+    - name: Run unit tests
+      run: npm run test:ci --verbose
+      working-directory: client

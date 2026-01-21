@@ -29,10 +29,8 @@
  */
 
 import * as cdk from "aws-cdk-lib";
-import * as ec2 from "aws-cdk-lib/aws-ec2"
 import { DatabaseStack } from "../lib/db-stack";
 import { EcsStack } from "../lib/ecs-stack";
-import { ApigStack } from "../lib/apig-stack";
 import { CognitoStack } from "../lib/cognito-stack";
 import {branding, assets} from "../lib/branding";
 
@@ -63,14 +61,13 @@ if (isProd) {
   cdk.Tags.of(databaseStack).add("ManagedBy", "CDK");
   cdk.Tags.of(databaseStack).add("Environment", tagEnv);
 }
-const certId = isProd ? "d2e66629-d5cc-44ee-9fc7-59228a653d7c" : "b795286d-3044-4e95-ba06-21e81fc5022e"
-// TODO: Add SSM Parameter check for latest librechat version for prod
+
 const ecsStack = new EcsStack(app, "EcsStack", {
   env: env,
   envVars: envVars,
   mongoImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/mongo:latest`,
   postgresImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie`,
-  certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${certId}`
+  certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${process.env.ACM_CERTIFICATE_ID}`
 });
 
 const cognitoStack = new CognitoStack(app, "CognitoStack", {

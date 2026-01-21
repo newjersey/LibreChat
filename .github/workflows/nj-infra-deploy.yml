@@ -38,6 +38,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
           AWS_ENV: ${{ github.event.inputs.environment }}
+          ACM_CERTIFICATE_ID: ${{ secrets.ACM_CERTIFICATE_ID }}
 
   cdk-deploy:
     runs-on: ubuntu-latest
@@ -60,3 +61,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
           AWS_ENV: ${{ github.event.inputs.environment }}
+          ACM_CERTIFICATE_ID: ${{ secrets.ACM_CERTIFICATE_ID }}

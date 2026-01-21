@@ -7,8 +7,8 @@ on:
         description: 'Select the target environment'
         type: choice
         options:
-        - dev
-        - newjersey
+          - dev
+          - newjersey
         required: true
         default: dev
 
@@ -18,26 +18,26 @@ jobs:
     environment:
       name: ${{ github.event.inputs.environment }}
     steps:
-    - name: Fail if branch is not newjersey
-      if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/newjersey'
-      run: |
-        echo "This workflow should not be triggered with workflow_dispatch on a branch other than newjersey"
-        exit 1
+      - name: Fail if branch is not newjersey
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/newjersey'
+        run: |
+          echo "This workflow should not be triggered with workflow_dispatch on a branch other than newjersey"
+          exit 1
 
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-    - name: AWS CDK GitHub Actions
-      uses: youyo/aws-cdk-github-actions@v2.1.4
-      with:
-        cdk_subcommand: 'diff'
-        actions_comment: true
-        working_dir: nj/infra/
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-        AWS_ENV: ${{ github.event.inputs.environment }}
+      - name: AWS CDK GitHub Actions
+        uses: youyo/aws-cdk-github-actions@v2.1.4
+        with:
+          cdk_subcommand: 'diff'
+          actions_comment: true
+          working_dir: nj/infra/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ENV: ${{ github.event.inputs.environment }}
 
   cdk-deploy:
     runs-on: ubuntu-latest
@@ -45,18 +45,18 @@ jobs:
       name: ${{ github.event.inputs.environment }}-deploy
     needs: cdk-diff
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-    - name: AWS CDK GitHub Actions
-      uses: youyo/aws-cdk-github-actions@v2.1.4
-      with:
-        cdk_subcommand: 'deploy'
-        cdk_args: '--require-approval never'
-        actions_comment: true
-        working_dir: nj/infra/
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-        AWS_ENV: ${{ github.event.inputs.environment }}
+      - name: AWS CDK GitHub Actions
+        uses: youyo/aws-cdk-github-actions@v2.1.4
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_args: '--require-approval never'
+          actions_comment: true
+          working_dir: nj/infra/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ENV: ${{ github.event.inputs.environment }}

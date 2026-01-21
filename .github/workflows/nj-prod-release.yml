@@ -9,7 +9,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     environment:
-      name: newjersey
+      name: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v6

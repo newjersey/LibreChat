@@ -7,7 +7,7 @@ on:
       - dev
       - dev-staging
       - release/*
-      - prod # NJ: our primary branch
+      - newjersey # NJ: our primary branch
     paths:
       - 'api/**'
       - 'client/**'

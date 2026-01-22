@@ -27,7 +27,7 @@ export interface EcsServicesProps extends cdk.StackProps {
 export class EcsStack extends cdk.Stack {
   public readonly listener: elbv2.ApplicationListener;
   public readonly loadBalancer: elbv2.ApplicationLoadBalancer;
-  public readonly service: ecs.FargateService;
+  public readonly service: ecsPatterns.ApplicationLoadBalancedFargateService;
 
   constructor(scope: Construct, id: string, props: EcsServicesProps) {
     super(scope, id, props);
@@ -45,7 +45,7 @@ export class EcsStack extends cdk.Stack {
     const librechatService = this.CreateLibrechatService(props, cluster, commonExecRole, isProd);
     this.listener = librechatService.listener;
     this.loadBalancer = librechatService.loadBalancer;
-    this.service = librechatService.service;
+    this.service = librechatService;
 
     if (!isProd) {
       this.CreateDatabaseSidecars(props, commonExecRole, vpc, cluster, librechatService)
@@ -146,10 +146,11 @@ export class EcsStack extends cdk.Stack {
         MEILI_HOST: "http://rag_api.internal:7700",
         RAG_API_URL: "http://rag_api.internal:8000",
         CONFIG_PATH: "/app/nj/nj-librechat.yaml",
+        MONGO_URI: "mongodb://127.0.0.1:27017/LibreChat"
       },
-      secrets: {
-        MONGO_URI: ecs.Secret.fromSecretsManager(docdbSecret, "uri")
-      },
+      // secrets: {
+      //   MONGO_URI: ecs.Secret.fromSecretsManager(docdbSecret, "uri")
+      // },
       environmentFiles: [
         ecs.EnvironmentFile.fromBucket(s3.Bucket.fromBucketArn(this, "EnvFilesBucket", "arn:aws:s3:::nj-librechat-env-files"), `${props.envVars.env}.env`),
       ],

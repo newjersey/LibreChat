@@ -32,6 +32,7 @@ import * as cdk from "aws-cdk-lib";
 import { DatabaseStack } from "../lib/db-stack";
 import { EcsStack } from "../lib/ecs-stack";
 import { CognitoStack } from "../lib/cognito-stack";
+import { MonitoringStack } from "../lib/monitoring-stack";
 import {branding, assets} from "../lib/branding";
 
 const app = new cdk.App();
@@ -77,6 +78,11 @@ const cognitoStack = new CognitoStack(app, "CognitoStack", {
   assets: assets,
 });
 
+const monitoringStack = new MonitoringStack(app, "MonitoringStack", {
+  env: env,
+  service: ecsStack.service,
+});
+
 cdk.Tags.of(ecsStack).add("Project", "AIAssistantService");
 cdk.Tags.of(ecsStack).add("ManagedBy", "CDK");
 cdk.Tags.of(ecsStack).add("Environment", tagEnv);
@@ -84,3 +90,7 @@ cdk.Tags.of(ecsStack).add("Environment", tagEnv);
 cdk.Tags.of(cognitoStack).add("Project", "AIAssistantService");
 cdk.Tags.of(cognitoStack).add("ManagedBy", "CDK");
 cdk.Tags.of(cognitoStack).add("Environment", tagEnv);
+
+cdk.Tags.of(monitoringStack).add("Project", "AIAssistantService");
+cdk.Tags.of(monitoringStack).add("ManagedBy", "CDK");
+cdk.Tags.of(monitoringStack).add("Environment", tagEnv);

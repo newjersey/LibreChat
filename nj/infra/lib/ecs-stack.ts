@@ -133,23 +133,29 @@ export class EcsStack extends cdk.Stack {
       executionRole: commonExecRole,
     });
 
+    const environment: Record<string, string> = {
+      NODE_ENV: "production",
+      PORT: "3080",
+      HOST: "0.0.0.0",
+      LOG_LEVEL: "info",
+      MEILI_HOST: "http://rag_api.internal:7700",
+      RAG_API_URL: "http://rag_api.internal:8000",
+      CONFIG_PATH: "/app/librechat.yaml",
+
+      ...(!isProd ? { MONGO_URI: "mongodb://mongodb.internal:27017/LibreChat" } : {}),
+    };
+
+    const envSecrets: Record<string, ecs.Secret> = {
+      ...(isProd ? { MONGO_URI: ecs.Secret.fromSecretsManager(docdbSecret, "uri") } : {}),
+    };
+
     librechatTaskDef.addContainer("librechat", {
       image: ecs.ContainerImage.fromRegistry(librechatImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "librechat" }),
       cpu: 512,
       memoryLimitMiB: 1024,
-      environment: {
-        NODE_ENV: "production",
-        PORT: "3080",
-        HOST: "0.0.0.0",
-        LOG_LEVEL: "info",
-        MEILI_HOST: "http://rag_api.internal:7700",
-        RAG_API_URL: "http://rag_api.internal:8000",
-        CONFIG_PATH: "/app/nj/nj-librechat.yaml",
-      },
-      secrets: {
-        MONGO_URI: ecs.Secret.fromSecretsManager(docdbSecret, "uri")
-      },
+      environment: environment,
+      secrets: envSecrets,
       environmentFiles: [
         ecs.EnvironmentFile.fromBucket(s3.Bucket.fromBucketArn(this, "EnvFilesBucket", "arn:aws:s3:::nj-librechat-env-files"), `${props.envVars.env}.env`),
       ],

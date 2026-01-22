@@ -146,11 +146,10 @@ export class EcsStack extends cdk.Stack {
         MEILI_HOST: "http://rag_api.internal:7700",
         RAG_API_URL: "http://rag_api.internal:8000",
         CONFIG_PATH: "/app/nj/nj-librechat.yaml",
-        MONGO_URI: "mongodb://127.0.0.1:27017/LibreChat"
       },
-      // secrets: {
-      //   MONGO_URI: ecs.Secret.fromSecretsManager(docdbSecret, "uri")
-      // },
+      secrets: {
+        MONGO_URI: ecs.Secret.fromSecretsManager(docdbSecret, "uri")
+      },
       environmentFiles: [
         ecs.EnvironmentFile.fromBucket(s3.Bucket.fromBucketArn(this, "EnvFilesBucket", "arn:aws:s3:::nj-librechat-env-files"), `${props.envVars.env}.env`),
       ],

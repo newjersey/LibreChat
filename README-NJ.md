@@ -8,24 +8,37 @@ There are developer instructions in `.github/CONTRIBUTING.md`, however we've fou
 
 ### Initial Setup
 
-You *should* only need to do the following once:
+You _should_ only need to do the following once:
 
-1. Install [Docker CLI](https://github.com/docker/cli), [Colima](https://github.com/abiosoft/colima), and 
-   [Docker Compose](https://github.com/docker/compose) (note: Docker Desktop NOT allowed at NJ). The following
-   terminal commands will install all three (make sure [homebrew](https://brew.sh/) is installed)
-   ```
+1. Install [Docker CLI](https://github.com/docker/cli), [Colima](https://github.com/abiosoft/colima), and
+   [Docker Compose](https://github.com/docker/compose).
+   - _**Note:** Docker Desktop NOT allowed at NJ._
+
+   The following terminal commands will install all three (make sure [Homebrew](https://brew.sh/) is installed)
+
+   ```bash
+   # Install dependencies
    $ brew install colima docker docker-compose
+
+   # Create Docker config directory
    $ mkdir ~/.docker
-   $ cat >~/.docker/config.json <<EOF
-       "cliPluginsExtraDirs": [
-         "/opt/homebrew/lib/docker/cli-plugins"
-       ]
-     EOF
+
+   # Write config.json
+   $ cat > ~/.docker/config.json <<EOF
+   {
+   "cliPluginsExtraDirs": [
+    "/opt/homebrew/lib/docker/cli-plugins"
+   ]
+   }
+   EOF
+
+   # Start Colima service
    $ brew services start colima
    ```
+
 2. Install `nvm` ([instructions](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)).
 3. Setup Node v20
-   - `$ nvm install 20` (first time only) 
+   - `$ nvm install 20` (first time only)
    - `$ nvm use 20`
 4. Install TypeScript globally
    - `$ npm i -g typescript`
@@ -45,7 +58,7 @@ Repeatable steps for getting LibreChat going:
    - `$ npm run frontend:dev`
 4. Visit LibreChat @ http://localhost:3090
 
-NOTE: `reinstall` builds all the code in `/packages/`, but does not do live rebuilds.  If you want live coding for 
+NOTE: `reinstall` builds all the code in `/packages/`, but does not do live rebuilds. If you want live coding for
 `/packages`, you'll need to run `build:watch` in their respective directories:
 `$ npm run build:watch --prefix packages/[directory]`
 
@@ -53,7 +66,7 @@ NOTE: `reinstall` builds all the code in `/packages/`, but does not do live rebu
 
 ### Minimize Upstream Conflicts
 
-While we want to customize the AI experience for New Jersey, we also want to leverage the work from the LibreChat OSS 
+While we want to customize the AI experience for New Jersey, we also want to leverage the work from the LibreChat OSS
 community as well.
 
 In order to be able to continue merging upstream LibreChat changes, we need to minimize merge conflict potential:
@@ -62,14 +75,14 @@ In order to be able to continue merging upstream LibreChat changes, we need to m
   merge it directly into LibreChat (both to give back & to minimize our customizations).
 
 - **When adding new code, keep most of the code in a separate NJ-specific file instead of adding the logic inline.**
-  E.g., if you want to add some new elements to a page, wrap them in a separate React Component, and just import the 
+  E.g., if you want to add some new elements to a page, wrap them in a separate React Component, and just import the
   Component into the existing file.
 
 - **When removing LibreChat features, find the highest-impact inflection point and comment out the code there.**
   E.g., if there's a setting we want to hide from users, just comment out the component instead of removing the setting
   from the app altogether.
 
-- **Leave comments on modifications to guide anyone needing to handle a merge conflict at that point.** 
+- **Leave comments on modifications to guide anyone needing to handle a merge conflict at that point.**
 
 ### Branching Strategy
 
@@ -83,24 +96,28 @@ Here's the basic processes:
 
 **Contributing code** - Create a pull request; once finished, squash & rebase it onto `newjersey`.
 
-**Upstream merges** - Push LibreChat's `main` onto our `main`, then create a merge commit on `newjersey`. 
+**Upstream merges** - Push LibreChat's `main` onto our `main`, then create a merge commit on `newjersey`.
 Be sure to smoke test before merging!
 
 ## Releasing to Prod
+
 Prod release happens in two steps:
+
 1. Create a tag in Github, and wait for it to build and push
 2. Run the infra deploy workflow on the prod environment.
 
 ### Create a tag from the newjersey branch
+
 Tags are formatted like `release-YYYYMMDD.X`. The `.X` is an optional increment in case multiple tags are cut per day.
 
 From the `newjersey` branch, run `git tag <tag>`, then `git push --tags`. This will initiate the tag build and update the `ai-assistant/prod-image-tag` SSM parameter.
 
 ### Run the infra deploy workflow
+
 - From the Github Actions tab, select the Deploy AI Assistant Infrastructure workflow
 - Select Run Workflow
-   - Branch: `newjersey`
-   - Environment: `prod`
+  - Branch: `newjersey`
+  - Environment: `prod`
 - Wait for the cdk-diff job to complete
 - REVIEW THE OUTPUT. When you approve the cdk-deploy job, you are responsible for the changes that roll out.
 - Approve and wait for the fireworks. You can watch the deployment from the Cloudformation console if so desired.

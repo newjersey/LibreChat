@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import TagManager from 'react-gtm-module';
+// import TagManager from 'react-gtm-module'; // NJ: Disabled to avoid eslint error
 import { LocalStorageKeys } from 'librechat-data-provider';
 import type { TStartupConfig, TUser } from 'librechat-data-provider';
 import { cleanupTimestampedStorage } from '~/utils/timestamps';
@@ -64,6 +64,7 @@ export default function useAppStartup({
     });
   }, [defaultPreset, setDefaultPreset, startupConfig?.modelSpecs?.list]);
 
+  /*NJ: Using OIT's GTM snippet in index.html. Disabled to avoid conflicts with OIT's container.
   useEffect(() => {
     if (startupConfig?.analyticsGtmId != null && typeof window.google_tag_manager === 'undefined') {
       const tagManagerArgs = {
@@ -72,4 +73,5 @@ export default function useAppStartup({
       TagManager.initialize(tagManagerArgs);
     }
   }, [startupConfig?.analyticsGtmId]);
+  */
 }

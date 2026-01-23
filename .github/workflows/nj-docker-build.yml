@@ -8,9 +8,9 @@ on:
     tags-ignore:
       - '**'
     paths:
-      - 'api/'
-      - 'client/'
-      - 'config/'
+      - 'api/**'
+      - 'client/**'
+      - 'config/**'
       - 'nj/nj-librechat.yaml'
 
 jobs:

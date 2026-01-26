@@ -92,9 +92,9 @@ Prod release happens in two steps:
 2. Run the infra deploy workflow on the prod environment.
 
 ### Create a tag from the newjersey branch
-Tags are formatted like `release-YYYYMMDD.X`. The `.X` is an optional increment in case multiple tags are cut per day.
+Tags are formatted like `release-YYYYMMDD[.X]`. The `.X` is an optional increment in case multiple tags are cut per day.
 
-From the `newjersey` branch, run `git tag <tag>`, then `git push --tags`. This will initiate the tag build and update the `ai-assistant/prod-image-tag` SSM parameter.
+From the `newjersey` branch (pull and fetch first), run `git tag <tag>`, then `git push --tags`. This will initiate the tag build and update the `ai-assistant/prod-image-tag` SSM parameter.
 
 ### Run the infra deploy workflow
 - From the Github Actions tab, select the Deploy AI Assistant Infrastructure workflow

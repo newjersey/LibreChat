@@ -140,7 +140,7 @@ export class EcsStack extends cdk.Stack {
       LOG_LEVEL: "info",
       MEILI_HOST: "http://rag_api.internal:7700",
       RAG_API_URL: "http://rag_api.internal:8000",
-      CONFIG_PATH: "/app/librechat.yaml",
+      CONFIG_PATH: "/app/nj/nj-librechat.yaml",
 
       ...(!isProd ? { MONGO_URI: "mongodb://mongodb.internal:27017/LibreChat" } : {}),
     };

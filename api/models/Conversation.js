@@ -178,7 +178,9 @@ module.exports = {
       filters.push({ tags: { $in: tags } });
     }
 
+    /* NJ: Show temporary chats in the sidebar
     filters.push({ $or: [{ expiredAt: null }, { expiredAt: { $exists: false } }] });
+     */
 
     if (search) {
       try {
@@ -278,7 +280,9 @@ module.exports = {
       const results = await Conversation.find({
         user,
         conversationId: { $in: conversationIds },
+        /* NJ: Show temporary chats in the sidebar
         $or: [{ expiredAt: { $exists: false } }, { expiredAt: null }],
+         */
       }).lean();
 
       results.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));

@@ -1,5 +1,6 @@
 import { logger } from '@librechat/data-schemas';
 import type { AppConfig } from '@librechat/data-schemas';
+import { createNewJerseyMidnightExpirationDate } from '~/nj/utils/tempChatRetentionNj';
 
 /**
  * Default retention period for temporary chats in hours
@@ -71,7 +72,7 @@ export function getTempChatRetentionHours(
  * @param interfaceConfig - The custom configuration object
  * @returns The expiration date
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function createTempChatExpirationDate(interfaceConfig?: AppConfig['interfaceConfig']): Date {
-  const retentionHours = getTempChatRetentionHours(interfaceConfig);
-  return new Date(Date.now() + retentionHours * 60 * 60 * 1000);
+  return createNewJerseyMidnightExpirationDate();
 }

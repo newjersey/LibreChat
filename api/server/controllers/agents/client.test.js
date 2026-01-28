@@ -347,7 +347,8 @@ describe('AgentClient - titleConvo', () => {
       expect(client.recordCollectedUsage).not.toHaveBeenCalled();
     });
 
-    it('should skip title generation for temporary chats', async () => {
+    // NJ: Changed test b/c we want generated titles for temp chats
+    it('should return the generated title for temporary chats', async () => {
       // Set isTemporary to true
       mockReq.body.isTemporary = true;
 
@@ -356,14 +357,7 @@ describe('AgentClient - titleConvo', () => {
 
       const result = await client.titleConvo({ text, abortController });
 
-      // Should return undefined without generating title
-      expect(result).toBeUndefined();
-
-      // generateTitle should NOT have been called
-      expect(mockRun.generateTitle).not.toHaveBeenCalled();
-
-      // recordCollectedUsage should NOT have been called
-      expect(client.recordCollectedUsage).not.toHaveBeenCalled();
+      expect(result).toBe('Generated Title');
     });
 
     it('should skip title generation when titleConvo is false in all config', async () => {

@@ -383,7 +383,9 @@ export default function useEventHandlers({
           return update;
         });
 
-        if (!isTemporary) {
+        // NJ: Because we show temporary chats in the sidebar, we *do* want to update convos
+        // eslint-disable-next-line no-constant-condition
+        if (!isTemporary || true) {
           if (parentMessageId === Constants.NO_PARENT) {
             addConvoToAllQueries(queryClient, update);
           } else {

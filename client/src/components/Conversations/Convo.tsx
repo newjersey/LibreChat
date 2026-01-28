@@ -279,7 +279,9 @@ export default function Conversation({
         // aria-hidden={!(isPopoverActive || isActiveConvo)}
       >
         {/* Only render ConvoOptions when user interacts (hover/focus) or for active conversation */}
+        {/* NJ: Hide conversation options for now
         {!renaming && (hasInteracted || isActiveConvo) && <ConvoOptions {...convoOptionsProps} />}
+        */}
       </div>
     </div>
   );

@@ -29,6 +29,7 @@ import SearchBar from './SearchBar';
 import NewChat from './NewChat';
 import { cn } from '~/utils';
 import store from '~/store';
+import TemporaryChatNotice from '~/nj/components/TemporaryChatNotice';
 
 const BookmarkNav = lazy(() => import('./Bookmarks/BookmarkNav'));
 const AccountSettings = lazy(() => import('./AccountSettings'));
@@ -234,6 +235,7 @@ const Nav = memo(
               isSmallScreen={isSmallScreen}
             />
             <div className="flex min-h-0 flex-grow flex-col overflow-hidden">
+              <TemporaryChatNotice />
               <Conversations
                 conversations={conversations}
                 moveToTop={moveToTop}

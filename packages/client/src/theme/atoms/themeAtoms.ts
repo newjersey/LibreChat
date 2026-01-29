@@ -1,13 +1,12 @@
 import { atomWithStorage } from 'jotai/utils';
 import { IThemeRGB } from '../types';
+import { constAtom } from '~/nj/utils/constAtom';
 
 /**
  * Atom for storing the theme mode (light/dark/system) in localStorage
  * Key: 'color-theme'
  */
-export const themeModeAtom = atomWithStorage<string>('color-theme', 'system', undefined, {
-  getOnInit: true,
-});
+export const themeModeAtom = constAtom<string>('light');
 
 /**
  * Atom for storing custom theme colors in localStorage

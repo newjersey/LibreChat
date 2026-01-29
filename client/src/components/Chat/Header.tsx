@@ -13,6 +13,7 @@ import { TemporaryChat } from './TemporaryChat';
 import AddMultiConvo from './AddMultiConvo';
 import { useHasAccess } from '~/hooks';
 import { cn } from '~/utils';
+import NewJerseyLogo from '~/nj/components/NewJerseyLogo';
 
 const defaultInterface = getConfigDefaults().interface;
 
@@ -51,6 +52,7 @@ export default function Header() {
                 transition={{ duration: 0.15 }}
                 key="header-buttons"
               >
+                <NewJerseyLogo />
                 <OpenSidebar setNavVisible={setNavVisible} className="max-md:hidden" />
                 <HeaderNewChat />
               </motion.div>

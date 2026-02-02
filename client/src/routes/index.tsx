@@ -20,6 +20,8 @@ import ShareRoute from './ShareRoute';
 import ChatRoute from './ChatRoute';
 import Search from './Search';
 import Root from './Root';
+import NewJerseyInfoTemplate from '~/nj/components/info/NewJerseyInfoTemplate';
+import NewJerseyAboutPage from '~/nj/components/info/NewJerseyAboutPage';
 
 const AuthLayout = () => (
   <AuthContextProvider>
@@ -126,6 +128,21 @@ export const router = createBrowserRouter(
                   <AgentMarketplace />
                 </MarketplaceProvider>
               ),
+            },
+            {
+              path: 'nj',
+              Component: NewJerseyInfoTemplate,
+              children: [
+                // Redirect to "about" page by default
+                {
+                  index: true,
+                  element: <Navigate to="about" replace />,
+                },
+                {
+                  path: 'about',
+                  Component: NewJerseyAboutPage,
+                },
+              ],
             },
           ],
         },

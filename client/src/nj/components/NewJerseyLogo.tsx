@@ -10,7 +10,7 @@ export default function NewJerseyLogo() {
   return (
     <div className="flex items-center gap-3 p-2">
       <NewJerseyIcon height={23} />
-      <span className="font-semibold tracking-tight text-[#0C5295]">NJ AI Assistant</span>
+      <span className="font-semibold tracking-tight text-jersey-blue">NJ AI Assistant</span>
     </div>
   );
 }

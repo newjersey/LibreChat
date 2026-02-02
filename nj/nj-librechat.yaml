@@ -45,16 +45,16 @@ interface:
   webSearch: false
 
 endpoints:
-  azureOpenAI:
-    groups:
-      - group: "nj-ai"
-        apiKey: ${NJ_AZURE_API_KEY}
-        instanceName: ${NJ_AZURE_INSTANCE_NAME}
-        deploymentName: "openai/deployments/gpt-4o-dev"
-        version: "2024-05-01-preview"
-        baseURL: https://${INSTANCE_NAME}.openai.azure.com
-        models:
-          gpt-4o-dev: true
+  # azureOpenAI:
+  #   groups:
+  #     - group: "nj-ai"
+  #       apiKey: ${NJ_AZURE_API_KEY}
+  #       instanceName: ${NJ_AZURE_INSTANCE_NAME}
+  #       deploymentName: "openai/deployments/gpt-4o-dev"
+  #       version: "2024-05-01-preview"
+  #       baseURL: https://${INSTANCE_NAME}.openai.azure.com
+  #       models:
+  #         gpt-4o-dev: true
   bedrock:
     availableRegions:
       - "us-east-1"
@@ -68,12 +68,12 @@ endpoints:
 # We explicitly spec our models (since we only have a few models and this makes the selector simpler)
 modelSpecs:
   list:
-    - name: "gpt-4o"
-      label: "ChatGPT"
-      default: false
-      preset:
-        endpoint: "azureOpenAI"
-        model: "gpt-4o-dev"
+    # - name: "gpt-4o"
+    #   label: "ChatGPT"
+    #   default: false
+    #   preset:
+    #     endpoint: "azureOpenAI"
+    #     model: "gpt-4o-dev"
     - name: "Claude Sonnet 4.5"
       label: "Claude Sonnet 4.5"
       default: true

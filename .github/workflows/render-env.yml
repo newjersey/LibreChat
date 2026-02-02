@@ -59,7 +59,7 @@ jobs:
             "${{ inputs.environment }}.env" \
             "s3://nj-librechat-env-files/${{ inputs.environment }}.env"
 
-      - name: Redeploy dev from latest
+      - name: Redeploy service with new env file
         uses: apideck-libraries/ecs-restart-service@v1
         with:
           service: ${{ secrets.SERVICE_NAME }}

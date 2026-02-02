@@ -44,5 +44,5 @@ jobs:
       - name: Redeploy dev from latest
         uses: apideck-libraries/ecs-restart-service@v1
         with:
-          service: ${{ secrets.DEV_SERVICE_NAME }}
-          cluster: ${{ secrets.DEV_CLUSTER_NAME }}
+          service: ${{ secrets.SERVICE_NAME }}
+          cluster: ${{ secrets.CLUSTER_NAME }}

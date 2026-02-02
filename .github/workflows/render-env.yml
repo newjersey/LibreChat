@@ -58,3 +58,9 @@ jobs:
           aws s3 cp \
             "${{ inputs.environment }}.env" \
             "s3://nj-librechat-env-files/${{ inputs.environment }}.env"
+
+      - name: Redeploy dev from latest
+        uses: apideck-libraries/ecs-restart-service@v1
+        with:
+          service: ${{ secrets.SERVICE_NAME }}
+          cluster: ${{ secrets.CLUSTER_NAME }}

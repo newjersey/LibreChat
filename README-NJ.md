@@ -123,7 +123,7 @@ From the `newjersey` branch, run `git tag <tag>`, then `git push --tags`. This w
 - Approve and wait for the fireworks. You can watch the deployment from the Cloudformation console if so desired.
 
 ## Updating Environment Files
-Environment files are rendered and uploaded by [this workflow](.github/workflows/render-env.yml). It takes [the nj template](nj/nj.env.template) and performs `envsubst`, pulling in values from Github environment secrets. TechOps support will likely be needed to update those environment secrets, but Josh can do it for right now.
+Environment files are rendered and uploaded by [this workflow](./.github/workflows/render-env.yml). It takes [the nj template](./nj/nj.env.template) and performs `envsubst`, pulling in values from Github environment secrets. TechOps support will likely be needed to update those environment secrets, but Josh can do it for right now.
 
 If either the template or the secret values have been updated, you can update the env vars by:
 

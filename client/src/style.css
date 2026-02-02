@@ -64,9 +64,9 @@
 }
 html {
   --brand-purple: #ab68ff;
-  --presentation: var(--white);
-  --text-primary: var(--gray-800);
-  --text-secondary: var(--gray-600);
+  --presentation: #F9F9F7; /* Custom for NJ */
+  --text-primary: #1C1D1F; /* Custom for NJ */
+  --text-secondary: #3D4551; /* Custom for NJ */
   --text-secondary-alt: var(--gray-500);
   --text-tertiary: var(--gray-500);
   --text-warning: var(--amber-500);
@@ -75,11 +75,11 @@ html {
   --header-hover: var(--gray-50);
   --header-button-hover: var(--gray-50);
   --surface-active: var(--gray-100);
-  --surface-active-alt: var(--gray-200);
+  --surface-active-alt: #F0F0EC; /* Custom for NJ */
   --surface-hover: var(--gray-200);
   --surface-hover-alt: var(--gray-300);
-  --surface-primary: var(--white);
-  --surface-primary-alt: var(--gray-50);
+  --surface-primary: #FCFCFB; /* Custom for NJ */
+  --surface-primary-alt: #F8F8F6; /* Custom for NJ */
   --surface-primary-contrast: var(--gray-100);
   --surface-secondary: var(--gray-50);
   --surface-secondary-alt: var(--gray-200);
@@ -90,8 +90,8 @@ html {
   --surface-submit-hover: var(--green-800);
   --surface-destructive: var(--red-700);
   --surface-destructive-hover: var(--red-800);
-  --surface-chat: var(--white);
-  --border-light: var(--gray-200);
+  --surface-chat: #FCFCFB; /* Custom for NJ */
+  --border-light: #EFEDEC; /* Custom for NJ, #332015 @ .08 opacity */
   --border-medium-alt: var(--gray-300);
   --border-medium: var(--gray-300);
   --border-heavy: var(--gray-400);

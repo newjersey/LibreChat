@@ -70,7 +70,7 @@ html {
   --presentation: #F9F9F7; /* Custom for NJ */
   --text-primary: #1C1D1F; /* Custom for NJ */
   --text-secondary: #3D4551; /* Custom for NJ */
-  --text-secondary-alt: var(--gray-500);
+  --text-secondary-alt: #1C1D1F; /* Custom for NJ */
   --text-tertiary: var(--gray-500);
   --text-warning: var(--amber-500);
   --ring-primary: var(--gray-500);
@@ -86,7 +86,7 @@ html {
   --surface-primary-contrast: var(--gray-100);
   --surface-secondary: var(--gray-50);
   --surface-secondary-alt: var(--gray-200);
-  --surface-tertiary: var(--gray-100);
+  --surface-tertiary: #F0F0EC; /* Custom for NJ */
   --surface-tertiary-alt: var(--white);
   --surface-dialog: var(--white);
   --surface-submit: var(--green-700);

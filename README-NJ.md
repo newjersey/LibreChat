@@ -121,3 +121,13 @@ From the `newjersey` branch, run `git tag <tag>`, then `git push --tags`. This w
 - Wait for the cdk-diff job to complete
 - REVIEW THE OUTPUT. When you approve the cdk-deploy job, you are responsible for the changes that roll out.
 - Approve and wait for the fireworks. You can watch the deployment from the Cloudformation console if so desired.
+
+## Updating Environment Files
+Environment files are rendered and uploaded by [this workflow](./.github/workflows/render-env.yml). It takes [the nj template](./nj/nj.env.template) and performs `envsubst`, pulling in values from Github environment secrets. TechOps support will likely be needed to update those environment secrets, but Josh can do it for right now.
+
+If either the template or the secret values have been updated, you can update the env vars by:
+
+1. Navigate to the Actions tab in the repo
+2. Select "Render and upload env file"
+3. Select "Run Workflow" and select your target environment
+4. The workflow will get the environment-specific values from secrets, perform `envsubst`, upload the file to S3, and redeploy the service. 

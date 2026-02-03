@@ -79,6 +79,7 @@ function ModelSelectorContent() {
     />
   );
 
+  // NJ: We disable the actual selection for now (since we only have one model)
   return (
     <div className="relative flex w-full max-w-md flex-col items-center gap-2">
       <Menu
@@ -94,6 +95,7 @@ function ModelSelectorContent() {
         combobox={<input id="model-search" placeholder=" " />}
         comboboxLabel={localize('com_endpoint_search_models')}
         trigger={trigger}
+        disabled={true}
       >
         {searchResults ? (
           renderSearchResults(searchResults, localize, searchValue)

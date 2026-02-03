@@ -61,6 +61,9 @@
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
   --markdown-font-size: 1rem;
+
+  /* Special colors for New Jersey */
+  --jersey-blue: #0C5295;
 }
 html {
   --brand-purple: #ab68ff;

@@ -28,6 +28,7 @@ export class EcsStack extends cdk.Stack {
   public readonly listener: elbv2.ApplicationListener;
   public readonly loadBalancer: elbv2.ApplicationLoadBalancer;
   public readonly service: ecsPatterns.ApplicationLoadBalancedFargateService;
+  public readonly s3Bucket: s3.Bucket;
 
   constructor(scope: Construct, id: string, props: EcsServicesProps) {
     super(scope, id, props);
@@ -40,6 +41,7 @@ export class EcsStack extends cdk.Stack {
 
     this.CreateVPCEndpoints(isProd, vpc);
     const cluster = this.CreateCluster(vpc);
+    this.s3Bucket = this.CreateFileS3Bucket();
     const commonExecRole = this.CreateCommonExecRole(isProd);
 
     const librechatService = this.CreateLibrechatService(props, cluster, commonExecRole, isProd);
@@ -111,6 +113,12 @@ export class EcsStack extends cdk.Stack {
     commonExecRole.addManagedPolicy(
       iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonS3ReadOnlyAccess")
     );
+    commonExecRole.attachInlinePolicy( new iam.Policy(this, 'fileBucketPolicy', {
+      statements: [new iam.PolicyStatement({
+        actions: ['s3:*'],
+        resources: [this.s3Bucket.bucketArn, `${this.s3Bucket.bucketArn}/*`]
+      })]
+    }))
     if (isProd) {
       commonExecRole.addManagedPolicy(
         iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonRDSFullAccess")
@@ -141,6 +149,8 @@ export class EcsStack extends cdk.Stack {
       MEILI_HOST: "http://rag_api.internal:7700",
       RAG_API_URL: "http://rag_api.internal:8000",
       CONFIG_PATH: "/app/nj/nj-librechat.yaml",
+      AWS_BUCKET_NAME: this.s3Bucket.bucketName,
+      AWS_REGION: this.region,
 
       // Apply empty custom footer in ECS definition (instead of .env file)
       // Can move back to .env if resolved: https://github.com/aws/containers-roadmap/issues/1354
@@ -301,6 +311,25 @@ export class EcsStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "MongoImageUri", { value: props.mongoImage });
     new cdk.CfnOutput(this, "PostgresImageUri", { value: props.postgresImage });
+  }
+
+  private CreateFileS3Bucket(){
+    const lifecycleRule: s3.LifecycleRule = {
+      enabled: true,
+      expiration: cdk.Duration.days(1),
+      prefix: "tmp/",
+    }
+
+    const s3Bucket = new s3.Bucket(this, 'LibrechatFileBucket', {
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
+      versioned: true,
+      lifecycleRules: [lifecycleRule],
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+    })
+
+    return s3Bucket;
   }
 }
 

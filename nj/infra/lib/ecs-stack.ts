@@ -318,7 +318,7 @@ export class EcsStack extends cdk.Stack {
     const lifecycleRule: s3.LifecycleRule = {
       enabled: true,
       expiration: cdk.Duration.days(1),
-      prefix: "tmp/",
+      // prefix: "tmp/", // re-enable when temp file changes land
     }
 
     const s3Bucket = new s3.Bucket(this, 'LibrechatFileBucket', {

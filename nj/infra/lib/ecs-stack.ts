@@ -139,6 +139,7 @@ export class EcsStack extends cdk.Stack {
       cpu: 512,
       memoryLimitMiB: 1024,
       executionRole: commonExecRole,
+      taskRole: commonExecRole,
     });
 
     const environment: Record<string, string> = {

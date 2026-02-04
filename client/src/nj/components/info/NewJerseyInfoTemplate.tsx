@@ -23,10 +23,10 @@ export default function NewJerseyInfoTemplate() {
   }
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="relative flex h-full w-full flex-col">
       <SimpleHeader />
-      <div className="flex flex-1 flex-col items-center overflow-y-scroll pt-20">
-        <div className="w-full md:max-w-[47rem] xl:max-w-[55rem]">
+      <div className="flex flex-1 flex-col items-center overflow-y-scroll pt-16">
+        <div className="w-full px-4 md:max-w-[47rem] xl:max-w-[55rem]">
           <Outlet />
         </div>
       </div>

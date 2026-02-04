@@ -318,7 +318,7 @@ export class EcsStack extends cdk.Stack {
       prefix: "tmp/",
     }
 
-    const s3Bucket = new s3.Bucket(this, 'FileS3Bucket', {
+    const s3Bucket = new s3.Bucket(this, 'LibrechatFileBucket', {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       encryption: s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,

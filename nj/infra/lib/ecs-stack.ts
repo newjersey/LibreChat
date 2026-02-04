@@ -149,6 +149,7 @@ export class EcsStack extends cdk.Stack {
       MEILI_HOST: "http://rag_api.internal:7700",
       RAG_API_URL: "http://rag_api.internal:8000",
       CONFIG_PATH: "/app/nj/nj-librechat.yaml",
+      AWS_BUCKET_NAME: this.s3Bucket.bucketName,
 
       // Apply empty custom footer in ECS definition (instead of .env file)
       // Can move back to .env if resolved: https://github.com/aws/containers-roadmap/issues/1354

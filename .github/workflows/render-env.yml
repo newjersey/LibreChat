@@ -28,8 +28,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.S3_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.S3_AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Render env file
@@ -59,7 +59,7 @@ jobs:
           aws s3 cp \
             "${{ inputs.environment }}.env" \
             "s3://nj-librechat-env-files/${{ inputs.environment }}.env"
-
+      
       - name: Redeploy service with new env file
         uses: apideck-libraries/ecs-restart-service@v1
         with:

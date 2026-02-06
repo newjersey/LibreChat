@@ -108,6 +108,7 @@ export default function useMessageActions(props: TMessageActions) {
     } else if (assistant) {
       return assistant.name ?? 'Assistant';
     } else {
+      return 'NJ AI Assistant'; // NJ: Default to saying it came from us
       return message?.sender;
     }
   }, [message, agent, assistant, UsernameDisplay, user, localize]);

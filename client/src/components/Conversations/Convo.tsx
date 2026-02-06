@@ -235,6 +235,8 @@ export default function Conversation({
           isSmallScreen={isSmallScreen}
           localize={localize}
         >
+          <div className="-mr-2" /> {/* Counteract the gap-2 in the parent */}
+          {/* NJ: We don't want the icon in chat history sidebar
           {isGenerating ? (
             <svg
               className="h-5 w-5 flex-shrink-0 animate-spin text-text-primary"
@@ -264,6 +266,7 @@ export default function Conversation({
               context="menu-item"
             />
           )}
+          */}
         </ConvoLink>
       )}
       <div

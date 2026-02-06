@@ -51,7 +51,7 @@ endpoints:
       - "us-east-1"
     titleModel: "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
     guardrailConfig:
-      guardrailIdentifier: cwwc15fplrpc
+      guardrailIdentifier: '${GUARDRAIL_ID}'
       guardrailVersion: "1"
       trace: "disabled"
 

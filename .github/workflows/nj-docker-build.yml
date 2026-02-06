@@ -28,8 +28,6 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v6
-        env: 
-          GUARDRAIL_ID: ${{ secrets.GUARDRAIL_ID }}
         with:
           push: true
           tags: |

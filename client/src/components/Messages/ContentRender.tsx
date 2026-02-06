@@ -127,7 +127,8 @@ const ContentRender = memo(
       >
         {!hasParallelContent && (
           <div className="relative flex flex-shrink-0 flex-col items-center">
-            <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full">
+            {/* NJ: Removed `rounded-full` here because the NJ icon doesn't want to be rounded! */}
+            <div className="flex h-6 w-6 items-center justify-center overflow-hidden">
               <MessageIcon iconData={iconData} assistant={assistant} agent={agent} />
             </div>
           </div>

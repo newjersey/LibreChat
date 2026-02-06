@@ -16,6 +16,7 @@ import {
 import UnknownIcon from '~/hooks/Endpoint/UnknownIcon';
 import { IconProps } from '~/common';
 import { cn } from '~/utils';
+import NewJerseyIcon from '~/nj/svgs/NewJerseyIcon';
 
 type EndpointIcon = {
   icon: React.ReactNode | React.JSX.Element;
@@ -143,9 +144,10 @@ const MessageEndpointIcon: React.FC<IconProps> = (props) => {
       name: 'Claude',
     },
     [EModelEndpoint.bedrock]: {
-      icon: <BedrockIcon className="icon-xl text-white" />,
-      bg: '#268672',
-      name: alternateName[EModelEndpoint.bedrock],
+      // NJ: We're using Bedrock for now, so put in our NJ icon / name
+      // (We still want to leave the door open for custom agent icons in the future.)
+      icon: <NewJerseyIcon />,
+      name: 'NJ AI Assistant',
     },
     [EModelEndpoint.custom]: {
       icon: <CustomMinimalIcon size={size * 0.7} />,

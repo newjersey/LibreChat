@@ -7,12 +7,14 @@ import { ChevronDownIcon, ChevronUpIcon, GraduationCap, SquareArrowOutUpRight } 
 import { useRecoilState } from 'recoil';
 import { landingHelpOpen } from '~/nj/store/landing';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Provides alternate landing page content w/ New Jersey-specific information.
  */
 export function NewJerseyLanding() {
   const [open, setOpen] = useRecoilState(landingHelpOpen);
+  const navigate = useNavigate();
 
   return (
     <div className="max-w-2xl pt-2">
@@ -52,11 +54,20 @@ export function NewJerseyLanding() {
                   <div className="mb-5 flex gap-3">
                     <p>
                       Check out these resources on how to use AI tools —{' '}
-                      <a href="https://nj.gov" className="inline-flex items-center gap-1 underline">
+                      <span
+                        role="button"
+                        onClick={() => navigate('/nj/guide')}
+                        className="inline-flex items-center gap-1 underline"
+                      >
                         AI Assistant FAQ <GraduationCap size={16} />
-                      </a>{' '}
+                      </span>{' '}
                       and{' '}
-                      <a href="https://nj.gov" className="inline-flex items-center gap-1 underline">
+                      <a
+                        href="https://innovation.nj.gov/skills/ai-how-tos/"
+                        className="inline-flex items-center gap-1 underline"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Generative AI How-to guides
                         <SquareArrowOutUpRight size={16} />
                       </a>
@@ -68,7 +79,12 @@ export function NewJerseyLanding() {
                   <div className="mb-5 flex gap-3">
                     <p>
                       Read the State{' '}
-                      <a href="https://nj.gov" className="inline-flex items-center gap-1 underline">
+                      <a
+                        href="https://innovation.nj.gov/ai-faq-state-employees/"
+                        className="inline-flex items-center gap-1 underline"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Guidelines on Generative AI use for Public Professionals
                         <SquareArrowOutUpRight size={16} />
                       </a>
@@ -80,11 +96,21 @@ export function NewJerseyLanding() {
                   <div className="mb-4">
                     <p>
                       Access the state&apos;s Generative AI training as a{' '}
-                      <a href="https://nj.gov" className="underline">
+                      <a
+                        href="https://stateofnewjersey.sabacloud.com/Saba/Web_spf/NA9P2PRD001/common/ledetail/CLIP.RAIPP.WBT/latestversion"
+                        className="underline"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         State learner
                       </a>{' '}
                       (government employees) or{' '}
-                      <a href="https://nj.gov" className="underline">
+                      <a
+                        href="https://stateofnewjersey-external.sabacloud.com/Saba/Web_spf/NA9P2PRD001/common/ledetail/CLIP.RAIPP.WBT/latestversion"
+                        className="underline"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         External learner
                       </a>{' '}
                       (contractors and others) before using this tool.

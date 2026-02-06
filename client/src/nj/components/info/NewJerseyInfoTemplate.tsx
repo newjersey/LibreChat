@@ -1,6 +1,8 @@
 import useAuthRedirect from '~/routes/useAuthRedirect';
 import SimpleHeader from '~/nj/components/SimpleHeader';
 import { Outlet } from 'react-router-dom';
+import { useGetStartupConfig } from '~/data-provider';
+import useGoogleTagManager from '~/nj/hooks/useGoogleTagManager';
 
 // NJ: Tells TypeScript that <feedback-widget> is a valid custom element.
 declare global {
@@ -17,6 +19,9 @@ declare global {
  */
 export default function NewJerseyInfoTemplate() {
   const { isAuthenticated } = useAuthRedirect();
+  const { data: startupConfig } = useGetStartupConfig();
+
+  useGoogleTagManager({ startupConfig });
 
   if (!isAuthenticated) {
     return null;

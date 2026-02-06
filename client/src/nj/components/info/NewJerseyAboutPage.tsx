@@ -12,6 +12,8 @@ import InfoFooter from '~/nj/components/info/InfoFooter';
  * Content for "about the AI assistant" page
  */
 export default function NewJerseyAboutPage() {
+  document.title = 'NJ AI Assistant - About';
+
   return (
     <div>
       <InfoTitle text="About the AI Assistant" />

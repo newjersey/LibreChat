@@ -7,6 +7,7 @@ import { useGetStartupConfig, useGetUserBalance } from '~/data-provider';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
+import { NewJerseySelectItems } from '~/nj/components/NewJerseySelectItems';
 
 function AccountSettings() {
   const localize = useLocalize();
@@ -88,6 +89,7 @@ function AccountSettings() {
         </Select.SelectItem>
         <DropdownMenuSeparator />
         */}
+        <NewJerseySelectItems />
         <Select.SelectItem
           aria-selected={true}
           onClick={() => logout()}

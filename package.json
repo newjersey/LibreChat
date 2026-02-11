@@ -107,6 +107,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.20.0",
     "@playwright/test": "^1.56.1",
+    "@types/helmet": "^0.0.48",
     "@types/react-virtualized": "^9.22.0",
     "caniuse-lite": "^1.0.30001741",
     "cross-env": "^7.0.3",
@@ -170,5 +171,8 @@
       "admin/",
       "packages/"
     ]
+  },
+  "dependencies": {
+    "helmet": "^8.1.0"
   }
 }

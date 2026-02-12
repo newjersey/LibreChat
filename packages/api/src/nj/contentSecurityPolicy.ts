@@ -52,7 +52,7 @@ export const securityHeaders = () => {
     },
     ieNoOpen: true,
     noSniff: true,
-    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    referrerPolicy: false,
     xssFilter: true,
   });
 };

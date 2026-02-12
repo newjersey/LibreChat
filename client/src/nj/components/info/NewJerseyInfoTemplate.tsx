@@ -34,7 +34,7 @@ export default function NewJerseyInfoTemplate() {
         className="flex flex-1 flex-col items-center overflow-y-scroll pt-16"
         ref={scrollableRef}
       >
-        <div className="mb-12 w-full px-4 md:max-w-[47rem] xl:max-w-[55rem]">
+        <div className="mb-12 mt-6 w-full px-4 md:max-w-[47rem] xl:max-w-[55rem]">
           <Outlet />
         </div>
       </div>

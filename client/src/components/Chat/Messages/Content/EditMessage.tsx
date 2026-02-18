@@ -20,7 +20,7 @@ const EditMessage = ({
   siblingIdx,
   setSiblingIdx,
 }: TEditProps) => {
-  // const saveButtonRef = useRef<HTMLButtonElement | null>(null);
+  const saveButtonRef = useRef<HTMLButtonElement | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const { conversation } = useMessagesConversation();
   const { getMessages, setMessages } = useMessagesOperations();
@@ -90,36 +90,36 @@ const EditMessage = ({
     enterEdit(true);
   };
 
-  // const updateMessage = (data: { text: string }) => {
-  //   const messages = getMessages();
-  //   if (!messages) {
-  //     return;
-  //   }
-  //   updateMessageMutation.mutate({
-  //     conversationId: conversationId ?? '',
-  //     model: conversation?.model ?? 'gpt-3.5-turbo',
-  //     text: data.text,
-  //     messageId,
-  //   });
+  const updateMessage = (data: { text: string }) => {
+    const messages = getMessages();
+    if (!messages) {
+      return;
+    }
+    updateMessageMutation.mutate({
+      conversationId: conversationId ?? '',
+      model: conversation?.model ?? 'gpt-3.5-turbo',
+      text: data.text,
+      messageId,
+    });
 
-  //   const isInMessages = messages.some((message) => message.messageId === messageId);
-  //   if (!isInMessages) {
-  //     message.text = data.text;
-  //   } else {
-  //     setMessages(
-  //       messages.map((msg) =>
-  //         msg.messageId === messageId
-  //           ? {
-  //               ...msg,
-  //               text: data.text,
-  //             }
-  //           : msg,
-  //       ),
-  //     );
-  //   }
+    const isInMessages = messages.some((message) => message.messageId === messageId);
+    if (!isInMessages) {
+      message.text = data.text;
+    } else {
+      setMessages(
+        messages.map((msg) =>
+          msg.messageId === messageId
+            ? {
+                ...msg,
+                text: data.text,
+              }
+            : msg,
+        ),
+      );
+    }
 
-  //   enterEdit(true);
-  // };
+    enterEdit(true);
+  };
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

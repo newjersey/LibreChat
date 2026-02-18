@@ -61,6 +61,9 @@ if (isProd) {
   cdk.Tags.of(databaseStack).add("Project", "AIAssistantService");
   cdk.Tags.of(databaseStack).add("ManagedBy", "CDK");
   cdk.Tags.of(databaseStack).add("Environment", tagEnv);
+  cdk.Tags.of(databaseStack).add("Agency", "997");
+  cdk.Tags.of(databaseStack).add("Org", "0005");
+  cdk.Tags.of(databaseStack).add("CloudPortfolioId", "0293");
 }
 
 const ecsStack = new EcsStack(app, "EcsStack", {
@@ -86,11 +89,22 @@ const monitoringStack = new MonitoringStack(app, "MonitoringStack", {
 cdk.Tags.of(ecsStack).add("Project", "AIAssistantService");
 cdk.Tags.of(ecsStack).add("ManagedBy", "CDK");
 cdk.Tags.of(ecsStack).add("Environment", tagEnv);
+cdk.Tags.of(ecsStack).add("Agency", "997");
+cdk.Tags.of(ecsStack).add("Org", "0005");
+cdk.Tags.of(ecsStack).add("CloudPortfolioId", "0293");
 
 cdk.Tags.of(cognitoStack).add("Project", "AIAssistantService");
 cdk.Tags.of(cognitoStack).add("ManagedBy", "CDK");
 cdk.Tags.of(cognitoStack).add("Environment", tagEnv);
+cdk.Tags.of(cognitoStack).add("Agency", "997");
+cdk.Tags.of(cognitoStack).add("Org", "0005");
+cdk.Tags.of(cognitoStack).add("CloudPortfolioId", "0293");
+
 
 cdk.Tags.of(monitoringStack).add("Project", "AIAssistantService");
 cdk.Tags.of(monitoringStack).add("ManagedBy", "CDK");
 cdk.Tags.of(monitoringStack).add("Environment", tagEnv);
+cdk.Tags.of(monitoringStack).add("Agency", "997");
+cdk.Tags.of(monitoringStack).add("Org", "0005");
+cdk.Tags.of(monitoringStack).add("CloudPortfolioId", "0293");
+

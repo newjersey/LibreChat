@@ -100,7 +100,6 @@ cdk.Tags.of(cognitoStack).add("Agency", "997");
 cdk.Tags.of(cognitoStack).add("Org", "0005");
 cdk.Tags.of(cognitoStack).add("CloudPortfolioId", "0293");
 
-
 cdk.Tags.of(monitoringStack).add("Project", "AIAssistantService");
 cdk.Tags.of(monitoringStack).add("ManagedBy", "CDK");
 cdk.Tags.of(monitoringStack).add("Environment", tagEnv);

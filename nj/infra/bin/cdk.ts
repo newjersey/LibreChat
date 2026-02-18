@@ -51,6 +51,21 @@ const envVars = {
   isProd: isProd
 }
 
+const commonTags = {
+  Project: "AIAssistantService",
+  ManagedBy: "CDK",
+  Environment: tagEnv,
+  Agency: "997",
+  Org: "0005",
+  CloudPortfolioId: "0293"
+};
+
+function applyTags(stack: cdk.Stack) {
+  Object.entries(commonTags).forEach(([key, value]) => {
+    cdk.Tags.of(stack).add(key, value);
+  });
+}
+
 if (isProd) {
   const databaseStack = new DatabaseStack(app, "DatabaseStack", {
     env: env,
@@ -58,12 +73,7 @@ if (isProd) {
     deployPG: false
   });
 
-  cdk.Tags.of(databaseStack).add("Project", "AIAssistantService");
-  cdk.Tags.of(databaseStack).add("ManagedBy", "CDK");
-  cdk.Tags.of(databaseStack).add("Environment", tagEnv);
-  cdk.Tags.of(databaseStack).add("Agency", "997");
-  cdk.Tags.of(databaseStack).add("Org", "0005");
-  cdk.Tags.of(databaseStack).add("CloudPortfolioId", "0293");
+  applyTags(databaseStack);
 }
 
 const ecsStack = new EcsStack(app, "EcsStack", {
@@ -86,24 +96,6 @@ const monitoringStack = new MonitoringStack(app, "MonitoringStack", {
   service: ecsStack.service,
 });
 
-cdk.Tags.of(ecsStack).add("Project", "AIAssistantService");
-cdk.Tags.of(ecsStack).add("ManagedBy", "CDK");
-cdk.Tags.of(ecsStack).add("Environment", tagEnv);
-cdk.Tags.of(ecsStack).add("Agency", "997");
-cdk.Tags.of(ecsStack).add("Org", "0005");
-cdk.Tags.of(ecsStack).add("CloudPortfolioId", "0293");
-
-cdk.Tags.of(cognitoStack).add("Project", "AIAssistantService");
-cdk.Tags.of(cognitoStack).add("ManagedBy", "CDK");
-cdk.Tags.of(cognitoStack).add("Environment", tagEnv);
-cdk.Tags.of(cognitoStack).add("Agency", "997");
-cdk.Tags.of(cognitoStack).add("Org", "0005");
-cdk.Tags.of(cognitoStack).add("CloudPortfolioId", "0293");
-
-cdk.Tags.of(monitoringStack).add("Project", "AIAssistantService");
-cdk.Tags.of(monitoringStack).add("ManagedBy", "CDK");
-cdk.Tags.of(monitoringStack).add("Environment", tagEnv);
-cdk.Tags.of(monitoringStack).add("Agency", "997");
-cdk.Tags.of(monitoringStack).add("Org", "0005");
-cdk.Tags.of(monitoringStack).add("CloudPortfolioId", "0293");
-
+applyTags(ecsStack);
+applyTags(cognitoStack);
+applyTags(monitoringStack);

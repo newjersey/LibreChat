@@ -14,7 +14,7 @@ on:
       - 'nj/nj-librechat.yaml'
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

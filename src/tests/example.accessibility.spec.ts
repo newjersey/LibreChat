@@ -17,12 +17,12 @@ const TEST_CASES = [
 
 for (const { name, url } of TEST_CASES) {
   test.describe.parallel(`Homepage accessibility - ${name}`, () => {
-    // Primary axe-core scan for this component.
+    // Primary axe-core scan for this page.
     test("has no detectable a11y violations", async ({ page }) => {
       await page.goto(url);
       await page.waitForLoadState("networkidle");
 
-      // .include(".usa-link") ensures the scan is scoped to the Link itself.
+      // #root ensures the scan is scoped to the document
       const accessibilityScanResults = await new AxeBuilder({ page })
         .include("#root")
         .analyze();

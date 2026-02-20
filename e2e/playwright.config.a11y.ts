@@ -52,7 +52,7 @@ const config: PlaywrightTestConfig = {
   },
   fullyParallel: false, // if you are on Windows, keep this as `false`. On a Mac, `true` could make tests faster (maybe on some Windows too, just try)
   // workers: 1,
-  testMatch: /a11y/,
+  testMatch: "**/*.accessibility.spec.ts",
   // retries: 0,
 };
 

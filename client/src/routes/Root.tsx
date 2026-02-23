@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useMediaQuery } from '@librechat/client';
 import type { ContextType } from '~/common';
 import {
@@ -85,6 +85,12 @@ export default function Root() {
             <PromptGroupsProvider>
               {/* NJ: We added dynamic height measurement via CSS instead of setBannerHeight, required extra div */}
               <div className="flex h-dvh flex-col">
+                <Link
+                  to={{ hash: '#maincontent' }}
+                  className="absolute left-0 top-0 z-50 transform bg-blue-500 px-4 py-2 text-white transition focus:translate-y-0"
+                >
+                  Skip to main content
+                </Link>
                 <Banner onHeightChange={setBannerHeight} />
                 <div className="flex min-h-0 flex-1">
                   <div className="relative z-0 flex h-full w-full overflow-hidden">

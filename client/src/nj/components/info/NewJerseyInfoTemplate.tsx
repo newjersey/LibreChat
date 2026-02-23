@@ -31,6 +31,7 @@ export default function NewJerseyInfoTemplate() {
     <div className="relative flex h-full w-full flex-col">
       <SimpleHeader />
       <div
+        id="maincontent"
         className="flex flex-1 flex-col items-center overflow-y-scroll pt-16"
         ref={scrollableRef}
       >

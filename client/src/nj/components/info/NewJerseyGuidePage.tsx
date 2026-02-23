@@ -16,7 +16,7 @@ export default function NewJerseyGuidePage() {
   document.title = 'NJ AI Assistant - Guides and FAQs';
 
   return (
-    <div>
+    <div id="content">
       <InfoTitle text="Guides and FAQs" />
 
       <InfoDivider />

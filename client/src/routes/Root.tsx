@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useMediaQuery } from '@librechat/client';
 import type { ContextType } from '~/common';
@@ -41,6 +41,7 @@ export default function Root() {
     return savedNavVisible !== null ? JSON.parse(savedNavVisible) : true;
   });
 
+  const mainContentRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, logout } = useAuthContext();
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
@@ -77,6 +78,24 @@ export default function Root() {
     return null;
   }
 
+  function SkipLink({ targetRef }: { targetRef: React.RefObject<HTMLElement> }) {
+
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (targetRef.current) {
+
+        e.preventDefault();
+        targetRef.current.focus();
+      }
+    };
+
+    return (
+      <a href="#maincontent" onClick={handleClick} className="skip-link">
+        Skip to main content
+      </a>
+    );
+  }
+
+
   return (
     <SetConvoProvider>
       <FileMapContext.Provider value={fileMap}>
@@ -85,18 +104,17 @@ export default function Root() {
             <PromptGroupsProvider>
               {/* NJ: We added dynamic height measurement via CSS instead of setBannerHeight, required extra div */}
               <div className="flex h-dvh flex-col">
-                <Link
-                  to={{ hash: '#maincontent' }}
-                  className="absolute left-0 top-0 z-50 transform bg-blue-500 px-4 py-2 text-white transition focus:translate-y-0"
-                >
-                  Skip to main content
-                </Link>
+                <SkipLink targetRef={mainContentRef} />
+                
                 <Banner onHeightChange={setBannerHeight} />
                 <div className="flex min-h-0 flex-1">
                   <div className="relative z-0 flex h-full w-full overflow-hidden">
                     <Nav navVisible={navVisible} setNavVisible={setNavVisible} />
                     <div
                       className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"
+                      id="maincontent"
+                      ref={mainContentRef}
+                      tabIndex={-1}
                       style={
                         isSmallScreen
                           ? {

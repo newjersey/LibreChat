@@ -38,7 +38,7 @@ export function NewJerseySelectItems() {
         <svg className="usa-icon usa-icon--size-2" aria-hidden="true" focusable="false" role="img">
           <use href={`${icons}#mail`} />
         </svg>
-        Contact us
+        Contact us<span className="sr-only"> (opens link in new window)</span>
       </Menu.MenuItem>
 
       <Menu.MenuItem
@@ -50,7 +50,7 @@ export function NewJerseySelectItems() {
         <svg className="usa-icon usa-icon--size-2" aria-hidden="true" focusable="false" role="img">
           <use href={`${icons}#notifications`} />
         </svg>
-        Get updates
+        Get updates<span className="sr-only"> (opens link in new window)</span>
       </Menu.MenuItem>
 
       <DropdownMenuSeparator />

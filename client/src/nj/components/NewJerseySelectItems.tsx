@@ -2,7 +2,7 @@
 /* ^ We're not worried about i18n for this app ^ */
 
 import { DropdownMenuSeparator } from '@librechat/client';
-import * as Select from '@ariakit/react/select';
+import * as Menu from '@ariakit/react/menu';
 import { useNavigate } from 'react-router-dom';
 import icons from '@uswds/uswds/img/sprite.svg';
 import React from 'react';
@@ -15,32 +15,23 @@ export function NewJerseySelectItems() {
 
   return (
     <>
-      <Select.SelectItem
-        value=""
-        onClick={() => navigate('nj/guide')}
-        className="select-item text-sm"
-      >
+      <Menu.MenuItem onClick={() => navigate('nj/guide')} className="select-item text-sm">
         <svg className="usa-icon usa-icon--size-2" aria-hidden="true" focusable="false" role="img">
           <use href={`${icons}#school`} />
         </svg>
         Guides & FAQs
-      </Select.SelectItem>
+      </Menu.MenuItem>
 
-      <Select.SelectItem
-        value=""
-        onClick={() => navigate('nj/about')}
-        className="select-item text-sm"
-      >
+      <Menu.MenuItem onClick={() => navigate('nj/about')} className="select-item text-sm">
         <svg className="usa-icon usa-icon--size-2" aria-hidden="true" focusable="false" role="img">
           <use href={`${icons}#local_library`} />
         </svg>
         About the AI Assistant
-      </Select.SelectItem>
+      </Menu.MenuItem>
 
       <DropdownMenuSeparator />
 
-      <Select.SelectItem
-        value=""
+      <Menu.MenuItem
         onClick={() => window.open('https://forms.office.com/g/zLiSuXxJ0Y', '_blank')}
         className="select-item text-sm"
       >
@@ -48,10 +39,9 @@ export function NewJerseySelectItems() {
           <use href={`${icons}#mail`} />
         </svg>
         Contact us
-      </Select.SelectItem>
+      </Menu.MenuItem>
 
-      <Select.SelectItem
-        value=""
+      <Menu.MenuItem
         onClick={() =>
           window.open('https://public.govdelivery.com/accounts/NJGOV/signup/45878', '_blank')
         }
@@ -61,7 +51,7 @@ export function NewJerseySelectItems() {
           <use href={`${icons}#notifications`} />
         </svg>
         Get updates
-      </Select.SelectItem>
+      </Menu.MenuItem>
 
       <DropdownMenuSeparator />
     </>

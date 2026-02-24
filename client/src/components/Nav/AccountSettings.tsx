@@ -88,11 +88,7 @@ function AccountSettings() {
         <DropdownMenuSeparator />
         */}
         <NewJerseySelectItems />
-        <Menu.MenuItem
-          aria-selected={true}
-          onClick={() => logout()}
-          className="select-item text-sm"
-        >
+        <Menu.MenuItem onClick={() => logout()} className="select-item text-sm">
           <svg
             className="usa-icon usa-icon--size-2"
             aria-hidden="true"

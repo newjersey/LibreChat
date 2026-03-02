@@ -132,7 +132,12 @@ If either the template or the secret values have been updated, you can update th
 3. Select "Run Workflow" and select your target environment
 4. The workflow will get the environment-specific values from secrets, perform `envsubst`, upload the file to S3, and redeploy the service. 
 
-## Updating Bedrock Guardrail
+
+## Clickopsed Components
+
+The two clickopsed components of the NJ AI Assistant are the Bedrock Guardrails, and a Secrets Manager secret governing the connection string between the prod Librechat container and DocumentDB. Everything else is deployed by CDK.
+
+### Updating Bedrock Guardrail
 Guardrail configs are managed per-environment through the AWS console. To manage them:
 1. Log into the desired AWS account
 2. Navigate to Bedrock -> Guardrails
@@ -143,3 +148,7 @@ Guardrail configs are managed per-environment through the AWS console. To manage
 7. In GitHub, go to Environment -> <env_to_change> -> Secrets
 8. Change `GUARDRAIL_VERSION`, supply the new value
 9. Run the steps for `Updating Environment Files` above.
+
+### Secrets Manager Connection String
+
+The connection string for DocumentDB lives in AWS Secrets Manager under the name `ai-assistant/docdb/uri`. If the DocumentDB secret is rotated, it must be updated here for LibreChat to maintain connection.

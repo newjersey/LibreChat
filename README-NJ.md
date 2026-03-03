@@ -133,7 +133,7 @@ If either the template or the secret values have been updated, you can update th
 4. The workflow will get the environment-specific values from secrets, perform `envsubst`, upload the file to S3, and redeploy the service. 
 
 
-## Clickopsed Components
+## ClickOps Components
 
 The following components of the NJ AI Assistant are managed via ClickOps (manually):
 - The Bedrock Guardrails

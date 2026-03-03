@@ -135,7 +135,11 @@ If either the template or the secret values have been updated, you can update th
 
 ## Clickopsed Components
 
-The two clickopsed components of the NJ AI Assistant are the Bedrock Guardrails, and a Secrets Manager secret governing the connection string between the prod Librechat container and DocumentDB. Everything else is deployed by CDK.
+The following components of the NJ AI Assistant are managed via ClickOps (manually):
+- The Bedrock Guardrails
+- A Secrets Manager secret that stores the connection string between the prod LibreChat container and DocumentDB. 
+
+The remaining infrastructure is deployed by CDK.
 
 ### Updating Bedrock Guardrail
 Guardrail configs are managed per-environment through the AWS console. To manage them:

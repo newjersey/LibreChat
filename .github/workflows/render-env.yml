@@ -10,6 +10,7 @@ on:
         options:
           - dev
           - prod
+          - librechat
 
 jobs:
   render-env:

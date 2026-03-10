@@ -25,6 +25,7 @@ export interface EcsServicesProps extends cdk.StackProps {
 }
 
 export class EcsStack extends cdk.Stack {
+  public readonly cluster: ecs.Cluster;
   public readonly listener: elbv2.ApplicationListener;
   public readonly loadBalancer: elbv2.ApplicationLoadBalancer;
   public readonly service: ecsPatterns.ApplicationLoadBalancedFargateService;
@@ -41,6 +42,7 @@ export class EcsStack extends cdk.Stack {
 
     this.CreateVPCEndpoints(isProd, vpc);
     const cluster = this.CreateCluster(vpc);
+    this.cluster = cluster;
     this.s3Bucket = this.CreateFileS3Bucket();
     const commonExecRole = this.CreateCommonExecRole(isProd);
 

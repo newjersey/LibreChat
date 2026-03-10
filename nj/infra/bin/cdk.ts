@@ -33,6 +33,7 @@ import { DatabaseStack } from "../lib/db-stack";
 import { EcsStack } from "../lib/ecs-stack";
 import { CognitoStack } from "../lib/cognito-stack";
 import { MonitoringStack } from "../lib/monitoring-stack";
+import { LibrechatPublicStack } from "../lib/librechat-public-stack";
 import {branding, assets} from "../lib/branding";
 
 const app = new cdk.App();
@@ -99,3 +100,15 @@ const monitoringStack = new MonitoringStack(app, "MonitoringStack", {
 applyTags(ecsStack);
 applyTags(cognitoStack);
 applyTags(monitoringStack);
+
+if (!isProd) {
+  const librechatPublicStack = new LibrechatPublicStack(app, "LibrechatPublicStack", {
+    env: env,
+    cluster: ecsStack.cluster,
+    listener: ecsStack.listener,
+    loadBalancer: ecsStack.loadBalancer,
+    certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${process.env.LIBRECHAT_ACM_CERTIFICATE_ID}`,
+  });
+
+  applyTags(librechatPublicStack);
+}

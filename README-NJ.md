@@ -44,6 +44,8 @@ You _should_ only need to do the following once:
    - `$ npm i -g typescript`
 5. Use docker to run services (e.g. Mongo)
    - `$ docker compose -f nj-dev-docker-compose.yml up -d`
+   - Alternatively, if you want to include RAG, you can run
+      - `$ docker compose -f rag-dev-docker-compose.yml up -d`
 6. Create a `.env` file in the root directory & fill it with our `.env` from Bitwarden.
 
 ### Building & Running LibreChat

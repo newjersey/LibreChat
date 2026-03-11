@@ -56,3 +56,4 @@ volumes:
     name: librechat-meilisearch-data
 
   pgdata2:
+  

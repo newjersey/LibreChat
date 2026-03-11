@@ -100,6 +100,10 @@ export default function NewJerseyGuidePage() {
           with knowledge through October 2025
         </li>
         <li className="mb-2">
+          <span className="font-bold">Chat history</span> — See past chats, and continue chats of a
+          particular topic in the same conversation thread
+        </li>
+        <li className="mb-2">
           <span className="font-bold">Visible reasoning</span> — Responses now include a
           &#34;thoughts&#34; section that shows the assistant&#39;s reasoning. Reviewing this can
           help you catch errors, verify logic, and decide whether the output is ready to use.
@@ -235,8 +239,16 @@ export default function NewJerseyGuidePage() {
         The data for the NJ AI Assistant is stored in a state-hosted database. Your prompts and
         responses are encrypted, and none of this information will be used as training data for AI
         models, due to the government-friendly terms of service we have with our service providers.
+      </p>
+      <p className="mb-6">
+        Chat history, similar to other state work-related documents, is retained in accordance with
+        state records retention policies. Consult with your agency’s records custodians for more
+        information.
+      </p>
+      <p className="mb-6">
         For maintenance purposes, the Platform team and OIT can access the information stored in the
-        database, and would only do this to resolve a bug or other app issues.
+        database, and would only access this information in response to a user request to help with
+        a technical issue.
       </p>
 
       <p className="mb-2 font-bold">

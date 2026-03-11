@@ -1,0 +1,75 @@
+/* eslint-disable i18next/no-literal-string */
+/* ^ We're not worried about i18n for this app ^ */
+
+import * as Collapsible from '@radix-ui/react-collapsible';
+import icons from '@uswds/uswds/img/sprite.svg';
+import { AnimatePresence, motion } from 'framer-motion';
+import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';
+
+export interface FAQ {
+  question: string;
+  answer: React.ReactNode;
+  wrappedQuestionMargin?: string;
+}
+export interface FAQSectionProps {
+  title: string;
+  faqs: FAQ[];
+}
+
+export interface CollapsibleSectionProps {
+  question: string;
+  answer: React.ReactNode;
+  wrappedQuestionMargin?: string;
+}
+
+function CollapsibleSection({ question, answer, wrappedQuestionMargin }: FAQ) {
+  return (
+    <Collapsible.Root key={question}>
+      <Collapsible.Trigger className="group flex w-full justify-between text-left">
+        <p className={`font-bold ${wrappedQuestionMargin ?? 'mb-2'}`}>{question}</p>
+        <svg
+          className="usa-icon usa-icon--size-3 flex-shrink-0 text-jersey-blue transition-transform duration-300 group-data-[state=open]:rotate-180"
+          aria-hidden="true"
+          focusable="false"
+          role="img"
+        >
+          <use href={`${icons}#expand_more`} />
+        </svg>
+      </Collapsible.Trigger>
+      <AnimatePresence initial={false}>
+        {' '}
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Collapsible.Content>{answer}</Collapsible.Content>
+        </motion.div>
+      </AnimatePresence>
+    </Collapsible.Root>
+  );
+}
+
+export default function FaqSection({ title, faqs }: FAQSectionProps) {
+  return (
+    <>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <InfoSectionHeader text={title} />
+
+        <div className="flex flex-col gap-4">
+          {faqs.map((faq) => {
+            return (
+              <CollapsibleSection
+                key={faq.question}
+                question={faq.question}
+                answer={faq.answer}
+                wrappedQuestionMargin={faq.wrappedQuestionMargin}
+              ></CollapsibleSection>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}

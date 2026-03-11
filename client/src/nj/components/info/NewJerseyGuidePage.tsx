@@ -3,22 +3,24 @@
 
 import InfoDivider from '~/nj/components/info/InfoDivider';
 import InfoTitle from '~/nj/components/info/InfoTitle';
-import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';
 import React from 'react';
-import icons from '@uswds/uswds/img/sprite.svg';
-import InfoLink from '~/nj/components/info/InfoLink';
-import { Link } from 'react-router-dom';
+import ResponsibleInfoAlert from '~/nj/components/info/ResponsibleInfoAlert';
+import GettingStarted from '~/nj/components/info/GettingStarted';
+import UsingAIAsst from '~/nj/components/info/UsingAIAsst';
+import HelpAndSupport from '~/nj/components/info/HelpAndSupport';
+import UpcomingFeatures from '~/nj/components/info/UpcomingFeatures';
+import AiLearning from '~/nj/components/info/AiLearning';
+import RelatedLinks from '~/nj/components/info/RelatedLinks';
+import InfoSectionHeader from './InfoSectionHeader';
 
 /**
  * Content for "guide to using the assistant" page
  */
 export default function NewJerseyGuidePage() {
   document.title = 'NJ AI Assistant - Guides and FAQs';
-
   return (
     <div>
       <InfoTitle text="Guides and FAQs" />
-
       <InfoDivider />
 
       <InfoSectionHeader text="Using the AI Assistant Responsibly" />
@@ -85,54 +87,7 @@ export default function NewJerseyGuidePage() {
       </p>
 
       <InfoDivider />
-
-      <InfoSectionHeader text="Getting Started" />
-
-      <p className="mb-2 font-bold">What&#39;s new in this version?</p>
-      <p className="mb-6">
-        The updated NJ AI Assistant brings a redesigned interface and expanded capabilities based on
-        feedback from users like you. Along with previous functionality from version 1.0, this new
-        update brings:
-      </p>
-      <ul className="mb-6 list-inside list-disc">
-        <li className="mb-2">
-          <span className="font-bold">Smarter responses</span> — Powered by an upgraded AI model
-          with knowledge through October 2025
-        </li>
-        <li className="mb-2">
-          <span className="font-bold">Chat history</span> — See past chats, and continue chats of a
-          particular topic in the same conversation thread
-        </li>
-        <li className="mb-2">
-          <span className="font-bold">Visible reasoning</span> — Responses now include a
-          &#34;thoughts&#34; section that shows the assistant&#39;s reasoning. Reviewing this can
-          help you catch errors, verify logic, and decide whether the output is ready to use.
-        </li>
-        <li className="mb-2">
-          <span className="font-bold">More control over your conversations</span> — Voice
-          transcription, edit prompts, retry responses, and revisit past chats
-        </li>
-        <li className="mb-2">
-          <span className="font-bold">Built-in learning resources</span> — Guides on effective
-          prompting and responsible AI use, plus direct access to State AI policy
-        </li>
-      </ul>
-
-      <p className="mb-2 font-bold">How do I navigate the NJ AI Assistant?</p>
-      <p className="mb-6">We&#39;ve added a few ways to move around and find what you need.</p>
-      <ul className="mb-6 list-inside list-disc">
-        <li className="mb-2">
-          <span className="font-bold">Sidebar</span> — A collapsible menu on the left side of your
-          screen gives you access to your recent chats and learning resources. Look for the user
-          menu at the bottom to explore guides, learn about the tool, or get in contact with us.
-        </li>
-        <li className="mb-2">
-          <span className="font-bold">Starting a new chat</span> — You have options: type directly
-          into the chat window, click the new chat button in the top right, or click the NJ AI
-          Assistant logo.
-        </li>
-      </ul>
-
+      <UsingAIAsst />
       <InfoDivider />
 
       <InfoSectionHeader text="Using the NJ AI Assistant" />
@@ -261,32 +216,7 @@ export default function NewJerseyGuidePage() {
       </ul>
 
       <InfoDivider />
-
-      <InfoSectionHeader text="Help & Support" />
-      <p className="mb-2 font-bold">How can I get in touch with the team?</p>
-      <p className="mb-6">
-        To share feedback, report a problem, ask a question, or request help with prompting/using AI
-        — either fill out the{' '}
-        <a
-          href="https://forms.office.com/g/zLiSuXxJ0Y"
-          className="underline hover:decoration-2"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Contact Us form
-        </a>{' '}
-        or send us an email at{' '}
-        <a
-          href="mailto:AI.Assistant@innovation.nj.gov"
-          className="underline hover:decoration-2"
-          target="_blank"
-          rel="noreferrer"
-        >
-          AI.Assistant@innovation.nj.gov
-        </a>{' '}
-        - both go directly to the team.
-      </p>
-
+      <UpcomingFeatures />
       <InfoDivider />
 
       <InfoSectionHeader text="Upcoming features" />
@@ -306,8 +236,16 @@ export default function NewJerseyGuidePage() {
         </li>
         <li className="mb-2">
           In the immediate future, the team is thinking about more features to support responsible
-          and safe AI use. We are also writing how-to guides for effective prompting and sharing AI
-          use cases.
+          and safe AI use. We are also writing resources and{' '}
+          <a
+            href="https://innovation.nj.gov/skills/ai-how-tos/"
+            className="font-normal text-primary underline hover:decoration-2"
+            target="_blank"
+            rel="noreferrer"
+          >
+            how-to guides about LLM prompting best practices and AI use cases
+          </a>
+          .
         </li>
       </ul>
 
@@ -433,6 +371,9 @@ export default function NewJerseyGuidePage() {
           icon="launch"
         />
       </div>
+      <AiLearning />
+      <InfoDivider />
+      <RelatedLinks />
     </div>
   );
 }

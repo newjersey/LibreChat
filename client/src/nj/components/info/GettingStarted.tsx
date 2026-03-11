@@ -1,6 +1,3 @@
-/* eslint-disable i18next/no-literal-string */
-/* ^ We're not worried about i18n for this app ^ */
-
 import FaqSection, { FAQ } from '~/nj/components/info/FaqSection';
 
 const gettingStartedFAQs: FAQ[] = [

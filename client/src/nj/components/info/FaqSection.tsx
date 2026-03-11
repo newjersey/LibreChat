@@ -3,8 +3,8 @@
 
 import * as Collapsible from '@radix-ui/react-collapsible';
 import icons from '@uswds/uswds/img/sprite.svg';
-import { AnimatePresence, motion } from 'framer-motion';
 import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';
+import React from 'react';
 
 export interface FAQ {
   question: string;
@@ -14,12 +14,6 @@ export interface FAQ {
 export interface FAQSectionProps {
   title: string;
   faqs: FAQ[];
-}
-
-export interface CollapsibleSectionProps {
-  question: string;
-  answer: React.ReactNode;
-  wrappedQuestionMargin?: string;
 }
 
 function CollapsibleSection({ question, answer, wrappedQuestionMargin }: FAQ) {
@@ -36,17 +30,7 @@ function CollapsibleSection({ question, answer, wrappedQuestionMargin }: FAQ) {
           <use href={`${icons}#expand_more`} />
         </svg>
       </Collapsible.Trigger>
-      <AnimatePresence initial={false}>
-        {' '}
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Collapsible.Content>{answer}</Collapsible.Content>
-        </motion.div>
-      </AnimatePresence>
+      <Collapsible.Content>{answer}</Collapsible.Content>
     </Collapsible.Root>
   );
 }

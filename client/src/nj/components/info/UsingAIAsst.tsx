@@ -38,6 +38,8 @@ const usingAIFAQs = [
     question: 'What can’t I use the NJ AI Assistant for?',
     answer: (
       <>
+        {' '}
+        <p className="mb-3"></p>
         <p className="mb-3">
           Although the NJ AI Assistant works by generating language, there are still some things it
           is not well-suited for —
@@ -51,11 +53,11 @@ const usingAIFAQs = [
             independently.
           </li>
           <li className="mb-2">
-            <strong>Executing code:</strong> If you&#39;re using the AI Assistant for coding tasks,
-            keep in mind that it can generate code but <strong>cannot execute it</strong>.
-            Occasionally, it may simulate what running the code would look like—these outputs are
-            fabricated and should be ignored. To avoid this, be explicit in your prompt that you
-            only want the code, not example results.
+            <span className="font-bold">Executing code:</span> If you&#39;re using the AI Assistant
+            for coding tasks, keep in mind that it can generate code but{' '}
+            <span className="font-bold">cannot execute it</span>. Occasionally, it may simulate what
+            running the code would look like—these outputs are fabricated and should be ignored. To
+            avoid this, be explicit in your prompt that you only want the code, not example results.
           </li>
           <li className="mb-2">
             <strong>Analysis without source material:</strong> The NJ AI Assistant doesn’t have
@@ -66,6 +68,28 @@ const usingAIFAQs = [
             and ask it to show its reasoning so you can spot errors.
           </li>
         </ul>
+      </>
+    ),
+  },
+  {
+    question: 'What are temporary chats?',
+    answer: (
+      <>
+        <p className="mb-3">
+          Temporary chats work like regular conversations with one key difference: they are
+          automatically deleted at midnight each day.
+        </p>
+        <p className="mb-3">
+          You can start a conversation in the morning, return to it throughout the day, and pick up
+          where you left off—closing your browser tab, navigating away, or refreshing the page
+          won&#39;t affect your chat. Your recent conversations will also appear in the sidebar for
+          easy access.
+        </p>
+        <p className="mb-6">
+          At midnight, all conversations and sidebar history are cleared from the site and its
+          database. Due to legal and security requirements around data retention, we are not able to
+          offer permanent chat history at this time.
+        </p>
       </>
     ),
   },
@@ -93,49 +117,29 @@ const usingAIFAQs = [
     question:
       'Can I enter personally identifiable information and sensitive information into the NJ AI Assistant?',
     answer: (
-      <p className="mb-3">
-        Employees are allowed to enter personally identifiable information (PII) and other sensitive
-        information into state-approved tools (including the NJ AI Assistant), but please see the{' '}
-        <a
-          href="https://innovation.nj.gov/ai-faq-state-employees/"
-          className="underline hover:decoration-2"
-          target="_blank"
-          rel="noreferrer"
-        >
-          official FAQ
-        </a>{' '}
-        for guidance before doing so. The{' '}
-        <a
-          href="https://nj.gov/it/docs/ps/25-OIT-001-State-of-New-Jersey-Guidance-on-Responsible-Use-of-Generative-AI.pdf"
-          className="underline hover:decoration-2"
-          target="_blank"
-          rel="noreferrer"
-        >
-          State’s current policy on responsible use of AI technology
-        </a>{' '}
-        also covers this topic in detail.{' '}
-      </p>
-    ),
-  },
-  {
-    question: 'Who can see the prompts I share?',
-    answer: (
       <>
-        <p className="mb-3">
-          The data for the NJ AI Assistant is stored in a state-hosted database. Your prompts and
-          responses are encrypted, and none of this information will be used as training data for AI
-          models, due to the government-friendly terms of service we have with our service
-          providers.
-        </p>
-        <p className="mb-3">
-          Chat history, similar to other state work-related documents, is retained in accordance
-          with state records retention policies. Consult with your agency’s records custodians for
-          more information.
-        </p>
-        <p className="mb-3">
-          For maintenance purposes, the Platform team and OIT can access the information stored in
-          the database, and would only access this information in response to a user request to help
-          with a technical issue.
+        <p className="mb-6">
+          Employees are allowed to enter personally identifiable information (PII) and other
+          sensitive information into state-approved tools (including the NJ AI Assistant), but
+          please see the{' '}
+          <a
+            href="https://innovation.nj.gov/ai-faq-state-employees/"
+            className="underline hover:decoration-2"
+            target="_blank"
+            rel="noreferrer"
+          >
+            official FAQ
+          </a>{' '}
+          for guidance before doing so. The{' '}
+          <a
+            href="https://nj.gov/it/docs/ps/25-OIT-001-State-of-New-Jersey-Guidance-on-Responsible-Use-of-Generative-AI.pdf"
+            className="underline hover:decoration-2"
+            target="_blank"
+            rel="noreferrer"
+          >
+            State’s current policy on responsible use of AI technology
+          </a>{' '}
+          also covers this topic in detail.
         </p>
       </>
     ),

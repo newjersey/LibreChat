@@ -130,7 +130,7 @@ const usingAIFAQs = [
           The data for the NJ AI Assistant is stored in a state-hosted database. Your prompts and
           responses are encrypted, and none of this information will be used as training data for AI
           models, due to the government-friendly terms of service we have with our service
-          providers.{' '}
+          providers.
         </p>
         <p className="mb-3">
           Chat history, similar to other state work-related documents, is retained in accordance
@@ -139,8 +139,8 @@ const usingAIFAQs = [
         </p>
         <p className="mb-3">
           For maintenance purposes, the Platform team and OIT can access the information stored in
-          the database, and would only access this information do this tofrom in response to a user
-          request to help with a technical issue or if legally required.
+          the database, and would only access this information in response to a user request to help
+          with a technical issue or if legally required.
         </p>
       </>
     ),

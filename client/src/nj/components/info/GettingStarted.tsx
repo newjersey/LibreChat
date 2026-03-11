@@ -1,3 +1,6 @@
+/* eslint-disable i18next/no-literal-string */
+/* ^ We're not worried about i18n for this app ^ */
+
 import FaqSection, { FAQ } from '~/nj/components/info/FaqSection';
 
 const gettingStartedFAQs: FAQ[] = [
@@ -20,9 +23,10 @@ const gettingStartedFAQs: FAQ[] = [
             in the same conversation thread
           </li>
           <li className="mb-2">
-            <strong>Visible reasoning</strong> — Responses now include a &#34;thoughts&#34; section
-            that shows the assistant&#39;s reasoning. Reviewing this can help you catch errors,
-            verify logic, and decide whether the output is ready to use.
+            <strong>Visible reasoning</strong> —{' '}
+            {`Responses now include a "thoughts" section that
+            shows the assistant's reasoning. Reviewing this can help you catch errors, verify logic,
+            and decide whether the output is ready to use.`}
           </li>
           <li className="mb-2">
             <strong>More control over your conversations</strong> — Voice transcription, edit
@@ -40,7 +44,7 @@ const gettingStartedFAQs: FAQ[] = [
     question: 'How do I navigate the NJ AI Assistant?',
     answer: (
       <>
-        <p className="mb-3">We've added a few ways to move around and find what you need.</p>
+        <p className="mb-3">{`We've added a few ways to move around and find what you need.`}</p>
         <ul className="mb-6 list-outside list-disc pl-8">
           <li className="mb-2">
             <strong>Sidebar</strong> — A collapsible menu on the left side of your screen gives you

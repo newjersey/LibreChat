@@ -1,6 +1,3 @@
-/* eslint-disable i18next/no-literal-string */
-/* ^ We're not worried about i18n for this app ^ */
-
 import * as Collapsible from '@radix-ui/react-collapsible';
 import icons from '@uswds/uswds/img/sprite.svg';
 import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';

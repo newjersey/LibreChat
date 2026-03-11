@@ -41,7 +41,7 @@ export default function FaqSection({ title, faqs }: FAQSectionProps) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <InfoSectionHeader text={title} />
 
-        <div className="flex flex-col gap-4">
+        <div className="mb-3 flex flex-col gap-4">
           {faqs.map((faq) => {
             return (
               <CollapsibleSection

@@ -72,28 +72,6 @@ const usingAIFAQs = [
     ),
   },
   {
-    question: 'What are temporary chats?',
-    answer: (
-      <>
-        <p className="mb-3">
-          Temporary chats work like regular conversations with one key difference: they are
-          automatically deleted at midnight each day.
-        </p>
-        <p className="mb-3">
-          You can start a conversation in the morning, return to it throughout the day, and pick up
-          where you left off—closing your browser tab, navigating away, or refreshing the page
-          won&#39;t affect your chat. Your recent conversations will also appear in the sidebar for
-          easy access.
-        </p>
-        <p className="mb-6">
-          At midnight, all conversations and sidebar history are cleared from the site and its
-          database. Due to legal and security requirements around data retention, we are not able to
-          offer permanent chat history at this time.
-        </p>
-      </>
-    ),
-  },
-  {
     question: 'What file types can I upload?',
     answer: (
       <>
@@ -145,6 +123,29 @@ const usingAIFAQs = [
     ),
   },
   {
+    question: 'Who can see the prompts I share?',
+    answer: (
+      <>
+        <p className="mb-3">
+          The data for the NJ AI Assistant is stored in a state-hosted database. Your prompts and
+          responses are encrypted, and none of this information will be used as training data for AI
+          models, due to the government-friendly terms of service we have with our service
+          providers.{' '}
+        </p>
+        <p className="mb-3">
+          Chat history, similar to other state work-related documents, is retained in accordance
+          with state records retention policies and may be subject to the open records request
+          (OPRA). Consult with your agency’s records custodians for more information.
+        </p>
+        <p className="mb-3">
+          For maintenance purposes, the Platform team and OIT can access the information stored in
+          the database, and would only access this information do this tofrom in response to a user
+          request to help with a technical issue or if legally required.
+        </p>
+      </>
+    ),
+  },
+  {
     question: 'What is the context limit, token limit, and temperature of the NJ AI Assistant?',
     answer: (
       <ul className="mb-6 list-outside list-disc pl-8">
@@ -153,7 +154,7 @@ const usingAIFAQs = [
         <li className="mb-2">Temperature: 1.0</li>
       </ul>
     ),
-    wrappedQuestionMargin: 'mb-6',
+    wrappedQuestionMargin: 'mb-3',
   },
 ];
 

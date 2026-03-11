@@ -380,7 +380,7 @@ export default function NewJerseyGuidePage() {
             target="_blank"
             rel="noreferrer"
           >
-            Anthropic’s prompt engineering guide - including how to
+            Anthropic’s prompt engineering guide
           </a>
         </li>
         <li className="mb-2">

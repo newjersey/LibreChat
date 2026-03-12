@@ -21,7 +21,8 @@ export interface EcsServicesProps extends cdk.StackProps {
   envVars: EnvVars,
   mongoImage: string;
   postgresImage: string;
-  certificateArn: string; 
+  redisImage: string;
+  certificateArn: string;
 }
 
 export class EcsStack extends cdk.Stack {
@@ -48,6 +49,8 @@ export class EcsStack extends cdk.Stack {
     this.listener = librechatService.listener;
     this.loadBalancer = librechatService.loadBalancer;
     this.service = librechatService;
+
+    this.CreateRedisService(props, commonExecRole, vpc, cluster, librechatService);
 
     if (!isProd) {
       this.CreateDatabaseSidecars(props, commonExecRole, vpc, cluster, librechatService)
@@ -158,6 +161,8 @@ export class EcsStack extends cdk.Stack {
       CUSTOM_FOOTER: "",
 
       ...(!isProd ? { MONGO_URI: "mongodb://mongodb.internal:27017/LibreChat" } : {}),
+      USE_REDIS: "true",
+      REDIS_URI: "redis://redis.internal:6379",
     };
 
     const envSecrets: Record<string, ecs.Secret> = {
@@ -212,6 +217,35 @@ export class EcsStack extends cdk.Stack {
     new cdk.CfnOutput(this, "LibrechatImageUri", { value: librechatImage });
     return librechatService;
   };
+
+  private CreateRedisService(props: EcsServicesProps, commonExecRole: iam.Role, vpc: ec2.IVpc, cluster: ecs.Cluster, librechatService: ecsPatterns.ApplicationLoadBalancedFargateService) {
+    const redisTaskDef = new ecs.FargateTaskDefinition(this, "RedisTaskDef", {
+      cpu: 256,
+      memoryLimitMiB: 512,
+      executionRole: commonExecRole,
+    });
+
+    redisTaskDef.addContainer("redis", {
+      image: ecs.ContainerImage.fromRegistry(props.redisImage),
+      logging: ecs.LogDrivers.awsLogs({ streamPrefix: "redis" }),
+      portMappings: [{ containerPort: 6379 }],
+    });
+
+    const redisSg = new ec2.SecurityGroup(this, "RedisSg", { vpc });
+    const redisService = new ecs.FargateService(this, "RedisService", {
+      cluster,
+      taskDefinition: redisTaskDef,
+      desiredCount: 1,
+      enableExecuteCommand: true,
+      cloudMapOptions: { name: "redis" },
+      securityGroups: [redisSg],
+      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
+    });
+
+    redisService.connections.allowFrom(librechatService.service, ec2.Port.tcp(6379), "App to Redis");
+
+    new cdk.CfnOutput(this, "RedisImageUri", { value: props.redisImage });
+  }
 
   private CreateDatabaseSidecars(props: EcsServicesProps, commonExecRole: iam.Role, vpc: ec2.IVpc, cluster: ecs.Cluster, librechatService: ecsPatterns.ApplicationLoadBalancedFargateService) {
     const mongoFs = new efs.FileSystem(this, "MongoFs", {

@@ -81,6 +81,7 @@ const ecsStack = new EcsStack(app, "EcsStack", {
   envVars: envVars,
   mongoImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/mongo:latest`,
   postgresImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie`,
+  redisImage: `${env.account}.dkr.ecr.${env.region}.amazonaws.com/newjersey/redis:8.6.1-alpine`,
   certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${process.env.ACM_CERTIFICATE_ID}`
 });
 

@@ -43,7 +43,7 @@ export default function ResponsibleInfoAlert() {
         >
           guidance for reducing hallucinations
         </a>
-        , and keep an eye out for prompting tips we will be added to the tool very soon.
+        , and keep an eye out for prompting tips we will add to the tool very soon.
       </p>
       <p className="mb-3">
         As the {''}

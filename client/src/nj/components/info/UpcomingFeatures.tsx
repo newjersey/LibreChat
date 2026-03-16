@@ -23,17 +23,8 @@ const upcomingFeaturesFAQs: FAQ[] = [
         </li>
         <li className="mb-2">
           In the immediate future, the team is thinking about more features to support responsible
-          and safe AI use. We are also writing resources and {''}
-          <a
-            href="https://innovation.nj.gov/skills/ai-how-tos/"
-            className="font-normal text-primary underline hover:decoration-2"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="how-to guides about LLM prompting best practices and AI use cases (opens in new window)"
-          >
-            how-to guides about LLM prompting best practices and AI use cases
-          </a>
-          .
+          and safe AI use. We are also writing how-to guides for effective prompting and sharing AI
+          use cases.
         </li>
       </ul>
     ),

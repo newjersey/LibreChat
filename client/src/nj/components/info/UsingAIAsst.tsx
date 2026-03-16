@@ -14,13 +14,13 @@ const usingAIFAQs = [
           reorganize information through back-and-forth conversation.
         </p>
         <p className="mb-3">
-          You can think of it as having a thinking partner or collaborator. You provide it with text
-          about what you need, and it responds with new text based on your input. This makes it very
-          useful for things like:
+          You can think of it as having a thinking partner or collaborator. You provide it with
+          instructions about what you need, and it responds with new text. This makes it very useful
+          for things like:
         </p>
         <ul className="mb-3 list-outside list-disc pl-8">
           <li className="mb-2">Drafting and editing content</li>
-          <li className="mb-2">Summarization & synthesizing</li>
+          <li className="mb-2">Summarizing and synthesizing content</li>
           <li className="mb-2">Analyzing and extracting information from documents</li>
           <li className="mb-2">
             Generating ideas and exploring different angles for a given problem
@@ -42,7 +42,7 @@ const usingAIFAQs = [
         <p className="mb-3"></p>
         <p className="mb-3">
           Although the NJ AI Assistant works by generating language, there are still some things it
-          is not well-suited for —
+          is not well-suited for:
         </p>
         <ul className="mb-6 list-outside list-disc pl-8">
           <li className="mb-2">
@@ -85,7 +85,7 @@ const usingAIFAQs = [
           </li>
           <li className="mb-2">
             Maximum file size: 50 MB max per each file, and a total maximum size of 60 MB for all
-            files uploaded per prompt size of 60 MB for all files uploaded per prompt
+            files uploaded per prompt
           </li>
         </ul>
       </>

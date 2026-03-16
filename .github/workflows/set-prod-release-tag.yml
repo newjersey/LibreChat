@@ -14,6 +14,14 @@ jobs:
     environment:
       name: prod
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Validate release tag
+        run: git rev-parse "refs/tags/${{ inputs.release }}" > /dev/null
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

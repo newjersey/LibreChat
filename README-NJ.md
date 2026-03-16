@@ -120,7 +120,7 @@ Then click "Publish release."
 
 The new release & tag will initiate the tag build and update the `ai-assistant/prod-image-tag` SSM parameter.
 
-### Manually set release
+### Manually set release tag for prod
 In the event that we need to set prod to a specific release tag, we can run the `Set prod release tag` workflow in Github Actions. This takes a text input for the release tag, and includes a verification step to ensure we're not setting a non-existent tag. The infra deploy workflow will still need to be ran to deploy the new tag.
 
 ### Run the infra deploy workflow

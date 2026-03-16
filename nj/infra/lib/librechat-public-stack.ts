@@ -8,14 +8,11 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
-// CloudMap service names are prefixed with "lc-" to avoid collisions with the dev stack's
-// mongodb.internal and vectordb.internal entries in the shared "internal" namespace.
-const DOMAIN = "librechat.ai-assistant.nj.gov";
+const DOMAIN = "kitchensink.ai-assistant.nj.gov";
 const ENV_FILE_KEY = "librechat.env";
 const ENV_FILES_BUCKET_ARN = "arn:aws:s3:::nj-librechat-env-files";
 
 export interface LibrechatPublicStackProps extends cdk.StackProps {
-  cluster: ecs.Cluster;
   listener: elbv2.ApplicationListener;
   loadBalancer: elbv2.ApplicationLoadBalancer;
   certificateArn: string;
@@ -29,16 +26,17 @@ export class LibrechatPublicStack extends cdk.Stack {
       tags: { Name: "VPC-Innov-Platform-*" },
     });
 
+    const cluster = this.createCluster(vpc);
     const fileBucket = this.createFileBucket();
     const execRole = this.createExecRole(fileBucket);
     const envBucket = s3.Bucket.fromBucketArn(this, "EnvFilesBucket", ENV_FILES_BUCKET_ARN);
 
-    const mongoService = this.createMongoService(vpc, props.cluster, execRole);
-    const vectorDbService = this.createVectorDbService(vpc, props.cluster, execRole);
-    const meiliService = this.createMeiliSearchService(vpc, props.cluster, execRole, envBucket);
-    const ragApiService = this.createRagApiService(props.cluster, execRole, envBucket);
+    const mongoService = this.createMongoService(vpc, cluster, execRole);
+    const vectorDbService = this.createVectorDbService(vpc, cluster, execRole);
+    const meiliService = this.createMeiliSearchService(vpc, cluster, execRole, envBucket);
+    const ragApiService = this.createRagApiService(cluster, execRole, envBucket);
     const librechatService = this.createLibrechatService(
-      vpc, props.cluster, execRole,
+      vpc, cluster, execRole,
       props.listener, props.certificateArn,
       envBucket, fileBucket,
     );
@@ -49,6 +47,15 @@ export class LibrechatPublicStack extends cdk.Stack {
     meiliService.connections.allowFrom(ragApiService, ec2.Port.tcp(7700), "RAG API to MeiliSearch");
     ragApiService.connections.allowFrom(librechatService, ec2.Port.tcp(8000), "LibreChat to RAG API");
     librechatService.connections.allowFrom(props.loadBalancer, ec2.Port.tcp(3080), "ALB to LibreChat");
+  }
+
+  private createCluster(vpc: ec2.IVpc): ecs.Cluster {
+    const cluster = new ecs.Cluster(this, "KitchensinkCluster", {
+      vpc,
+      clusterName: "kitchensink-cluster",
+    });
+    cluster.addDefaultCloudMapNamespace({ name: "kitchensink" });
+    return cluster;
   }
 
   private createFileBucket(): s3.Bucket {
@@ -112,7 +119,7 @@ export class LibrechatPublicStack extends cdk.Stack {
       taskDefinition: taskDef,
       desiredCount: 1,
       enableExecuteCommand: true,
-      cloudMapOptions: { name: "lc-mongodb" },
+      cloudMapOptions: { name: "mongodb" },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
 
@@ -154,7 +161,7 @@ export class LibrechatPublicStack extends cdk.Stack {
       taskDefinition: taskDef,
       desiredCount: 1,
       enableExecuteCommand: true,
-      cloudMapOptions: { name: "lc-vectordb" },
+      cloudMapOptions: { name: "vectordb" },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
 
@@ -198,7 +205,7 @@ export class LibrechatPublicStack extends cdk.Stack {
       taskDefinition: taskDef,
       desiredCount: 1,
       enableExecuteCommand: true,
-      cloudMapOptions: { name: "lc-meilisearch" },
+      cloudMapOptions: { name: "meilisearch" },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
 
@@ -223,9 +230,9 @@ export class LibrechatPublicStack extends cdk.Stack {
       ),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "lc-rag-api" }),
       environment: {
-        DB_HOST: "lc-vectordb.internal",
+        DB_HOST: "vectordb.kitchensink",
         RAG_PORT: "8000",
-        MEILI_HOST: "http://lc-meilisearch.internal:7700",
+        MEILI_HOST: "http://meilisearch.kitchensink:7700",
       },
       environmentFiles: [ecs.EnvironmentFile.fromBucket(envBucket, ENV_FILE_KEY)],
       portMappings: [{ containerPort: 8000 }],
@@ -236,7 +243,7 @@ export class LibrechatPublicStack extends cdk.Stack {
       taskDefinition: taskDef,
       desiredCount: 1,
       enableExecuteCommand: true,
-      cloudMapOptions: { name: "lc-rag-api" },
+      cloudMapOptions: { name: "rag-api" },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
   }
@@ -266,9 +273,9 @@ export class LibrechatPublicStack extends cdk.Stack {
         NODE_ENV: "production",
         PORT: "3080",
         HOST: "0.0.0.0",
-        MONGO_URI: "mongodb://lc-mongodb.internal:27017/LibreChat",
-        MEILI_HOST: "http://lc-meilisearch.internal:7700",
-        RAG_API_URL: "http://lc-rag-api.internal:8000",
+        MONGO_URI: "mongodb://mongodb.kitchensink:27017/LibreChat",
+        MEILI_HOST: "http://meilisearch.kitchensink:7700",
+        RAG_API_URL: "http://rag-api.kitchensink:8000",
         AWS_BUCKET_NAME: fileBucket.bucketName,
         AWS_REGION: this.region,
       },

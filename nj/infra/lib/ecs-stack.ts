@@ -39,10 +39,12 @@ export class EcsStack extends cdk.Stack {
     });
     const isProd = props.envVars.env.includes("prod")
 
-    this.CreateVPCEndpoints(isProd, vpc);
-    const cluster = this.CreateCluster(vpc);
-    this.s3Bucket = this.CreateFileS3Bucket();
-    const commonExecRole = this.CreateCommonExecRole(isProd);
+    if (props.envVars.env != "kitchensink") {
+      this.CreateVPCEndpoints(isProd, vpc);
+    }
+    const cluster = this.CreateCluster(vpc, props.envVars.env === "kitchensink" ? "KitchensinkCluster" : undefined);
+    this.s3Bucket = this.CreateFileS3Bucket(props.envVars.env === "kitchensink" ? "KitchensinkFileBucket" : undefined);
+    const commonExecRole = this.CreateCommonExecRole(isProd, props.envVars.env === "kitchensink" ? "KitchensinkCommonTaskExecutionRole" : undefined);
 
     const librechatService = this.CreateLibrechatService(props, cluster, commonExecRole, isProd);
     this.listener = librechatService.listener;
@@ -92,18 +94,18 @@ export class EcsStack extends cdk.Stack {
     }
   };
 
-  private CreateCluster(vpc: ec2.IVpc) {
+  private CreateCluster(vpc: ec2.IVpc, clusterName?: string) {
     const cluster = new ecs.Cluster(this, "AIAssistantCluster", {
       vpc,
-      clusterName: "ai-assistant-cluster",
+      clusterName: clusterName ?? "ai-assistant-cluster",
     });
     cluster.addDefaultCloudMapNamespace({ name: "internal" });
 
     return cluster;
   };
 
-  private CreateCommonExecRole(isProd: boolean) {
-    const commonExecRole = new iam.Role(this, "CommonTaskExecutionRole", {
+  private CreateCommonExecRole(isProd: boolean, roleName?: string) {
+    const commonExecRole = new iam.Role(this, roleName ?? "CommonTaskExecutionRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       description: "Execution role for pulling ECR images and writing logs",
     });
@@ -312,14 +314,14 @@ export class EcsStack extends cdk.Stack {
     new cdk.CfnOutput(this, "PostgresImageUri", { value: props.postgresImage });
   }
 
-  private CreateFileS3Bucket(){
+  private CreateFileS3Bucket(bucketName?: string) {
     const lifecycleRule: s3.LifecycleRule = {
       enabled: true,
       expiration: cdk.Duration.days(1),
       prefix: "tmp/",
     }
 
-    const s3Bucket = new s3.Bucket(this, 'LibrechatFileBucket', {
+    const s3Bucket = new s3.Bucket(this, bucketName ?? 'LibrechatFileBucket', {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       encryption: s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,

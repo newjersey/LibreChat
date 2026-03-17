@@ -2,18 +2,6 @@ name: Build & Push Kitchensink Image (NJ)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - newjersey
-    tags-ignore:
-      - '**'
-    paths:
-      - 'nj/kitchensink-librechat.yaml'
-      - 'nj/Dockerfile.kitchensink'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   docker:

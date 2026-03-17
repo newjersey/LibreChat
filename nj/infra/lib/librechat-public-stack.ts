@@ -65,7 +65,7 @@ export class LibrechatPublicStack extends cdk.Stack {
   }
 
   private createFileBucket(): s3.Bucket {
-    return new s3.Bucket(this, "FileBucket", {
+    return new s3.Bucket(this, "KitchenSinkFileBucket", {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       encryption: s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,
@@ -76,7 +76,7 @@ export class LibrechatPublicStack extends cdk.Stack {
   }
 
   private createExecRole(fileBucket: s3.Bucket): iam.Role {
-    const role = new iam.Role(this, "ExecRole", {
+    const role = new iam.Role(this, "KitchenSinkExecRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       description: "Execution and task role for LibreChat public stack",
     });

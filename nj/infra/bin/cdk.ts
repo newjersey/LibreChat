@@ -116,8 +116,8 @@ applyTags(monitoringStack);
 if (process.env.DEPLOY_KITCHENSINK === "true") {
   const librechatPublicStack = new LibrechatPublicStack(app, "LibrechatPublicStack", {
     env: env,
-    listener: ecsStack.listener,
-    loadBalancer: ecsStack.loadBalancer,
+    listenerArn: ecsStack.listener.listenerArn,
+    loadBalancerSecurityGroupId: ecsStack.loadBalancer.connections.securityGroups[0].securityGroupId,
     certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${process.env.LIBRECHAT_ACM_CERTIFICATE_ID}`,
   });
 

@@ -13,8 +13,8 @@ const ENV_FILE_KEY = "librechat.env";
 const ENV_FILES_BUCKET_ARN = "arn:aws:s3:::nj-librechat-env-files";
 
 export interface LibrechatPublicStackProps extends cdk.StackProps {
-  listener: elbv2.ApplicationListener;
-  loadBalancer: elbv2.ApplicationLoadBalancer;
+  listenerArn: string;
+  loadBalancerSecurityGroupId: string;
   certificateArn: string;
 }
 
@@ -31,13 +31,19 @@ export class LibrechatPublicStack extends cdk.Stack {
     const execRole = this.createExecRole(fileBucket);
     const envBucket = s3.Bucket.fromBucketArn(this, "EnvFilesBucket", ENV_FILES_BUCKET_ARN);
 
+    const lbSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(this, "ImportedLbSg", props.loadBalancerSecurityGroupId);
+    const listener = elbv2.ApplicationListener.fromApplicationListenerAttributes(this, "ImportedListener", {
+      listenerArn: props.listenerArn,
+      securityGroup: lbSecurityGroup,
+    });
+
     const mongoService = this.createMongoService(vpc, cluster, execRole);
     const vectorDbService = this.createVectorDbService(vpc, cluster, execRole);
     const meiliService = this.createMeiliSearchService(vpc, cluster, execRole, envBucket);
     const ragApiService = this.createRagApiService(cluster, execRole, envBucket);
     const librechatService = this.createLibrechatService(
       vpc, cluster, execRole,
-      props.listener, props.certificateArn,
+      listener, props.certificateArn,
       envBucket, fileBucket,
     );
 
@@ -46,7 +52,7 @@ export class LibrechatPublicStack extends cdk.Stack {
     meiliService.connections.allowFrom(librechatService, ec2.Port.tcp(7700), "LibreChat to MeiliSearch");
     meiliService.connections.allowFrom(ragApiService, ec2.Port.tcp(7700), "RAG API to MeiliSearch");
     ragApiService.connections.allowFrom(librechatService, ec2.Port.tcp(8000), "LibreChat to RAG API");
-    librechatService.connections.allowFrom(props.loadBalancer, ec2.Port.tcp(3080), "ALB to LibreChat");
+    librechatService.connections.allowFrom(lbSecurityGroup, ec2.Port.tcp(3080), "ALB to LibreChat");
   }
 
   private createCluster(vpc: ec2.IVpc): ecs.Cluster {
@@ -252,7 +258,7 @@ export class LibrechatPublicStack extends cdk.Stack {
     vpc: ec2.IVpc,
     cluster: ecs.Cluster,
     execRole: iam.Role,
-    listener: elbv2.ApplicationListener,
+    listener: elbv2.IApplicationListener,
     certificateArn: string,
     envBucket: s3.IBucket,
     fileBucket: s3.Bucket,

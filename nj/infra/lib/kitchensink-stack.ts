@@ -261,7 +261,7 @@ export class KitchenSinkStack extends cdk.Stack {
     envBucket: s3.IBucket,
     fileBucket: s3.Bucket,
   ): ecs.FargateService {
-    const taskDef = new ecs.FargateTaskDefinition(this, "LibrechatTaskDef", {
+    const taskDef = new ecs.FargateTaskDefinition(this, "KitchenSinkTaskDef", {
       cpu: 512,
       memoryLimitMiB: 1024,
       executionRole: execRole,
@@ -286,7 +286,7 @@ export class KitchenSinkStack extends cdk.Stack {
       command: ["npm", "run", "backend"],
     });
 
-    const targetGroup = new elbv2.ApplicationTargetGroup(this, "LibrechatTg", {
+    const targetGroup = new elbv2.ApplicationTargetGroup(this, "KitchenSinkTg", {
       vpc,
       port: 3080,
       protocol: elbv2.ApplicationProtocol.HTTP,
@@ -298,15 +298,15 @@ export class KitchenSinkStack extends cdk.Stack {
       },
     });
 
-    const cert = acm.Certificate.fromCertificateArn(this, "LibrechatCert", certificateArn);
-    listener.addCertificates("LibrechatCert", [cert]);
-    listener.addAction("LibrechatRule", {
+    const cert = acm.Certificate.fromCertificateArn(this, "KitchenSinkCert", certificateArn);
+    listener.addCertificates("KitchenSinkCert", [cert]);
+    listener.addAction("KitchenSinkRule", {
       conditions: [elbv2.ListenerCondition.hostHeaders([DOMAIN])],
       priority: 10,
       action: elbv2.ListenerAction.forward([targetGroup]),
     });
 
-    const service = new ecs.FargateService(this, "LibrechatService", {
+    const service = new ecs.FargateService(this, "KitchenSinkService", {
       cluster,
       taskDefinition: taskDef,
       desiredCount: 1,

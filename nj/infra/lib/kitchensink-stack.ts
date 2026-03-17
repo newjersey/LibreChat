@@ -113,7 +113,7 @@ export class KitchenSinkStack extends cdk.Stack {
     });
 
     const container = taskDef.addContainer("mongodb", {
-      image: ecs.ContainerImage.fromRegistry("mongo:8.0.17"),
+      image: ecs.ContainerImage.fromRegistry(`${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/mongo:8.0.17`),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "lc-mongodb" }),
       command: ["mongod", "--noauth"],
       portMappings: [{ containerPort: 27017 }],
@@ -151,7 +151,7 @@ export class KitchenSinkStack extends cdk.Stack {
     });
 
     const container = taskDef.addContainer("vectordb", {
-      image: ecs.ContainerImage.fromRegistry("pgvector/pgvector:0.8.0-pg15-trixie"),
+      image: ecs.ContainerImage.fromRegistry(`${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/pgvector:0.8.0-pg15-trixie`),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "lc-vectordb" }),
       environment: {
         POSTGRES_DB: "mydatabase",
@@ -198,7 +198,7 @@ export class KitchenSinkStack extends cdk.Stack {
     });
 
     const container = taskDef.addContainer("meilisearch", {
-      image: ecs.ContainerImage.fromRegistry("getmeili/meilisearch:v1.35.1"),
+      image: ecs.ContainerImage.fromRegistry(`${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/meilisearch:v1.35.1`),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "lc-meilisearch" }),
       environment: { MEILI_NO_ANALYTICS: "true" },
       environmentFiles: [ecs.EnvironmentFile.fromBucket(envBucket, ENV_FILE_KEY)],
@@ -231,9 +231,7 @@ export class KitchenSinkStack extends cdk.Stack {
     });
 
     taskDef.addContainer("rag_api", {
-      image: ecs.ContainerImage.fromRegistry(
-        "registry.librechat.ai/danny-avila/librechat-rag-api-dev-lite:latest",
-      ),
+      image: ecs.ContainerImage.fromRegistry(`${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/rag-api:latest`),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "lc-rag-api" }),
       environment: {
         DB_HOST: "vectordb.kitchensink",
@@ -271,9 +269,7 @@ export class KitchenSinkStack extends cdk.Stack {
     });
 
     taskDef.addContainer("librechat", {
-      image: ecs.ContainerImage.fromRegistry(
-        "registry.librechat.ai/danny-avila/librechat-dev:latest",
-      ),
+      image: ecs.ContainerImage.fromRegistry(`${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/librechat-dev:latest`),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "lc-librechat" }),
       environment: {
         NODE_ENV: "production",
@@ -326,7 +322,7 @@ export class KitchenSinkStack extends cdk.Stack {
     scalableTarget.scaleOnMemoryUtilization("MemoryScaling", { targetUtilizationPercent: 50 });
 
     new cdk.CfnOutput(this, "KitchenSinkImageUri", {
-      value: "registry.librechat.ai/danny-avila/librechat-dev:latest",
+      value: `${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/librechat-dev:latest`,
     });
 
     return service;

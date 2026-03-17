@@ -67,15 +67,18 @@ jobs:
           export GUARDRAIL_ID="${{ secrets.GUARDRAIL_ID }}"
           export GUARDRAIL_VERSION="${{ secrets.GUARDRAIL_VERSION }}"
 
-          envsubst < nj/nj.env.template > "${{ inputs.environment }}.env"
+          ENV_FILE_NAME=$([[ "${{ inputs.deploy_kitchensink }}" == "true" ]] && echo "librechat.env" || echo "${{ inputs.environment }}.env")
 
-          sed 's/=.*$/=***/' "${{ inputs.environment }}.env"
+          envsubst < nj/nj.env.template > "$ENV_FILE_NAME"
+
+          sed 's/=.*$/=***/' "$ENV_FILE_NAME"
 
       - name: Upload to S3
         run: |
+          ENV_FILE_NAME=$([[ "${{ inputs.deploy_kitchensink }}" == "true" ]] && echo "librechat.env" || echo "${{ inputs.environment }}.env")
           aws s3 cp \
-            "${{ inputs.environment }}.env" \
-            "s3://nj-librechat-env-files/${{ inputs.environment }}.env"
+            "$ENV_FILE_NAME" \
+            "s3://nj-librechat-env-files/$ENV_FILE_NAME"
       
       - name: Redeploy service with new env file
         uses: apideck-libraries/ecs-restart-service@v1

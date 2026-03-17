@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 /* ^ We're not worried about i18n for this app ^ */
 
-import InfoDivider from '~/nj/components/info/InfoDivider';
+import { InfoDivider } from '~/nj/components/info/InfoDivider';
 import InfoTitle from '~/nj/components/info/InfoTitle';
 import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';
 import InfoLink from '~/nj/components/info/InfoLink';

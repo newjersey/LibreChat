@@ -1,4 +1,4 @@
-import InfoDivider from '~/nj/components/info/InfoDivider';
+import { InfoDivider } from '~/nj/components/info/InfoDivider';
 import InfoTitle from '~/nj/components/info/InfoTitle';
 import React from 'react';
 import ResponsibleInfoAlert from '~/nj/components/info/ResponsibleInfoAlert';
@@ -8,24 +8,24 @@ import HelpAndSupport from '~/nj/components/info/HelpAndSupport';
 import UpcomingFeatures from '~/nj/components/info/UpcomingFeatures';
 import AiLearning from '~/nj/components/info/AiLearning';
 import RelatedLinks from '~/nj/components/info/RelatedLinks';
+import { useState } from 'react';
 
 /**
  * Content for "guide to using the assistant" page
  */
 export default function NewJerseyGuidePage() {
   document.title = 'NJ AI Assistant - Guides and FAQs';
+  const [openFaq, setOpenFaq] = useState<string | null>(null);
+
   return (
     <div>
       <InfoTitle text="Guides and FAQs" />
       <InfoDivider />
       <ResponsibleInfoAlert />
-      <GettingStarted />
-      <InfoDivider />
-      <UsingAIAsst />
-      <InfoDivider />
-      <HelpAndSupport />
-      <InfoDivider />
-      <UpcomingFeatures />
+      <GettingStarted openFaq={openFaq} setOpenFaq={setOpenFaq} />
+      <UsingAIAsst openFaq={openFaq} setOpenFaq={setOpenFaq} />
+      <HelpAndSupport openFaq={openFaq} setOpenFaq={setOpenFaq} />
+      <UpcomingFeatures openFaq={openFaq} setOpenFaq={setOpenFaq} />
       <InfoDivider />
       <AiLearning />
       <InfoDivider />

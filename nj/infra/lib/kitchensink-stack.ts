@@ -12,14 +12,14 @@ const DOMAIN = "kitchensink.ai-assistant.nj.gov";
 const ENV_FILE_KEY = "librechat.env";
 const ENV_FILES_BUCKET_ARN = "arn:aws:s3:::nj-librechat-env-files";
 
-export interface LibrechatPublicStackProps extends cdk.StackProps {
+export interface KitchenSinkStackProps extends cdk.StackProps {
   listenerArn: string;
   loadBalancerSecurityGroupId: string;
   certificateArn: string;
 }
 
-export class LibrechatPublicStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props: LibrechatPublicStackProps) {
+export class KitchenSinkStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: KitchenSinkStackProps) {
     super(scope, id, props);
 
     const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
@@ -325,7 +325,7 @@ export class LibrechatPublicStack extends cdk.Stack {
     scalableTarget.scaleOnCpuUtilization("CpuScaling", { targetUtilizationPercent: 50 });
     scalableTarget.scaleOnMemoryUtilization("MemoryScaling", { targetUtilizationPercent: 50 });
 
-    new cdk.CfnOutput(this, "LibrechatPublicImageUri", {
+    new cdk.CfnOutput(this, "KitchenSinkImageUri", {
       value: "registry.librechat.ai/danny-avila/librechat-dev:latest",
     });
 

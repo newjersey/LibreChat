@@ -33,7 +33,7 @@ import { DatabaseStack } from "../lib/db-stack";
 import { EcsStack } from "../lib/ecs-stack";
 import { CognitoStack } from "../lib/cognito-stack";
 import { MonitoringStack } from "../lib/monitoring-stack";
-import { LibrechatPublicStack } from "../lib/librechat-public-stack";
+import { KitchenSinkStack } from "../lib/kitchensink-stack";
 import {branding, assets} from "../lib/branding";
 
 const app = new cdk.App();
@@ -114,12 +114,12 @@ applyTags(cognitoStack);
 applyTags(monitoringStack);
 
 if (process.env.DEPLOY_KITCHENSINK === "true") {
-  const librechatPublicStack = new LibrechatPublicStack(app, "LibrechatPublicStack", {
+  const kitchenSinkStack = new KitchenSinkStack(app, "KitchenSinkStack", {
     env: env,
     listenerArn: ecsStack.listener.listenerArn,
     loadBalancerSecurityGroupId: ecsStack.loadBalancer.connections.securityGroups[0].securityGroupId,
     certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${process.env.LIBRECHAT_ACM_CERTIFICATE_ID}`,
   });
 
-  applyTags(librechatPublicStack);
+  applyTags(kitchenSinkStack);
 }

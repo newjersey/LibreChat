@@ -1,4 +1,4 @@
-import { InfoDivider } from '~/nj/components/info/InfoDivider';
+import { InfoDivider } from '~/nj/components/info/Dividers';
 import InfoTitle from '~/nj/components/info/InfoTitle';
 import React from 'react';
 import ResponsibleInfoAlert from '~/nj/components/info/ResponsibleInfoAlert';

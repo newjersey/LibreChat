@@ -136,10 +136,9 @@ export class EcsStack extends cdk.Stack {
     const librechatImage = `${this.account}.dkr.ecr.${this.region}.amazonaws.com/newjersey/librechat:${librechatTag}`;
 
     const librechatTaskDef = new ecs.FargateTaskDefinition(this, "LibreChatTaskDef", {
-      cpu: 512,
-      memoryLimitMiB: 1024,
       executionRole: commonExecRole,
       taskRole: commonExecRole,
+      ...(isProd ? { cpu: 2048, memoryLimitMiB: 8192 } : { cpu: 512, memoryLimitMiB: 1024 }),
     });
 
     const environment: Record<string, string> = {
@@ -167,8 +166,6 @@ export class EcsStack extends cdk.Stack {
     librechatTaskDef.addContainer("librechat", {
       image: ecs.ContainerImage.fromRegistry(librechatImage),
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: "librechat" }),
-      cpu: 512,
-      memoryLimitMiB: 1024,
       environment: environment,
       secrets: envSecrets,
       environmentFiles: [
@@ -176,6 +173,7 @@ export class EcsStack extends cdk.Stack {
       ],
       portMappings: [{ containerPort: 3080 }],
       command: ["npm", "run", "backend"],
+      ...(isProd ? { cpu: 2048, memoryLimitMiB: 8192 } : { cpu: 512, memoryLimitMiB: 1024 }),
     });
 
     // Re-enable when OIT does load balancer things
@@ -318,7 +316,7 @@ export class EcsStack extends cdk.Stack {
     const lifecycleRule: s3.LifecycleRule = {
       enabled: true,
       expiration: cdk.Duration.days(1),
-      // prefix: "tmp/", // re-enable when temp file changes land
+      prefix: "tmp/",
     }
 
     const s3Bucket = new s3.Bucket(this, 'LibrechatFileBucket', {

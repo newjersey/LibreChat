@@ -1,7 +1,7 @@
 import * as Collapsible from '@radix-ui/react-collapsible';
 import icons from '@uswds/uswds/img/sprite.svg';
 import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';
-import { SectionDivider } from '~/nj/components/info/Dividers';
+import { HorizontalRule } from '~/nj/components/info/HorizontalRule';
 
 export interface FAQ {
   question: string;
@@ -40,7 +40,6 @@ function CollapsibleSection({
           className="usa-icon usa-icon--size-3 flex-shrink-0 text-jersey-blue transition-transform duration-300 group-data-[state=open]:rotate-180"
           aria-hidden="true"
           focusable="false"
-          role="img"
         >
           <use href={`${icons}#expand_more`} />
         </svg>
@@ -75,7 +74,7 @@ export default function FaqSection({
                   isOpen={openFaq === faq.question}
                   handleOpen={(open) => setOpenFaq(open ? faq.question : null)}
                 ></CollapsibleSection>
-                {!isLastFaqOnPage && <SectionDivider />}
+                {!isLastFaqOnPage && <HorizontalRule spacing="mb-4" />}
               </>
             );
           })}

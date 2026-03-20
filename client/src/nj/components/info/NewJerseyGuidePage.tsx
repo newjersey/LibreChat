@@ -1,4 +1,4 @@
-import { InfoDivider } from '~/nj/components/info/Dividers';
+import { HorizontalRule } from '~/nj/components/info/HorizontalRule';
 import InfoTitle from '~/nj/components/info/InfoTitle';
 import React from 'react';
 import ResponsibleInfoAlert from '~/nj/components/info/ResponsibleInfoAlert';
@@ -20,15 +20,15 @@ export default function NewJerseyGuidePage() {
   return (
     <div>
       <InfoTitle text="Guides and FAQs" />
-      <InfoDivider />
+      <HorizontalRule spacing="mb-6" />
       <ResponsibleInfoAlert />
       <GettingStarted openFaq={openFaq} setOpenFaq={setOpenFaq} />
       <UsingAIAsst openFaq={openFaq} setOpenFaq={setOpenFaq} />
       <HelpAndSupport openFaq={openFaq} setOpenFaq={setOpenFaq} />
       <UpcomingFeatures openFaq={openFaq} setOpenFaq={setOpenFaq} />
-      <InfoDivider />
+      <HorizontalRule spacing="mb-6" />
       <AiLearning />
-      <InfoDivider />
+      <HorizontalRule spacing="mb-6" />
       <RelatedLinks />
     </div>
   );

@@ -168,7 +168,6 @@ export default function useResumableSSE(
               hasResponseMessage: !!data.responseMessage,
             });
             clearAllDrafts(currentSubmission.conversation?.conversationId);
-            logSubmitPrompt(userMessage, false);
             try {
               finalHandler(data, currentSubmission as EventSubmission);
             } catch (error) {

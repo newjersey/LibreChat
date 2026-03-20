@@ -2,6 +2,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import icons from '@uswds/uswds/img/sprite.svg';
 import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';
 import { HorizontalRule } from '~/nj/components/info/HorizontalRule';
+import { useRef } from 'react';
 
 export interface FAQ {
   question: string;
@@ -56,6 +57,8 @@ export default function FaqSection({
   openFaq,
   setOpenFaq,
 }: FAQSectionProps) {
+  const faqRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -64,18 +67,33 @@ export default function FaqSection({
         <div className="mb-8 flex flex-col gap-4">
           {faqs.map((faq, index) => {
             const isLastFaqOnPage = isLastSection && index === faqs.length - 1;
+
             return (
-              <>
+              <div
+                ref={(el: HTMLDivElement | null) => {
+                  faqRefs.current[faq.question] = el;
+                }}
+                className="scroll-mt-10"
+                key={faq.question}
+              >
                 <CollapsibleSection
-                  key={faq.question}
                   question={faq.question}
                   answer={faq.answer}
                   wrappedQuestionMargin={faq.wrappedQuestionMargin}
                   isOpen={openFaq === faq.question}
-                  handleOpen={(open) => setOpenFaq(open ? faq.question : null)}
-                ></CollapsibleSection>
+                  handleOpen={(open) => {
+                    if (open) {
+                      setOpenFaq(faq.question);
+                      requestAnimationFrame(() => {
+                        faqRefs.current[faq.question]?.scrollIntoView({ behavior: 'smooth' });
+                      });
+                    } else {
+                      setOpenFaq(null);
+                    }
+                  }}
+                />
                 {!isLastFaqOnPage && <HorizontalRule spacing="mb-4" />}
-              </>
+              </div>
             );
           })}
         </div>

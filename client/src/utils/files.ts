@@ -17,6 +17,12 @@ import {
 import type { TFile, EndpointFileConfig, FileConfig } from 'librechat-data-provider';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ExtendedFile } from '~/common';
+import {
+  logCombinedFileSizeError,
+  logFileCountError,
+  logFileSizeError,
+  logFileTypeError,
+} from '~/nj/analytics/logHelpers';
 
 export const partialTypes = ['text/x-'];
 
@@ -251,7 +257,8 @@ export const validateFiles = ({
   const currentTotalSize = existingFiles.reduce((total, file) => total + file.size, 0);
 
   if (fileLimit && fileList.length + files.size > fileLimit) {
-    setError(`File limit reached: ${fileLimit} files`);
+    logFileCountError(fileList.length + files.size);
+    setError(`You can only upload up to ${fileLimit} files at a time.`);
     return false;
   }
 
@@ -282,18 +289,22 @@ export const validateFiles = ({
     }
 
     if (!checkType(originalFile.type, mimeTypesToCheck)) {
-      setError(`Unsupported file type: ${originalFile.type}`);
+      console.log(originalFile);
+      logFileTypeError(originalFile);
+      setError('Currently, unsupported file type: ' + originalFile.type);
       return false;
     }
 
     if (fileSizeLimit && originalFile.size >= fileSizeLimit) {
-      setError(`File size limit exceeded: ${fileSizeLimit / megabyte} MB`);
+      logFileSizeError(originalFile);
+      setError(`File size exceeds ${fileSizeLimit / megabyte} MB.`);
       return false;
     }
   }
 
   if (totalSizeLimit && currentTotalSize + incomingTotalSize > totalSizeLimit) {
-    setError(`Total file size limit exceeded: ${totalSizeLimit / megabyte} MB`);
+    logCombinedFileSizeError(existingFiles, fileList);
+    setError(`The total size of the files cannot exceed ${totalSizeLimit / megabyte} MB.`);
     return false;
   }
 

@@ -39,8 +39,8 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const appConfig = req.config;
-    const files = await getFiles({ user: req.user.id });
-    if (appConfig.fileStrategy === FileSources.s3) {
+    const files = await getFiles({ user: req.user.id, expiresAt: { $exists: false } });
+    if (appConfig?.fileStrategy === FileSources.s3) {
       try {
         const cache = getLogStores(CacheKeys.S3_EXPIRY_INTERVAL);
         const alreadyChecked = await cache.get(req.user.id);
@@ -376,6 +376,7 @@ router.post('/', async (req, res) => {
 
     metadata.temp_file_id = metadata.file_id;
     metadata.file_id = req.file_id;
+    metadata.temporary = metadata.temporary === 'true';
 
     if (isAssistantsEndpoint(metadata.endpoint)) {
       return await processFileUpload({ req, res, metadata });
@@ -404,7 +405,8 @@ router.post('/', async (req, res) => {
     if (
       error.message?.includes('Invalid file format') ||
       error.message?.includes('No OCR result') ||
-      error.message?.includes('exceeds token limit')
+      error.message?.includes('exceeds token limit') ||
+      error.message?.includes('Unable to extract text from')
     ) {
       message = error.message;
     }

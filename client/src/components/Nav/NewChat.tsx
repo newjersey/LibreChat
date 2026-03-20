@@ -7,6 +7,8 @@ import { CLOSE_SIDEBAR_ID, OPEN_SIDEBAR_ID } from '~/components/Chat/Menus/OpenS
 import { useLocalize, useNewConvo } from '~/hooks';
 import { clearMessagesCache } from '~/utils';
 import store from '~/store';
+import { logEvent } from '~/nj/analytics/logEvent';
+import NewJerseyLogo from '~/nj/components/NewJerseyLogo';
 
 export default function NewChat({
   index = 0,
@@ -45,6 +47,7 @@ export default function NewChat({
       e.preventDefault();
       clearMessagesCache(queryClient, conversation?.conversationId);
       queryClient.invalidateQueries([QueryKeys.messages]);
+      logEvent('click_clear_chat');
       newConvo();
       if (isSmallScreen) {
         toggleNav();
@@ -56,6 +59,7 @@ export default function NewChat({
   return (
     <>
       <div className="flex items-center justify-between px-0.5 py-[2px] md:py-2">
+        <NewJerseyLogo />
         <TooltipAnchor
           description={localize('com_nav_close_sidebar')}
           render={

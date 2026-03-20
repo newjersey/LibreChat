@@ -102,6 +102,8 @@ const DateLabel: FC<{ groupName: string; isFirst?: boolean }> = memo(({ groupNam
       className={cn('pl-1 pt-1 text-text-secondary', isFirst === true ? 'mt-0' : 'mt-2')}
       style={{ fontSize: '0.7rem' }}
     >
+      {/* eslint-disable-next-line i18next/no-literal-string */}
+      <span className="sr-only">Conversations from </span> {/* NJ: Make this more header clearer */}
       {localize(groupName as TranslationKeys) || groupName}
     </h2>
   );
@@ -357,6 +359,11 @@ const Conversations: FC<ConversationsProps> = ({
     },
     [flattenedItems.length, throttledLoadMore],
   );
+
+  // NJ: For accessibility, it's better to hide chat history if there is no actual history
+  if (!isLoading && groupedConversations.length == 0) {
+    return <></>;
+  }
 
   return (
     <div className="relative flex h-full min-h-0 flex-col pb-2 text-sm text-text-primary">

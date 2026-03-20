@@ -151,6 +151,9 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        'jersey-blue': 'var(--jersey-blue)',
+        info: 'var(--info)',
+        'info-lighter': 'var(--info-lighter)',
       },
       borderRadius: {
         lg: 'var(--radius)',

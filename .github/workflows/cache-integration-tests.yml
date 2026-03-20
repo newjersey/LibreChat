@@ -7,6 +7,7 @@ on:
       - dev
       - dev-staging
       - release/*
+      - newjersey # NJ: our primary branch
     paths:
       - 'packages/api/src/cache/**'
       - 'packages/api/src/cluster/**'

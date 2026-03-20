@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { constRecoilStateOpts } from '~/nj/utils/constRecoilState';
 
 export type SearchState = {
   enabled: boolean | null;
@@ -8,10 +9,11 @@ export type SearchState = {
   isTyping: boolean;
 };
 
-export const search = atom<SearchState>({
+// NJ: Disable the search bar until we actually support search (via Meili)
+export const search = constRecoilStateOpts<SearchState>({
   key: 'search',
   default: {
-    enabled: null,
+    enabled: false,
     query: '',
     debouncedQuery: '',
     isSearching: false,

@@ -18,6 +18,7 @@ import Header from './Header';
 import Footer from './Footer';
 import { cn } from '~/utils';
 import store from '~/store';
+import NewJerseyChatNotice from '~/nj/components/NewJerseyChatNotice';
 
 function LoadingSpinner() {
   return (
@@ -32,7 +33,8 @@ function LoadingSpinner() {
 function ChatView({ index = 0 }: { index?: number }) {
   const { conversationId } = useParams();
   const rootSubmission = useRecoilValue(store.submissionByIndex(index));
-  const centerFormOnLanding = useRecoilValue(store.centerFormOnLanding);
+  const addedSubmission = useRecoilValue(store.submissionByIndex(index + 1));
+  const centerFormOnLanding = false; // NJ: force this to be `false` to put our landing page text up
 
   const fileMap = useFileMapContext();
 
@@ -100,6 +102,7 @@ function ChatView({ index = 0 }: { index?: number }) {
                     )}
                   >
                     <ChatForm index={index} />
+                    <NewJerseyChatNotice />
                     {isLandingPage ? <ConversationStarters /> : <Footer />}
                   </div>
                 </div>

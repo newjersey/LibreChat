@@ -157,7 +157,7 @@ export default function Conversation({
     toggleNav();
 
     if (typeof title === 'string' && title.length > 0) {
-      document.title = title;
+      // document.title = title; // NJ: Don't change title to match conversation
     }
 
     navigateToConvo(conversation, {
@@ -183,7 +183,7 @@ export default function Conversation({
       className={cn(
         'group relative flex h-12 w-full items-center rounded-lg outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-black dark:focus-visible:ring-white md:h-9',
         isActiveConvo || isPopoverActive
-          ? 'bg-surface-active-alt before:absolute before:bottom-1 before:left-0 before:top-1 before:w-0.5 before:rounded-full before:bg-black dark:before:bg-white'
+          ? 'bg-surface-active-alt before:absolute before:bottom-1 before:left-0 before:top-1 before:w-0.5 before:rounded-full before:bg-jersey-blue dark:before:bg-white'
           : 'hover:bg-surface-active-alt',
       )}
       role="button"
@@ -235,6 +235,8 @@ export default function Conversation({
           isSmallScreen={isSmallScreen}
           localize={localize}
         >
+          <div className="-mr-2" /> {/* Counteract the gap-2 in the parent */}
+          {/* NJ: We don't want the icon in chat history sidebar
           {isGenerating ? (
             <svg
               className="h-5 w-5 flex-shrink-0 animate-spin text-text-primary"
@@ -264,6 +266,7 @@ export default function Conversation({
               context="menu-item"
             />
           )}
+          */}
         </ConvoLink>
       )}
       <div
@@ -279,7 +282,9 @@ export default function Conversation({
         // aria-hidden={!(isPopoverActive || isActiveConvo)}
       >
         {/* Only render ConvoOptions when user interacts (hover/focus) or for active conversation */}
+        {/* NJ: Hide conversation options for now
         {!renaming && (hasInteracted || isActiveConvo) && <ConvoOptions {...convoOptionsProps} />}
+        */}
       </div>
     </div>
   );

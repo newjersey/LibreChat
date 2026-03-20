@@ -36,7 +36,7 @@ export const ThinkingButton = memo(
     label,
     content,
     contentId,
-    showCopyButton = true,
+    showCopyButton = false, // NJ: Avoid duplicative copy button
   }: {
     isExpanded: boolean;
     onClick: (e: MouseEvent<HTMLButtonElement>) => void;

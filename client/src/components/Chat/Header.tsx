@@ -13,6 +13,8 @@ import { TemporaryChat } from './TemporaryChat';
 import AddMultiConvo from './AddMultiConvo';
 import { useHasAccess } from '~/hooks';
 import { cn } from '~/utils';
+import NewJerseyLogo from '~/nj/components/NewJerseyLogo';
+import OldAssistantLink from '~/nj/components/OldAssistantLink';
 
 const defaultInterface = getConfigDefaults().interface;
 
@@ -56,6 +58,7 @@ function Header() {
                 transition={{ duration: 0.15 }}
                 key="header-buttons"
               >
+                <NewJerseyLogo />
                 <OpenSidebar setNavVisible={setNavVisible} className="max-md:hidden" />
                 <HeaderNewChat />
               </motion.div>
@@ -73,7 +76,8 @@ function Header() {
               {interfaceConfig.presets === true && interfaceConfig.modelSelect && <PresetsMenu />}
               {hasAccessToBookmarks === true && <BookmarkMenu />}
               {hasAccessToMultiConvo === true && <AddMultiConvo />}
-              {isSmallScreen && (
+              {/* NJ: We disable exporting/sharing */}
+              {isSmallScreen && false && (
                 <>
                   <ExportAndShareMenu
                     isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
@@ -85,7 +89,8 @@ function Header() {
           )}
         </div>
 
-        {!isSmallScreen && (
+        {/* NJ: We disable exporting/sharing */}
+        {!isSmallScreen && false && (
           <div className="flex items-center gap-2">
             <ExportAndShareMenu
               isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
@@ -93,6 +98,8 @@ function Header() {
             {hasAccessToTemporaryChat === true && <TemporaryChat />}
           </div>
         )}
+
+        <OldAssistantLink />
       </div>
       {/* Empty div for spacing */}
       <div />

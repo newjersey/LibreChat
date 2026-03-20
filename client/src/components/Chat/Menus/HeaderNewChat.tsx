@@ -5,6 +5,7 @@ import { TooltipAnchor, Button, NewChatIcon } from '@librechat/client';
 import { useNewConvo, useLocalize } from '~/hooks';
 import { clearMessagesCache } from '~/utils';
 import store from '~/store';
+import { logEvent } from '~/nj/analytics/logEvent';
 
 export default function HeaderNewChat() {
   const localize = useLocalize();
@@ -19,6 +20,7 @@ export default function HeaderNewChat() {
     }
     clearMessagesCache(queryClient, conversation?.conversationId);
     queryClient.invalidateQueries([QueryKeys.messages]);
+    logEvent('click_clear_chat');
     newConversation();
   };
 

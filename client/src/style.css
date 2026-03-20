@@ -61,13 +61,18 @@
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
   --markdown-font-size: 1rem;
+
+  /* Special colors for New Jersey */
+  --jersey-blue: #0c5295;
+  --info-lighter: #e7f6f8;
+  --info: #00bde3;
 }
 html {
   --brand-purple: #ab68ff;
-  --presentation: var(--white);
-  --text-primary: var(--gray-800);
-  --text-secondary: var(--gray-600);
-  --text-secondary-alt: var(--gray-500);
+  --presentation: #fcfcfb; /* Custom for NJ */
+  --text-primary: #1c1d1f; /* Custom for NJ */
+  --text-secondary: #3d4551; /* Custom for NJ */
+  --text-secondary-alt: #1c1d1f; /* Custom for NJ */
   --text-tertiary: var(--gray-500);
   --text-warning: var(--amber-500);
   --text-destructive: var(--red-600);
@@ -76,23 +81,23 @@ html {
   --header-hover: var(--gray-50);
   --header-button-hover: var(--gray-50);
   --surface-active: var(--gray-100);
-  --surface-active-alt: var(--gray-200);
+  --surface-active-alt: #f0f0ec; /* Custom for NJ */
   --surface-hover: var(--gray-200);
   --surface-hover-alt: var(--gray-300);
-  --surface-primary: var(--white);
-  --surface-primary-alt: var(--gray-50);
+  --surface-primary: #fcfcfb; /* Custom for NJ */
+  --surface-primary-alt: #f9f9f7; /* Custom for NJ */
   --surface-primary-contrast: var(--gray-100);
   --surface-secondary: var(--gray-50);
   --surface-secondary-alt: var(--gray-200);
-  --surface-tertiary: var(--gray-100);
+  --surface-tertiary: #f0f0ec; /* Custom for NJ */
   --surface-tertiary-alt: var(--white);
   --surface-dialog: var(--white);
   --surface-submit: var(--green-700);
   --surface-submit-hover: var(--green-800);
   --surface-destructive: var(--red-700);
   --surface-destructive-hover: var(--red-800);
-  --surface-chat: var(--white);
-  --border-light: var(--gray-200);
+  --surface-chat: #ffffff; /* Custom for NJ */
+  --border-light: #efedec; /* Custom for NJ, #332015 @ .08 opacity */
   --border-medium-alt: var(--gray-300);
   --border-medium: var(--gray-300);
   --border-heavy: var(--gray-400);
@@ -2925,4 +2930,89 @@ html {
 
 .sharepoint-picker-bg {
   background-color: #f5f5f5;
+}
+
+/* Customization for feedback widget - no easier way to customize, sadly */
+.feedback-container {
+  background-color: #edeff0 !important;
+  padding: 12px 30px !important;
+}
+
+.feedback-text {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+.feedback-button {
+  padding: 12px 20px !important;
+  font-weight: 700 !important;
+  width: auto !important;
+}
+
+.feedback-button:focus {
+  outline-offset: 4px !important;
+  outline: 4px solid #1b1b1b !important;
+}
+
+.confirmation-text {
+  font-size: 16px !important;
+}
+
+.flex-box {
+  gap: 0.5rem !important;
+}
+
+@media screen and (max-width: 620px) {
+  .feedback-button {
+    padding: 6px 20px !important;
+  }
+}
+
+/* USWDS icon styling; we don't want all of USWDS styles (it overrides a lot of LibreChat styling) */
+.usa-icon {
+  display: inline-block;
+  fill: currentColor;
+  height: 1em;
+  position: relative;
+  width: 1em;
+}
+
+.usa-icon--size-2 {
+  height: 1rem;
+  width: 1rem;
+}
+
+.usa-icon--size-3 {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.usa-icon--size-4 {
+  height: 2rem;
+  width: 2rem;
+}
+
+.usa-icon--size-5 {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+.usa-icon--size-6 {
+  height: 3rem;
+  width: 3rem;
+}
+
+.usa-icon--size-7 {
+  height: 3.5rem;
+  width: 3.5rem;
+}
+
+.usa-icon--size-8 {
+  height: 4rem;
+  width: 4rem;
+}
+
+.usa-icon--size-9 {
+  height: 4.5rem;
+  width: 4.5rem;
 }

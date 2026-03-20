@@ -6,6 +6,7 @@ on:
       - dev
       - dev-staging
       - release/*
+      - newjersey # NJ: our primary branch
     paths:
       - 'api/**'
       - 'packages/**'

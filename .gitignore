@@ -143,6 +143,7 @@ helm/**/.values.yaml
 /.codeium
 *.local.md
 
+cdk.out/
 
 # Removed Windows wrapper files per user request
 hive-mind-prompt-*.txt
@@ -173,3 +174,6 @@ claude-flow.config.json
 claude-flow
 # Removed Windows wrapper files per user request
 hive-mind-prompt-*.txt
+
+**/*.env
+**/cdk.context.json 

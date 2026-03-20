@@ -228,7 +228,8 @@ describe('resolveEndpointType + isDocumentSupportedProvider (upload menu)', () =
     expect(isDocumentSupportedProvider(endpointType)).toBe(true);
   });
 
-  it('agent with bedrock provider is document-supported', () => {
+  // We're explicitly skipping Bedrock document support ATM
+  it.skip('agent with bedrock provider is document-supported', () => {
     const endpointType = resolveEndpointType(
       endpointsConfig,
       EModelEndpoint.agents,

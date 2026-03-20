@@ -4,6 +4,7 @@ import type { Control } from 'react-hook-form';
 import { SendIcon, TooltipAnchor } from '@librechat/client';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
+import NewJerseySendIcon from '~/nj/svgs/NewJerseySendIcon';
 
 type SendButtonProps = {
   disabled: boolean;
@@ -23,13 +24,13 @@ const SubmitButton = React.memo(
             id="send-button"
             disabled={props.disabled}
             className={cn(
-              'rounded-full bg-text-primary p-1.5 text-text-primary outline-offset-4 transition-all duration-200 disabled:cursor-not-allowed disabled:text-text-secondary disabled:opacity-10',
+              'text-text-primary outline-offset-4 transition-all duration-200 disabled:cursor-not-allowed disabled:text-text-secondary disabled:opacity-10',
             )}
             data-testid="send-button"
             type="submit"
           >
             <span className="" data-state="closed">
-              <SendIcon size={24} />
+              <NewJerseySendIcon />
             </span>
           </button>
         }

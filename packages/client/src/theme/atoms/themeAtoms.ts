@@ -3,13 +3,12 @@
 
 import { atomWithStorage } from 'jotai/utils';
 import { IThemeRGB } from '../types';
+import { constAtom } from '~/nj/utils/constAtom';
 
 /**
  * @deprecated Use ThemeContext instead. This atom is no longer used internally.
  */
-export const themeModeAtom = atomWithStorage<string>('color-theme', 'system', undefined, {
-  getOnInit: true,
-});
+export const themeModeAtom = constAtom<string>('light');
 
 /**
  * @deprecated Use ThemeContext instead. This atom is no longer used internally.

@@ -57,7 +57,9 @@ export default function MobileNav({
         </svg>
       </button>
       <h1 className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm font-normal">
+        {/* NJ: Don't show title on mobile nav - it's unnecessary & messes with info pages
         {title ?? localize('com_ui_new_chat')}
+         */}
       </h1>
       <button
         type="button"

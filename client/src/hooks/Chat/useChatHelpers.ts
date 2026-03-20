@@ -8,6 +8,7 @@ import useChatFunctions from '~/hooks/Chat/useChatFunctions';
 import { useAbortStreamMutation } from '~/data-provider';
 import useNewConvo from '~/hooks/useNewConvo';
 import store from '~/store';
+import { logEvent } from '~/nj/analytics/logEvent';
 
 // this to be set somewhere else
 export default function useChatHelpers(index = 0, paramId?: string) {
@@ -137,6 +138,8 @@ export default function useChatHelpers(index = 0, paramId?: string) {
       actualEndpoint,
       isAssistants,
     });
+
+    logEvent('stop_generation');
 
     // For non-assistants endpoints (using resumable streams), call abort endpoint first
     if (conversationId && !isAssistants) {

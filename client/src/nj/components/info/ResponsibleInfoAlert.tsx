@@ -1,8 +1,6 @@
 /* eslint-disable i18next/no-literal-string */
 /* ^ We're not worried about i18n for this app ^ */
 
-import InfoSectionHeader from '~/nj/components/info/InfoSectionHeader';
-
 export default function ResponsibleInfoAlert() {
   return (
     <div

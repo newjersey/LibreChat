@@ -185,8 +185,8 @@ export class EcsStack extends cdk.Stack {
       ],
       portMappings: [{ containerPort: 3080 }],
       command: ["npm", "run", "backend"],
-      cpu: 1024, 
-      memoryLimitMiB: 2048,
+      cpu: (isProd ? 1024 : 512), 
+      memoryLimitMiB: (isProd ? 2048 : 1024),
     });
 
     // Re-enable when OIT does load balancer things

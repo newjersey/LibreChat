@@ -103,9 +103,9 @@ Be sure to smoke test before merging!
 
 Prod release happens in two steps:
 
-1. Create a release in Github, and wait for it to build and push
-2. [OPTIONAL] If environment variables have changed, run the render-env pipeline
-3. Run the infra deploy workflow on the prod environment.
+1. Create a [release](https://github.com/newjersey/LibreChat/releases) in Github, and wait for it to build and push
+2. [OPTIONAL] If environment variables have changed, run the [render-env](./.github/workflows/render-env.yml) pipeline
+3. Run the [infra deploy workflow](./.github/workflows/nj-infra-deploy.yml) on the prod environment.
 
 ### Create a new release
 

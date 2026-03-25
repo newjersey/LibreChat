@@ -104,8 +104,8 @@ Be sure to smoke test before merging!
 Prod release happens in two steps:
 
 1. Create a release in Github, and wait for it to build and push
-1a. If environment variables have changed, run the render-env pipeline
-2. Run the infra deploy workflow on the prod environment.
+2. [OPTIONAL] If environment variables have changed, run the render-env pipeline
+3. Run the infra deploy workflow on the prod environment.
 
 ### Create a new release
 

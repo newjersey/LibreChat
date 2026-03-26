@@ -20,7 +20,7 @@ jobs:
         with:
           app-id: 3185872
           private-key: ${{ secrets.AI_ASSISTANT_APP }}
-          repositories: ${{ github.repository }}
+          owner: newjersey
 
       - name: Debug - Test token access
         env:

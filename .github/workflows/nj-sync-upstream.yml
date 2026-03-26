@@ -66,7 +66,7 @@ jobs:
         id: vars
         run: |
           DATE=$(date +%Y-%m-%d)
-          BRANCH="upstream-merge/$DATE"
+          BRANCH="test-upstream-merge/$DATE"
           git checkout -b "$BRANCH"
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
           echo "date=$DATE" >> "$GITHUB_OUTPUT"

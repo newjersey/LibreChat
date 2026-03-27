@@ -43,6 +43,16 @@ interface:
   runCode: true
   sidePanel: true
   webSearch: true
+  mcpServers: 
+    use: true
+    create: true
+    share: true
+    public: false
+  remoteAgents: 
+    use: true
+    create: true
+    share: true
+    public: false
 
 endpoints:
   bedrock:

@@ -23,7 +23,7 @@ def get_kitchensink_container(client, cluster_arn, service_name):
     raise ValueError("Librechat container not found")
 
 
-def create_users(client, cluster_arn, task_arn, container_arn, email_list, default_password):
+def create_users(client, cluster_arn, task_arn, email_list, default_password):
     for email in email_list:
         name = email[0:email.index("@")]
 
@@ -72,7 +72,7 @@ def main():
 
     print(f"KitchenSink Container found, creating the following users: {args.email_list}")
 
-    create_users(client, cluster_arn, task_arn, container_arn, args.email_list, default_password)
+    create_users(client, cluster_arn, task_arn, args.email_list, default_password)
 
 
 if __name__ == "__main__": 

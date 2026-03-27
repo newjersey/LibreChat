@@ -1,9 +1,4 @@
-import pprint
 import boto3
-import websocket
-import uuid
-import json
-import construct as c
 import os
 import argparse
 import re

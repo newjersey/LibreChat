@@ -1,34 +1,20 @@
-import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import { QueryKeys } from 'librechat-data-provider';
 import { useQueryClient } from '@tanstack/react-query';
-import { TooltipAnchor, NewChatIcon, MobileSidebar, Sidebar, Button } from '@librechat/client';
-import { CLOSE_SIDEBAR_ID, OPEN_SIDEBAR_ID } from '~/components/Chat/Menus/OpenSidebar';
+import { TooltipAnchor, Button, NewChatIcon } from '@librechat/client';
 import { useLocalize, useNewConvo } from '~/hooks';
-import { clearMessagesCache } from '~/utils';
+import { clearMessagesCache, cn } from '~/utils';
 import store from '~/store';
 import { logEvent } from '~/nj/analytics/logEvent';
 import NewJerseyLogo from '~/nj/components/NewJerseyLogo';
 
-export default function NewChat({
-  index = 0,
-  toggleNav,
-  subHeaders,
-  isSmallScreen,
-  headerButtons,
-}: {
-  index?: number;
-  toggleNav: () => void;
-  isSmallScreen?: boolean;
-  subHeaders?: React.ReactNode;
-  headerButtons?: React.ReactNode;
-}) {
-  const queryClient = useQueryClient();
-  /** Note: this component needs an explicit index passed if using more than one */
-  const { newConversation: newConvo } = useNewConvo(index);
+export default function NewChat({ className }: { className?: string }) {
   const localize = useLocalize();
-  const { conversation } = store.useCreateConversationAtom(index);
+  const queryClient = useQueryClient();
+  const { newConversation } = useNewConvo();
+  const conversation = useRecoilValue(store.conversationByIndex(0));
 
+<<<<<<< HEAD
   const handleToggleNav = useCallback(() => {
     toggleNav();
     // Delay focus until after the sidebar animation completes (200ms)
@@ -105,5 +91,36 @@ export default function NewChat({
       </div>
       {subHeaders != null ? subHeaders : null}
     </>
+=======
+  const clickHandler: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
+      window.open('/c/new', '_blank');
+      return;
+    }
+    clearMessagesCache(queryClient, conversation?.conversationId);
+    queryClient.invalidateQueries([QueryKeys.messages]);
+    newConversation();
+  };
+
+  return (
+    <TooltipAnchor
+      description={localize('com_ui_new_chat')}
+      render={
+        <Button
+          size="icon"
+          variant="outline"
+          data-testid="new-chat-button"
+          aria-label={localize('com_ui_new_chat')}
+          className={cn(
+            'size-9 rounded-xl bg-presentation duration-0 hover:bg-surface-active-alt max-md:hidden',
+            className,
+          )}
+          onClick={clickHandler}
+        >
+          <NewChatIcon />
+        </Button>
+      }
+    />
+>>>>>>> upstream/main
   );
 }

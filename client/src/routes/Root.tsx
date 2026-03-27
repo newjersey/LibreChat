@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
+=======
+import { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+>>>>>>> upstream/main
 import { Outlet } from 'react-router-dom';
 import { useMediaQuery } from '@librechat/client';
-import type { ContextType } from '~/common';
 import {
   useSearchEnabled,
   useAssistantsMap,
@@ -9,6 +13,7 @@ import {
   useAgentsMap,
   useFileMap,
 } from '~/hooks';
+import store from '~/store';
 import {
   PromptGroupsProvider,
   AssistantsMapContext,
@@ -17,7 +22,7 @@ import {
   FileMapContext,
 } from '~/Providers';
 import { useUserTermsQuery, useGetStartupConfig } from '~/data-provider';
-import { Nav, MobileNav, NAV_WIDTH } from '~/components/Nav';
+import { UnifiedSidebar } from '~/components/UnifiedSidebar';
 import { TermsAndConditionsModal } from '~/components/ui';
 import { useHealthCheck } from '~/data-provider';
 import { Banner } from '~/components/Banners';
@@ -37,17 +42,17 @@ declare global {
 export default function Root() {
   const [showTerms, setShowTerms] = useState(false);
   const [bannerHeight, setBannerHeight] = useState(0);
-  const [navVisible, setNavVisible] = useState(() => {
-    const savedNavVisible = localStorage.getItem('navVisible');
-    return savedNavVisible !== null ? JSON.parse(savedNavVisible) : true;
-  });
-
-  const { isAuthenticated, logout } = useAuthContext();
+  const sidebarExpanded = useRecoilValue(store.sidebarExpanded);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
+<<<<<<< HEAD
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Global health check - runs once per authenticated session
+=======
+  const { isAuthenticated, logout } = useAuthContext();
+
+>>>>>>> upstream/main
   useHealthCheck(isAuthenticated);
 
   const assistantsMap = useAssistantsMap({ isAuthenticated });
@@ -86,6 +91,7 @@ export default function Root() {
         <AssistantsMapContext.Provider value={assistantsMap}>
           <AgentsMapContext.Provider value={agentsMap}>
             <PromptGroupsProvider>
+<<<<<<< HEAD
               {/* NJ: We added dynamic height measurement via CSS instead of setBannerHeight, required extra div */}
               <div className="flex h-dvh flex-col">
                 <SkipToContentLink targetRef={contentRef} />
@@ -112,6 +118,22 @@ export default function Root() {
                       <MobileNav navVisible={navVisible} setNavVisible={setNavVisible} />
                       <Outlet context={{ navVisible, setNavVisible } satisfies ContextType} />
                     </div>
+=======
+              <Banner onHeightChange={setBannerHeight} />
+              <div className="flex" style={{ height: `calc(100dvh - ${bannerHeight}px)` }}>
+                <div className="relative z-0 flex h-full w-full overflow-hidden">
+                  <UnifiedSidebar />
+                  <div
+                    className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"
+                    style={{
+                      transform:
+                        isSmallScreen && sidebarExpanded ? 'translateX(min(85vw, 380px))' : 'none',
+                      transition: 'transform 300ms cubic-bezier(0.2, 0, 0, 1)',
+                    }}
+                    {...{ inert: isSmallScreen && sidebarExpanded ? '' : undefined }}
+                  >
+                    <Outlet />
+>>>>>>> upstream/main
                   </div>
                 </div>
                 {/* For small screens, the widget blocks too much content, so hide then */}

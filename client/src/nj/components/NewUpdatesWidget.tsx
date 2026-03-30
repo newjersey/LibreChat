@@ -12,7 +12,7 @@ export default function NewUpdatesWidget() {
   const [dismissed, setDismissed] = useRecoilState(newUpdatesWidgetDismissed);
   const [expanded, setExpanded] = useState(false);
 
-  if (dismissed) {
+  if (import.meta.env.VITE_DISPLAY_UPDATE_WIDGET !== 'true' || dismissed) {
     return null;
   }
 

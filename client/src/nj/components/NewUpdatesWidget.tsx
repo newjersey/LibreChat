@@ -36,7 +36,7 @@ export default function NewUpdatesWidget() {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
             onClick={toggleExpanded}
-            className="flex items-center gap-2 rounded bg-text-primary px-4 py-2 text-sm font-medium text-surface-primary shadow-lg hover:bg-text-primary/90"
+            className="hover:bg-text-primary/90 flex items-center gap-2 rounded-full bg-text-primary px-4 py-2 text-sm font-medium text-surface-primary shadow-lg"
           >
             <svg
               className="usa-icon usa-icon--size-3"
@@ -69,7 +69,7 @@ export default function NewUpdatesWidget() {
               <h3 className="text-base font-semibold">New update</h3>
               <button
                 onClick={toggleExpanded}
-                className="text-surface-primary hover:text-surface-primary/80"
+                className="hover:text-surface-primary/80 text-surface-primary"
                 aria-label="Close"
               >
                 <svg
@@ -106,7 +106,7 @@ export default function NewUpdatesWidget() {
 
             <button
               onClick={handleDismiss}
-              className="w-full rounded border-2 border-surface-primary bg-transparent py-2 text-sm font-medium text-surface-primary hover:bg-surface-primary/10"
+              className="hover:bg-surface-primary/10 w-full rounded border-2 border-surface-primary bg-transparent py-2 text-sm font-medium text-surface-primary"
             >
               Dismiss
             </button>

@@ -17,13 +17,7 @@ import NewUpdatesWidget from '~/nj/components/NewUpdatesWidget';
 
 const defaultInterface = getConfigDefaults().interface;
 
-function Header({
-  index = 0,
-  isLandingPage = false,
-}: {
-  index?: number;
-  isLandingPage?: boolean;
-}) {
+function Header({ index = 0, isLandingPage = false }: { index?: number; isLandingPage?: boolean }) {
   const { data: startupConfig } = useGetStartupConfig();
   const navVisible = useRecoilValue(store.sidebarExpanded);
 

@@ -78,7 +78,7 @@ function ExpandedWidget({ onClose, onDismiss }: ExpandedWidgetProps) {
       animate={{ scale: 1 }}
       exit={{ scale: 0.9 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="w-[340px] rounded-2xl bg-text-primary pt-3 pr-3 pb-5 pl-3 text-surface-primary"
+      className="w-[340px] rounded-2xl bg-text-primary pb-5 pl-3 pr-3 pt-3 text-surface-primary"
       style={{ boxShadow: '0 0 0 2px #000, 0 0 0 4px #fff' }}
     >
       <div className="mb-5 flex items-start justify-between">

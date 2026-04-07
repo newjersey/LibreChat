@@ -45,7 +45,7 @@ const helpSupportFAQs: FAQ[] = [
             >
               this Teams link
             </a>{' '}
-            to access it. 
+            to access it.
           </li>
           <li>
             If you have a question and cannot make office hours, feel free to email us at{' '}

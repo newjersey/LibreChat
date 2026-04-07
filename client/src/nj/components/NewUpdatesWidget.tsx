@@ -84,7 +84,7 @@ function ExpandedWidget({ onClose, onDismiss }: ExpandedWidgetProps) {
       <div className="mb-5 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <Icon name="notifications" style={{ color: '#FFBE2E' }} />
-          <h3 className="text-base font-semibold">New update</h3>
+          <h3 className="text-base font-semibold">New updates</h3>
         </div>
         <button
           onClick={onClose}

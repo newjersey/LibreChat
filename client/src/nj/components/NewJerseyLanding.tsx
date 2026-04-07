@@ -121,7 +121,7 @@ export function NewJerseyLanding() {
                           <use href={`${icons}#launch`} />
                         </svg>
                       </a>
-                       and the{' '}
+                      and the{' '}
                       <a
                         href="https://innovation.nj.gov/ai-faq-state-employees/"
                         className="inline-flex items-center gap-1 underline hover:decoration-2"
@@ -145,15 +145,18 @@ export function NewJerseyLanding() {
 
                   <div className="mb-5 flex gap-3">
                     <p>
-                      Join weekly AI Office Hours to learn more about AI and prompting, the NJ AI Assistant, or get help on a project you&apos;re working on.{' '}
+                      Join weekly AI Office Hours to learn more about AI and prompting, the NJ AI
+                      Assistant, or get help on a project you&apos;re working on.{' '}
                       <a
                         href="https://teams.microsoft.com/meet/27661582151645?p=78SP1n7rYEGoorbxsn"
                         className="inline-flex items-center gap-1 underline hover:decoration-2"
                         target="_blank"
                         rel="noreferrer"
-                      > Use this link to join
-                      </a> 
-                      {' '}every Thursday from 12:30 - 1:30 pm.
+                      >
+                        {' '}
+                        Use this link to join
+                      </a>{' '}
+                      every Thursday from 12:30 - 1:30 pm.
                     </p>
                   </div>
 

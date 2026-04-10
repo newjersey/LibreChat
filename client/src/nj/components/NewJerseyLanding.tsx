@@ -152,6 +152,7 @@ export function NewJerseyLanding() {
                         className="inline-flex items-center gap-1 underline hover:decoration-2"
                         target="_blank"
                         rel="noreferrer"
+                        aria-label="Book time on any Thursday (opens in new window)"
                       >
                         Book time on any Thursday
                       </a>{' '}

@@ -275,10 +275,24 @@ export class KitchenSinkStack extends cdk.Stack {
     execRole: iam.Role,
     envBucket: s3.IBucket,
   ): ecs.FargateService {
+    const ragTaskRole = new iam.Role(this, "RagApiTaskRole", {
+      assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+      description: "Task role for RAG API to access Bedrock",
+    });
+
+    ragTaskRole.addToPolicy(new iam.PolicyStatement({
+      actions: ["bedrock:InvokeModel"],
+      resources: [
+        `arn:aws:bedrock:${this.region}::foundation-model/amazon.titan-embed-text-v1`,
+        `arn:aws:bedrock:${this.region}::foundation-model/amazon.titan-embed-text-v2:0`,
+      ],
+    }));
+
     const taskDef = new ecs.FargateTaskDefinition(this, "RagApiTaskDef", {
       cpu: 512,
       memoryLimitMiB: 1024,
       executionRole: execRole,
+      taskRole: ragTaskRole,
     });
 
     taskDef.addContainer("rag_api", {

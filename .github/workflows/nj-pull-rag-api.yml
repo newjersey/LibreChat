@@ -2,8 +2,6 @@ name: Pull & Push RAG API Image (NJ)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 6 * * 0'  # Weekly on Sundays at 6 AM UTC
 
 jobs:
   pull-and-push:

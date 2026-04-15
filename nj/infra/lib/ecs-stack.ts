@@ -127,6 +127,12 @@ export class EcsStack extends cdk.Stack {
         resources: [this.s3Bucket.bucketArn, `${this.s3Bucket.bucketArn}/*`]
       })]
     }))
+    commonExecRole.attachInlinePolicy( new iam.Policy(this, 'bedrockPolicy', {
+      statements: [new iam.PolicyStatement({
+        actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+        resources: [`arn:aws:bedrock:${this.region}::foundation-model/*`]
+      })]
+    }))
     if (isProd) {
       commonExecRole.addManagedPolicy(
         iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonRDSFullAccess")
@@ -317,6 +323,8 @@ export class EcsStack extends cdk.Stack {
     const environment: Record<string, string> = {
       RAG_PORT: "8000",
       MEILI_HOST: "http://meilisearch.internal:7700",
+      EMBEDDINGS_PROVIDER: "bedrock",
+      EMBEDDINGS_MODEL: "amazon.titan-embed-text-v1",
     };
 
     const envSecrets: Record<string, ecs.Secret> = {};

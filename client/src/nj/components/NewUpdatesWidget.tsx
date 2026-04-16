@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 /* ^ We're not worried about i18n for this app ^ */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import { newUpdatesWidgetDismissed } from '~/nj/store/landing';
 import { logEvent } from '~/nj/analytics/logEvent';
 import icons from '@uswds/uswds/img/sprite.svg';
 import { getUpdateWidgetContent } from '~/nj/content/parser/njContentRetrieval';
+import releaseNotes from '~/nj/content/release-notes.md?raw';
 
 interface IconProps {
   name: string;
@@ -125,16 +126,42 @@ function ExpandedWidget({ onClose, onDismiss }: ExpandedWidgetProps) {
   );
 }
 
+function getMostRecentReleaseDate(releaseNotes: string): string | null {
+  const dateMatch = releaseNotes.match(/#+\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})/);
+  return dateMatch ? dateMatch[1] : null;
+}
+
+function isReleaseDateNew(newReleaseDate: string | null): boolean {
+  if (!newReleaseDate) return false;
+  const releaseDate = new Date(newReleaseDate);
+  const today = new Date();
+
+  releaseDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  const timeDiff = today.getTime() - releaseDate.getTime();
+  const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
+  console.log('dayDiff', dayDiff);
+
+  return dayDiff < 4;
+}
+
 export default function NewUpdatesWidget() {
   const [dismissed, setDismissed] = useRecoilState(newUpdatesWidgetDismissed);
   const [expanded, setExpanded] = useState(false);
 
-  if (dismissed) {
+  const latestReleaseDate = getMostRecentReleaseDate(releaseNotes);
+
+  const shouldShowWidget: boolean = isReleaseDateNew(latestReleaseDate);
+
+  const isDismissed = dismissed === latestReleaseDate;
+
+  if (isDismissed || !shouldShowWidget) {
     return null;
   }
 
   const handleDismiss = () => {
-    setDismissed(true);
+    setDismissed(latestReleaseDate);
     setExpanded(false);
   };
 

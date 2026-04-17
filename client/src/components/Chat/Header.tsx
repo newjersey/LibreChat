@@ -14,7 +14,6 @@ import { cn } from '~/utils';
 import store from '~/store';
 import NewJerseyLogo from '~/nj/components/NewJerseyLogo';
 import NewUpdatesWidget from '~/nj/components/NewUpdatesWidget';
-import releaseNotes from '~/nj/content/release-notes.md?raw';
 
 const defaultInterface = getConfigDefaults().interface;
 

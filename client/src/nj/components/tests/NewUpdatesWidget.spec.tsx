@@ -1,5 +1,5 @@
 import { render } from 'test/layout-test-utils';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { newUpdatesWidgetDismissed } from '~/nj/store/landing';
 import NewUpdatesWidget from '../NewUpdatesWidget';

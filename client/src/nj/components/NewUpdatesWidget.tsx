@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 /* ^ We're not worried about i18n for this app ^ */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -140,8 +140,7 @@ function isReleaseDateNew(newReleaseDate: string | null): boolean {
   today.setHours(0, 0, 0, 0);
 
   const timeDiff = today.getTime() - releaseDate.getTime();
-  const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
-  console.log('dayDiff', dayDiff);
+  const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
   return dayDiff < 4;
 }

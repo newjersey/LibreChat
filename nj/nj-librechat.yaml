@@ -29,7 +29,7 @@ interface:
   bookmarks: false
   endpointsMenu: false
   fileCitations: false
-  fileSearch: false  
+  fileSearch: false
   marketplace:
     use: false
   memories: false

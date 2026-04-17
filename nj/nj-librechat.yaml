@@ -24,6 +24,7 @@ interface:
   modelSelect: false
 
   # We're purposefully disabling most LibreChat features (for now)
+  # Many of these features are now set via environment variables, but these are fallback positions.
   agents: false
   bookmarks: false
   endpointsMenu: false

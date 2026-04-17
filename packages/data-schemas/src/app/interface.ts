@@ -27,6 +27,13 @@ export async function loadDefaultInterface({
   /** Only disable memories if memory config is present but disabled/invalid */
   const shouldDisableMemories = memoryConfig && !memoryEnabled;
 
+  // Environment variable helper for permissions
+  const getEnvBoolean = (envVar: string): boolean | undefined => {
+    const value = process.env[envVar];
+    if (value === undefined) return undefined;
+    return value.toLowerCase().trim() === 'true';
+  };
+
   const loadedInterface: AppConfig['interfaceConfig'] = removeNullishValues({
     // UI elements - use schema defaults
     modelSelect:
@@ -39,17 +46,17 @@ export async function loadDefaultInterface({
     mcpServers: interfaceConfig?.mcpServers ?? defaults.mcpServers,
     customWelcome: interfaceConfig?.customWelcome ?? defaults.customWelcome,
 
-    // Permissions - only include if explicitly configured
-    bookmarks: interfaceConfig?.bookmarks,
+    // Permissions - environment variables override YAML config
+    bookmarks: getEnvBoolean('INTERFACE_BOOKMARKS') ?? interfaceConfig?.bookmarks,
     memories: shouldDisableMemories ? false : interfaceConfig?.memories,
-    prompts: interfaceConfig?.prompts,
-    multiConvo: interfaceConfig?.multiConvo,
-    agents: interfaceConfig?.agents,
-    temporaryChat: interfaceConfig?.temporaryChat,
-    runCode: interfaceConfig?.runCode,
-    webSearch: interfaceConfig?.webSearch,
-    fileSearch: interfaceConfig?.fileSearch,
-    fileCitations: interfaceConfig?.fileCitations,
+    prompts: getEnvBoolean('INTERFACE_PROMPTS') ?? interfaceConfig?.prompts,
+    multiConvo: getEnvBoolean('INTERFACE_MULTI_CONVO') ?? interfaceConfig?.multiConvo,
+    agents: getEnvBoolean('INTERFACE_AGENTS') ?? interfaceConfig?.agents,
+    temporaryChat: getEnvBoolean('INTERFACE_TEMPORARY_CHAT') ?? interfaceConfig?.temporaryChat,
+    runCode: getEnvBoolean('INTERFACE_RUN_CODE') ?? interfaceConfig?.runCode,
+    webSearch: getEnvBoolean('INTERFACE_WEB_SEARCH') ?? interfaceConfig?.webSearch,
+    fileSearch: getEnvBoolean('INTERFACE_FILE_SEARCH') ?? interfaceConfig?.fileSearch,
+    fileCitations: getEnvBoolean('INTERFACE_FILE_CITATIONS') ?? interfaceConfig?.fileCitations,
     peoplePicker: interfaceConfig?.peoplePicker,
     marketplace: interfaceConfig?.marketplace,
     remoteAgents: interfaceConfig?.remoteAgents,

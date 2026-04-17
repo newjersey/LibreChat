@@ -29,7 +29,7 @@ interface:
   bookmarks: false
   endpointsMenu: false
   fileCitations: false
-  fileSearch: false
+  fileSearch: false  
   marketplace:
     use: false
   memories: false
@@ -69,6 +69,7 @@ endpoints:
     capabilities:
       - "context"
       - "ocr"
+      - "file_search"
 
 # We explicitly spec our models (since we only have a few models and this makes the selector simpler)
 modelSpecs:

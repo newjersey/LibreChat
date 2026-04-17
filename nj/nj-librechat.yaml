@@ -24,12 +24,11 @@ interface:
   modelSelect: false
 
   # We're purposefully disabling most LibreChat features (for now)
-  # Many of these features are now set via environment variables, but these are fallback positions.
-  agents: false
+  agents: false # Can be overriden with env var INTERFACE_AGENTS
   bookmarks: false
   endpointsMenu: false
   fileCitations: false
-  fileSearch: false
+  fileSearch: false # Can be overriden with env var INTERFACE_FILE_SEARCH
   marketplace:
     use: false
   memories: false

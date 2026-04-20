@@ -297,8 +297,7 @@ export class EcsStack extends cdk.Stack {
 
     // Allow RAG API to connect to RDS
     if (props.rdsSecurityGroup && props.rdsPort) {
-      const rdsPortNumber = parseInt(props.rdsPort, 10);
-      ragApiService.connections.allowTo(props.rdsSecurityGroup, ec2.Port.tcp(rdsPortNumber), "RAG API to RDS");
+      ragApiService.connections.allowTo(props.rdsSecurityGroup, ec2.Port.tcp(5432), "RAG API to RDS");
     }
 
     // Allow LibreChat to connect to RAG API
@@ -306,8 +305,7 @@ export class EcsStack extends cdk.Stack {
 
     // Allow LibreChat to connect to RDS
     if (props.rdsSecurityGroup && props.rdsPort) {
-      const rdsPortNumber = parseInt(props.rdsPort, 10);
-      librechatService.service.connections.allowTo(props.rdsSecurityGroup, ec2.Port.tcp(rdsPortNumber), "LibreChat to RDS");
+      librechatService.service.connections.allowTo(props.rdsSecurityGroup, ec2.Port.tcp(5432), "LibreChat to RDS");
     }
 
     new cdk.CfnOutput(this, "MongoImageUri", { value: props.mongoImage });

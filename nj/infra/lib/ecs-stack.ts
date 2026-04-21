@@ -130,7 +130,11 @@ export class EcsStack extends cdk.Stack {
     commonExecRole.attachInlinePolicy( new iam.Policy(this, 'bedrockPolicy', {
       statements: [new iam.PolicyStatement({
         actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
-        resources: [`arn:aws:bedrock:${this.region}::foundation-model/*`]
+        resources: [
+          `arn:aws:bedrock:${this.region}::foundation-model/*`,
+          `arn:aws:bedrock:${this.region}::foundation-model/amazon.titan-embed-text-v1`,
+          `arn:aws:bedrock:${this.region}::foundation-model/amazon.titan-embed-text-v2:0`
+        ]
       })]
     }))
     if (isProd) {

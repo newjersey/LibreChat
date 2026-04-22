@@ -328,6 +328,7 @@ export class EcsStack extends cdk.Stack {
       RAG_PORT: "8000",
       EMBEDDINGS_PROVIDER: "bedrock",
       EMBEDDINGS_MODEL: "amazon.titan-embed-text-v1",
+      JWT_SECRET: "16f8c0ef4a5d391b26034086c628469d3f9f497f08163ab9b40137092f2909ef", // fear not, not an actual secret
     };
 
     const envSecrets: Record<string, ecs.Secret> = {};

@@ -25,8 +25,8 @@ interface:
 
   # We're purposefully disabling most LibreChat features (for now)
   agents: 
-    use: true # Can be overriden with env var INTERFACE_AGENTS
-    create: false
+    use: true
+    create: false # Can be overriden with env var INTERFACE_AGENTS
     share: false
     public: false 
   bookmarks: false

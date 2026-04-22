@@ -44,7 +44,7 @@ interface:
   sidePanel: false
   webSearch: false
   mcpServers:
-    use: false
+    use: true
     create: false
     share: false
     public: false

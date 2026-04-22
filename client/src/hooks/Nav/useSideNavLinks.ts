@@ -176,18 +176,18 @@ export default function useSideNavLinks({
       });
     }
 
-    if (
-      (hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
-      hasAccessToCreateMCP
-    ) {
-      links.push({
-        title: 'com_nav_setting_mcp',
-        label: '',
-        icon: MCPIcon,
-        id: 'mcp-builder',
-        Component: MCPBuilderPanel,
-      });
-    }
+    // if (
+    //   (hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
+    //   hasAccessToCreateMCP
+    // ) {
+    //   links.push({
+    //     title: 'com_nav_setting_mcp',
+    //     label: '',
+    //     icon: MCPIcon,
+    //     id: 'mcp-builder',
+    //     Component: MCPBuilderPanel,
+    //   });
+    // }
 
     if (includeHidePanel && hidePanel) {
       links.push({

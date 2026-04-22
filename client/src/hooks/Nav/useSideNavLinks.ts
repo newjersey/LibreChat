@@ -86,20 +86,20 @@ export default function useSideNavLinks({
   const Links = useMemo(() => {
     const links: NavLink[] = [];
 
-    if (
-      endpointsConfig?.[EModelEndpoint.agents] &&
-      hasAccessToAgents &&
-      hasAccessToCreateAgents &&
-      endpointsConfig[EModelEndpoint.agents].disableBuilder !== true
-    ) {
-      links.push({
-        title: 'com_sidepanel_agent_builder',
-        label: '',
-        icon: Bot,
-        id: EModelEndpoint.agents,
-        Component: AgentPanelSwitch,
-      });
-    }
+    // if (
+    //   endpointsConfig?.[EModelEndpoint.agents] &&
+    //   hasAccessToAgents &&
+    //   hasAccessToCreateAgents &&
+    //   endpointsConfig[EModelEndpoint.agents].disableBuilder !== true
+    // ) {
+    //   links.push({
+    //     title: 'com_sidepanel_agent_builder',
+    //     label: '',
+    //     icon: Bot,
+    //     id: EModelEndpoint.agents,
+    //     Component: AgentPanelSwitch,
+    //   });
+    // }
 
     if (
       isAssistantsEndpoint(endpoint) &&

@@ -86,7 +86,6 @@ export default function useSideNavLinks({
   const Links = useMemo(() => {
     const links: NavLink[] = [];
 
-    /* NJ - Disable for now so we can set agents permission without showing the UI panel
     if (
       endpointsConfig?.[EModelEndpoint.agents] &&
       hasAccessToAgents &&
@@ -101,7 +100,6 @@ export default function useSideNavLinks({
         Component: AgentPanelSwitch,
       });
     }
-    */
 
     if (
       isAssistantsEndpoint(endpoint) &&

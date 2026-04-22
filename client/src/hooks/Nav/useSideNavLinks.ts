@@ -86,7 +86,7 @@ export default function useSideNavLinks({
   const Links = useMemo(() => {
     const links: NavLink[] = [];
 
-    /* NJ - Disable for now so we can set agents permission without show the UI panel
+    /* NJ - Disable for now so we can set agents permission without showing the UI panel
     if (
       endpointsConfig?.[EModelEndpoint.agents] &&
       hasAccessToAgents &&
@@ -178,7 +178,7 @@ export default function useSideNavLinks({
       });
     }
 
-    /* NJ - Disable for now so we can set mcp permission without show the UI panel
+    /* NJ - Disable for now so we can set mcp permission without showing the UI panel
     if (
       (hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
       hasAccessToCreateMCP

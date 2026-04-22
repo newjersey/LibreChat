@@ -86,20 +86,22 @@ export default function useSideNavLinks({
   const Links = useMemo(() => {
     const links: NavLink[] = [];
 
-    // if (
-    //   endpointsConfig?.[EModelEndpoint.agents] &&
-    //   hasAccessToAgents &&
-    //   hasAccessToCreateAgents &&
-    //   endpointsConfig[EModelEndpoint.agents].disableBuilder !== true
-    // ) {
-    //   links.push({
-    //     title: 'com_sidepanel_agent_builder',
-    //     label: '',
-    //     icon: Bot,
-    //     id: EModelEndpoint.agents,
-    //     Component: AgentPanelSwitch,
-    //   });
-    // }
+    /* NJ - Disable for now so we can set agents permission without show the UI panel
+    if (
+      endpointsConfig?.[EModelEndpoint.agents] &&
+      hasAccessToAgents &&
+      hasAccessToCreateAgents &&
+      endpointsConfig[EModelEndpoint.agents].disableBuilder !== true
+    ) {
+      links.push({
+        title: 'com_sidepanel_agent_builder',
+        label: '',
+        icon: Bot,
+        id: EModelEndpoint.agents,
+        Component: AgentPanelSwitch,
+      });
+    }
+    */
 
     if (
       isAssistantsEndpoint(endpoint) &&
@@ -176,18 +178,20 @@ export default function useSideNavLinks({
       });
     }
 
-    // if (
-    //   (hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
-    //   hasAccessToCreateMCP
-    // ) {
-    //   links.push({
-    //     title: 'com_nav_setting_mcp',
-    //     label: '',
-    //     icon: MCPIcon,
-    //     id: 'mcp-builder',
-    //     Component: MCPBuilderPanel,
-    //   });
-    // }
+    /* NJ - Disable for now so we can set mcp permission without show the UI panel
+    if (
+      (hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
+      hasAccessToCreateMCP
+    ) {
+      links.push({
+        title: 'com_nav_setting_mcp',
+        label: '',
+        icon: MCPIcon,
+        id: 'mcp-builder',
+        Component: MCPBuilderPanel,
+      });
+    }
+    */
 
     if (includeHidePanel && hidePanel) {
       links.push({

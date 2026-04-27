@@ -70,7 +70,7 @@ export const handler = async (event) => {
   try {
     await deleteFromCognito(email);
   } catch (err) {
-    console.error('Cognito operation failed:', err);
+    console.error(`Cognito operation failed for ${email} — delete manually from user pool ${USER_POOL_ID}:`, err);
     return { statusCode: 500, body: JSON.stringify({ error: 'Cognito operation failed', detail: err.message }) };
   }
 

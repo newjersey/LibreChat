@@ -19,7 +19,7 @@ on:
 jobs:
   clear-user:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: ${{ inputs.environment }}-deploy
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

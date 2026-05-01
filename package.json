@@ -188,7 +188,9 @@
       "data/",
       "client/",
       "admin/",
-      "packages/"
+      "packages/",
+      "e2e/",
+      "nj/e2e/"
     ]
   }
 }

@@ -44,7 +44,10 @@ export default defineConfig({
       name: 'nj',
       testDir: '../nj/e2e',
       testMatch: '*.spec.ts',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: path.resolve(process.cwd(), 'e2e/storageState.json'),
+      },
     },
     /* Test against mobile viewports. */
     // {
@@ -71,9 +74,9 @@ export default defineConfig({
       NODE_ENV: 'CI',
       EMAIL_HOST: '',
       SEARCH: 'false',
-      SESSION_EXPIRY: '60000',
+      SESSION_EXPIRY: '300000', // 5 min (in ms)
       ALLOW_REGISTRATION: 'true',
-      REFRESH_TOKEN_EXPIRY: '300000',
+      REFRESH_TOKEN_EXPIRY: '600000', // 10 min (in ms)
     },
   },
 });

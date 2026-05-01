@@ -64,12 +64,13 @@ NOTE: `reinstall` builds all the code in `/packages/`, but does not do live rebu
 
 ### Running e2e tests
 
-Our tests live in: ./nj/e2e/* and they can be run on their own with the following command:
+Our tests live in: `./nj/e2e/*` and they can be run on their own with the following command:
 
 1. Build everything
    - `$ npm run reinstall`
 2. Run the tests
-   - `npm run e2e:nj`
+   - (all tests) `npm run e2e:nj`
+   - (single test file) `npx playwright test --config=e2e/playwright.config.ts nj/e2e/<file>`
 
 ## How to Work in This Repo
 
@@ -123,7 +124,7 @@ to actually pay attention to the pull request it generates each week!
 Prod release happens in two steps:
 
 1. Create a [release](https://github.com/newjersey/LibreChat/releases) in Github, and wait for it to build and push
-2. [OPTIONAL] If environment variables have changed, run the [render-env workflow](./.github/workflows/render-env.yml) 
+2. [OPTIONAL] If environment variables have changed, run the [render-env workflow](./.github/workflows/render-env.yml)
 3. Run the [infra deploy workflow](./.github/workflows/nj-infra-deploy.yml) on the prod environment.
 
 ### Create a new release
@@ -145,6 +146,7 @@ Then click "Publish release."
 The new release & tag will initiate the tag build and update the `ai-assistant/prod-image-tag` SSM parameter.
 
 ### Updating Environment Files
+
 Environment files are rendered and uploaded by [this workflow](./.github/workflows/render-env.yml). It takes [the nj template](./nj/nj.env.template) and performs `envsubst`, pulling in values from Github environment secrets. TechOps support will likely be needed to update those environment secrets, but Josh can do it for right now.
 
 If either the template or the secret values have been updated, you can update the env vars by:
@@ -152,9 +154,10 @@ If either the template or the secret values have been updated, you can update th
 1. Navigate to the Actions tab in the repo
 2. Select "Render and upload env file"
 3. Select "Run Workflow" and select your target environment
-4. The workflow will get the environment-specific values from secrets, perform `envsubst`, upload the file to S3, and redeploy the service. 
+4. The workflow will get the environment-specific values from secrets, perform `envsubst`, upload the file to S3, and redeploy the service.
 
 #### Manually set release tag for prod (Rollback Strategy, DANGER)
+
 In the event that we need to set prod to a specific release tag, we can run the `Set prod release tag` workflow in Github Actions. This takes a text input for the release tag, and includes a verification step to ensure we're not setting a non-existent tag. The infra deploy workflow will still need to be ran to deploy the new tag.
 
 ### Run the infra deploy workflow
@@ -170,13 +173,16 @@ In the event that we need to set prod to a specific release tag, we can run the 
 ## ClickOps Components
 
 The following components of the NJ AI Assistant are managed via ClickOps (manually):
+
 - The Bedrock Guardrails
-- A Secrets Manager secret that stores the connection string between the prod LibreChat container and DocumentDB. 
+- A Secrets Manager secret that stores the connection string between the prod LibreChat container and DocumentDB.
 
 The remaining infrastructure is deployed by CDK.
 
 ### Updating Bedrock Guardrail
+
 Guardrail configs are managed per-environment through the AWS console. To manage them:
+
 1. Log into the desired AWS account
 2. Navigate to Bedrock -> Guardrails
 3. Select "Working Draft"
@@ -192,4 +198,5 @@ Guardrail configs are managed per-environment through the AWS console. To manage
 The connection string for DocumentDB lives in AWS Secrets Manager under the name `ai-assistant/docdb/uri`. If the DocumentDB secret is rotated, it must be updated here for LibreChat to maintain connection.
 
 ## Updating the New Updates widget
-The purpose of this widget is surfacing new updates and changes to the user. Information can be updated in `client/src/nj/components/NewUpdatesWidget.tsx`, and the env var `VITE_DISPLAY_UPDATE_WIDGET` must be set to `true`. 
+
+The purpose of this widget is surfacing new updates and changes to the user. Information can be updated in `client/src/nj/components/NewUpdatesWidget.tsx`, and the env var `VITE_DISPLAY_UPDATE_WIDGET` must be set to `true`.

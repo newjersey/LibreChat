@@ -1,7 +1,11 @@
 import { PlaywrightTestConfig } from '@playwright/test';
 import mainConfig from './playwright.config';
 import path from 'path';
-const absolutePath = path.resolve(process.cwd(), 'api/server/index.js');
+
+// Use __dirname to get config file location, then resolve to project root
+const projectRoot = path.resolve(__dirname, '..');
+const absolutePath = path.join(projectRoot, 'api/server/index.js');
+
 import dotenv from 'dotenv';
 dotenv.config();
 

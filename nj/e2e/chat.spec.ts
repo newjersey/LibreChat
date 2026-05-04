@@ -92,6 +92,9 @@ test('log in, prompt submission, and log out', async ({ page }) => {
   await inputField.press('Enter');
   await expect(page.getByText('Can you tell me a joke?')).toBeVisible();
 
+  // Wait for mocked response
+  await expect(page.getByText('Mocked response')).toBeVisible({ timeout: 60000 });
+
   // Log out
   const profileMenu = page.getByLabel('Account Settings');
   await profileMenu.click();

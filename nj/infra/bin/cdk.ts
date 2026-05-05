@@ -109,6 +109,7 @@ const ecsStack = new EcsStack(app, 'EcsStack', {
   rdsSecurityGroup: databaseStack.rdsSecurityGroup,
   rdsSecret: databaseStack.rdsSecret,
   ragApiJwtSecretArn: `arn:aws:secretsmanager:${env.region}:${env.account}:secret:ai-assistant/rag-api/jwt-secret-${ragApiJwtSecretSuffix[AWS_ENV]}`,
+  mongoSecretArn: `arn:aws:secretsmanager:${env.region}:${env.account}:secret:ai-assistant/dev/mongodb-Ajw7aQ`
 });
 
 const cognitoStack = new CognitoStack(app, 'CognitoStack', {

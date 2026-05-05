@@ -150,6 +150,7 @@ if (process.env.DEPLOY_KITCHENSINK === 'true') {
     env: env,
     listenerArn: ecsStack.listener.listenerArn,
     certificateArn: `arn:aws:acm:${env.region}:${env.account}:certificate/${process.env.LIBRECHAT_ACM_CERTIFICATE_ID}`,
+    mongoSecretArn: `arn:aws:secretsmanager:${env.region}:${env.account}:secret:ai-assistant/kitchensink/mongodb-B2athN`
   });
 
   applyTags(kitchenSinkStack);

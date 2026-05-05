@@ -7,7 +7,7 @@ import * as efs from 'aws-cdk-lib/aws-efs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
 
 const DOMAIN = 'kitchensink.ai-assistant.nj.gov';
 const ENV_FILE_KEY = 'librechat.env';
@@ -17,6 +17,7 @@ export interface KitchenSinkStackProps extends cdk.StackProps {
   listenerArn: string;
   certificateArn: string;
   mongoSecretArn: string;
+  ragApiJwtSecretArn: string;
 }
 
 export class KitchenSinkStack extends cdk.Stack {
@@ -32,7 +33,7 @@ export class KitchenSinkStack extends cdk.Stack {
     const execRole = this.createExecRole(fileBucket);
     const envBucket = s3.Bucket.fromBucketArn(this, 'EnvFilesBucket', ENV_FILES_BUCKET_ARN);
 
-    const mongoSecret = secretsmanager.Secret.fromSecretCompleteArn(
+    const mongoSecret = secrets.Secret.fromSecretCompleteArn(
       this,
       'MongoSecret',
       props.mongoSecretArn,
@@ -58,7 +59,7 @@ export class KitchenSinkStack extends cdk.Stack {
     const vectorDbService = this.createVectorDbService(vpc, cluster, execRole);
     const meiliService = this.createMeiliSearchService(vpc, cluster, execRole, envBucket);
     const ollamaService = this.createOllamaService(vpc, cluster, execRole);
-    const ragApiService = this.createRagApiService(cluster, execRole, envBucket);
+    const ragApiService = this.createRagApiService(cluster, execRole, envBucket, props.ragApiJwtSecretArn);
     const librechatService = this.createLibrechatService(
       vpc,
       cluster,
@@ -181,7 +182,7 @@ export class KitchenSinkStack extends cdk.Stack {
     vpc: ec2.IVpc,
     cluster: ecs.Cluster,
     execRole: iam.Role,
-    mongoSecret: secretsmanager.ISecret,
+    mongoSecret: secrets.ISecret,
   ): ecs.FargateService {
     const mongoFs = new efs.FileSystem(this, 'MongoFs', {
       vpc,
@@ -382,6 +383,7 @@ export class KitchenSinkStack extends cdk.Stack {
     cluster: ecs.Cluster,
     execRole: iam.Role,
     envBucket: s3.IBucket,
+    ragApiJwtSecretArn: string,
   ): ecs.FargateService {
     const ragTaskRole = new iam.Role(this, 'RagApiTaskRole', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
@@ -397,6 +399,9 @@ export class KitchenSinkStack extends cdk.Stack {
         ],
       }),
     );
+
+    const jwtSecret = secrets.Secret.fromSecretCompleteArn(this, 'RagApiJwtSecret', ragApiJwtSecretArn);
+    jwtSecret.grantRead(execRole);
 
     const taskDef = new ecs.FargateTaskDefinition(this, 'RagApiTaskDef', {
       cpu: 512,
@@ -417,6 +422,9 @@ export class KitchenSinkStack extends cdk.Stack {
         EMBEDDINGS_PROVIDER: 'bedrock',
         OLLAMA_BASE_URL: 'http://ollama.kitchensink:11434',
         EMBEDDINGS_MODEL: 'amazon.titan-embed-text-v1',
+      },
+      secrets: {
+        JWT_SECRET: ecs.Secret.fromSecretsManager(jwtSecret, 'JWT_SECRET'),
       },
       environmentFiles: [ecs.EnvironmentFile.fromBucket(envBucket, ENV_FILE_KEY)],
       portMappings: [{ containerPort: 8000 }],
@@ -440,7 +448,7 @@ export class KitchenSinkStack extends cdk.Stack {
     certificateArn: string,
     envBucket: s3.IBucket,
     fileBucket: s3.Bucket,
-    mongoSecret: secretsmanager.ISecret,
+    mongoSecret: secrets.ISecret,
   ): ecs.FargateService {
     const taskDef = new ecs.FargateTaskDefinition(this, 'KitchenSinkTaskDef', {
       cpu: 512,

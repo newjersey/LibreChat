@@ -340,9 +340,20 @@ export default function AgentConfig() {
       <hr className="mb-4 border-border-heavy" />
 
       {contextEnabled && (
-        <div className="mx-3">
+        <div className="mx-3 mb-3">
           <FileContext agent_id={agent_id} files={context_files} />
         </div>
+      )}
+
+      {/* File search */}
+      {fileSearchEnabled && (
+        <>
+          <hr className="mb-4 border-border-heavy" />
+
+          <div className="mx-3">
+            <FileSearch agent_id={agent_id} files={knowledge_files} />
+          </div>
+        </>
       )}
     </div>
   );

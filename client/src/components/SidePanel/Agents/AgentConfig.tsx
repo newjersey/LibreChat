@@ -34,9 +34,10 @@ import AgentTool from './AgentTool';
 import CodeForm from './Code/Form';
 import MCPTools from './MCPTools';
 import uswdsIcons from '@uswds/uswds/img/sprite.svg';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import store from '~/store';
 import { X } from 'lucide-react';
+import { showAgentComplexBanner } from '~/nj/store/agents';
 
 const sectionLabelClass = 'text-sm font-semibold';
 const labelClass = 'mb-2 text-token-text-primary block text-sm font-semibold';
@@ -53,7 +54,7 @@ export default function AgentConfig() {
   const methods = useFormContext<AgentForm>();
   const [showToolDialog, setShowToolDialog] = useState(false);
   const [showMCPToolDialog, setShowMCPToolDialog] = useState(false);
-  const [showComplexBanner, setShowComplexBanner] = useState(true);
+  const [showComplexBanner, setShowComplexBanner] = useRecoilState(showAgentComplexBanner);
   const {
     actions,
     setAction,

@@ -309,7 +309,7 @@ export class MonitoringStack extends cdk.Stack {
       ['DocDbWriteLatency', 'WriteLatency'],
     ] as const) {
       new cloudwatch.CfnAlarm(this, id, {
-        alarmName: `ai-assistant-${metricName.toLowerCase().replace('l', '-l')}`,
+        alarmName: `ai-assistant-docdb-${metricName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`,
         comparisonOperator: 'GreaterThanUpperThreshold',
         evaluationPeriods: 5,
         datapointsToAlarm: 4,

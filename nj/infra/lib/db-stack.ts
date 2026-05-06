@@ -25,6 +25,7 @@ export class DatabaseStack extends cdk.Stack {
   public readonly rdsSecret?: secrets.ISecret;
   public readonly rdsInstanceIdentifier?: string;
   public readonly docDbClusterIdentifier?: string;
+  public readonly elastiCacheName: string;
 
   constructor(scope: Construct, id: string, props: DatabaseStackProps) {
     super(scope, id, props);
@@ -54,6 +55,7 @@ export class DatabaseStack extends cdk.Stack {
     this.redisEndpoint = redis.endpoint;
     this.redisPort = redis.port;
     this.redisSecurityGroup = redis.securityGroup;
+    this.elastiCacheName = redis.cacheName;
   }
 
   private CreateDocumentDBInstance(vpc: ec2.IVpc): string {
@@ -159,6 +161,7 @@ export class DatabaseStack extends cdk.Stack {
     endpoint: string;
     port: string;
     securityGroup: ec2.ISecurityGroup;
+    cacheName: string;
   } {
     const REDIS_PORT = 6379;
     const redisSecurityGroup = new ec2.SecurityGroup(this, 'RedisSg', { vpc });
@@ -204,6 +207,7 @@ export class DatabaseStack extends cdk.Stack {
       endpoint: cache.attrEndpointAddress,
       port: cache.attrEndpointPort,
       securityGroup: redisSecurityGroup,
+      cacheName: cache.serverlessCacheName,
     };
   }
 }

@@ -12,6 +12,7 @@ export interface MonitoringStackProps extends cdk.StackProps {
   isProd: boolean;
   rdsInstanceIdentifier?: string;
   docDbClusterIdentifier?: string;
+  elastiCacheName: string;
 }
 
 export class MonitoringStack extends cdk.Stack {
@@ -120,7 +121,7 @@ export class MonitoringStack extends cdk.Stack {
       this.createDocDbAlarms(topic, props.docDbClusterIdentifier);
     }
 
-    this.createElastiCacheAlarms(topic);
+    this.createElastiCacheAlarms(topic, props.elastiCacheName);
     this.createAlbLatencyAlarms(topic, loadBalancer);
     this.createBedrockAlarms(topic);
   }
@@ -264,7 +265,7 @@ export class MonitoringStack extends cdk.Stack {
     }
   }
 
-  private createElastiCacheAlarms(topic: sns.Topic) {
+  private createElastiCacheAlarms(topic: sns.Topic, cacheName: string) {
     const currConnectionsAlarm = new cloudwatch.Alarm(this, 'ElastiCacheCurrConnections', {
       alarmName: 'ai-assistant-elasticache-curr-connections',
       metric: new cloudwatch.Metric({
@@ -272,7 +273,7 @@ export class MonitoringStack extends cdk.Stack {
         metricName: 'CurrConnections',
         period: Duration.minutes(5),
         statistic: 'Maximum',
-        dimensionsMap: { CacheClusterId: 'nj-ai-assistant-cache' },
+        dimensionsMap: { CacheClusterId: cacheName },
       }),
       threshold: 500,
       evaluationPeriods: 3,

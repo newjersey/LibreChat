@@ -142,6 +142,7 @@ const monitoringStack = new MonitoringStack(app, 'MonitoringStack', {
   isProd,
   rdsInstanceIdentifier: databaseStack.rdsInstanceIdentifier,
   docDbClusterIdentifier: databaseStack.docDbClusterIdentifier,
+  elastiCacheName: databaseStack.elastiCacheName,
 });
 
 applyTags(databaseStack);

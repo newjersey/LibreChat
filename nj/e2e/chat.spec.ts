@@ -25,7 +25,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/login');
 
   const emailInput = page.locator('input[name="email"]');
-  await expect(emailInput).toBeVisible({ timeout: 10000 });
+  await emailInput.waitFor({ state: 'attached', timeout: 10000 });
+  await expect(emailInput).toBeEnabled();
 
   await emailInput.fill(String(process.env.E2E_USER_EMAIL));
   await page.fill('input[name="password"]', String(process.env.E2E_USER_PASSWORD));

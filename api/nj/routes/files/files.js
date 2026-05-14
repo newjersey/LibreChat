@@ -17,7 +17,7 @@ router.patch('/:file_id', async (req, res) => {
     if (!file.length) {
       return res.status(404).json({ message: 'File not found' });
     }
-    const updated = await db.updateFile({ file_id, ...update });
+    const updated = await db.updateFile({ file_id, ...update }, { user: req.user.id });
     res.status(200).json(updated);
   } catch (error) {
     logger.error('[PATCH /files/:file_id] Error updating file', error);

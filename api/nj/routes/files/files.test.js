@@ -22,6 +22,17 @@ jest.mock('~/config', () => ({
 
 const router = require('./files');
 
+async function createFileHelper(userId, userFileId) {
+  return createFile({
+    user: userId,
+    file_id: userFileId,
+    filename: 'original.txt',
+    filepath: '/uploads/original.txt',
+    bytes: 100,
+    type: 'text/plain',
+  });
+}
+
 // Note: tests designed to be placed in mainline files.test.js, if we ever decide to upstream this
 describe('PATCH /files/:file_id', () => {
   let app;
@@ -82,26 +93,12 @@ describe('PATCH /files/:file_id', () => {
     await User.create({ _id: authorId, username: 'author', email: 'author@test.com' });
     await User.create({ _id: userId, username: 'user', email: 'user@test.com' });
 
-    await createFile({
-      user: authorId,
-      file_id: fileId,
-      filename: 'test.txt',
-      filepath: '/uploads/test.txt',
-      bytes: 100,
-      type: 'text/plain',
-    });
+    await createFileHelper(authorId, fileId);
   });
 
   it('should pin a file owned by the user', async () => {
     const userFileId = uuidv4();
-    await createFile({
-      user: userId,
-      file_id: userFileId,
-      filename: 'my-file.txt',
-      filepath: '/uploads/my-file.txt',
-      bytes: 100,
-      type: 'text/plain',
-    });
+    await createFileHelper(userId, userFileId);
 
     const response = await request(app).patch(`/files/${userFileId}`).send({ pinned: true });
 
@@ -112,14 +109,7 @@ describe('PATCH /files/:file_id', () => {
 
   it('should rename a file owned by the user', async () => {
     const userFileId = uuidv4();
-    await createFile({
-      user: userId,
-      file_id: userFileId,
-      filename: 'original.txt',
-      filepath: '/uploads/original.txt',
-      bytes: 100,
-      type: 'text/plain',
-    });
+    await createFileHelper(userId, userFileId);
 
     const response = await request(app)
       .patch(`/files/${userFileId}`)
@@ -131,14 +121,7 @@ describe('PATCH /files/:file_id', () => {
 
   it('should update both pinned and filename in one request', async () => {
     const userFileId = uuidv4();
-    await createFile({
-      user: userId,
-      file_id: userFileId,
-      filename: 'original.txt',
-      filepath: '/uploads/original.txt',
-      bytes: 100,
-      type: 'text/plain',
-    });
+    await createFileHelper(userId, userFileId);
 
     const response = await request(app)
       .patch(`/files/${userFileId}`)
@@ -165,14 +148,7 @@ describe('PATCH /files/:file_id', () => {
 
   it('should return 400 when no updatable fields are provided', async () => {
     const userFileId = uuidv4();
-    await createFile({
-      user: userId,
-      file_id: userFileId,
-      filename: 'my-file.txt',
-      filepath: '/uploads/my-file.txt',
-      bytes: 100,
-      type: 'text/plain',
-    });
+    await createFileHelper(userId, userFileId);
 
     const response = await request(app).patch(`/files/${userFileId}`).send({});
 
@@ -181,14 +157,7 @@ describe('PATCH /files/:file_id', () => {
 
   it('should return 400 when pinned is not a boolean', async () => {
     const userFileId = uuidv4();
-    await createFile({
-      user: userId,
-      file_id: userFileId,
-      filename: 'my-file.txt',
-      filepath: '/uploads/my-file.txt',
-      bytes: 100,
-      type: 'text/plain',
-    });
+    await createFileHelper(userId, userFileId);
 
     const response = await request(app).patch(`/files/${userFileId}`).send({ pinned: 'yes' });
 
@@ -197,14 +166,7 @@ describe('PATCH /files/:file_id', () => {
 
   it('should return 400 when filename is an empty string', async () => {
     const userFileId = uuidv4();
-    await createFile({
-      user: userId,
-      file_id: userFileId,
-      filename: 'my-file.txt',
-      filepath: '/uploads/my-file.txt',
-      bytes: 100,
-      type: 'text/plain',
-    });
+    await createFileHelper(userId, userFileId);
 
     const response = await request(app).patch(`/files/${userFileId}`).send({ filename: '' });
 

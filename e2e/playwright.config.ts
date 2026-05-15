@@ -43,14 +43,8 @@ export default defineConfig({
     {
       name: 'nj',
       testDir: '../nj/e2e',
-      testMatch: '**/base.spec.ts',
+      testMatch: '*.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'nj-auth-state', // tests that mutate auth state like logging out
-      testDir: '../nj/e2e',
-      testMatch: '**/chat.spec.ts',
-      use: { ...devices['Desktop Chrome'], storageState: undefined },
     },
     /* Test against mobile viewports. */
     // {

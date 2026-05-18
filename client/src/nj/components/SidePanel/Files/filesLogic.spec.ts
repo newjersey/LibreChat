@@ -49,10 +49,10 @@ describe('filesLogic', () => {
       };
       const today1: TFile = { ...baseFile, file_id: 't1', createdAt: '2026-05-15T08:00:00Z' };
       const today2: TFile = { ...baseFile, file_id: 't2', createdAt: '2026-05-15T16:00:00Z' };
-      const yesterday1: TFile = { ...baseFile, file_id: 't1', createdAt: '2026-05-14T08:00:00Z' };
-      const yesterday2: TFile = { ...baseFile, file_id: 't2', createdAt: '2026-05-14T16:00:00Z' };
-      const previous1: TFile = { ...baseFile, file_id: 't1', createdAt: '2026-05-13T08:00:00Z' };
-      const previous2: TFile = { ...baseFile, file_id: 't2', createdAt: '2026-05-13T16:00:00Z' };
+      const yesterday1: TFile = { ...baseFile, file_id: 'y1', createdAt: '2026-05-14T08:00:00Z' };
+      const yesterday2: TFile = { ...baseFile, file_id: 'y2', createdAt: '2026-05-14T16:00:00Z' };
+      const previous1: TFile = { ...baseFile, file_id: 'p1', createdAt: '2026-05-13T08:00:00Z' };
+      const previous2: TFile = { ...baseFile, file_id: 'p2', createdAt: '2026-05-13T16:00:00Z' };
 
       const result = groupFiles([
         pinned1,
@@ -66,7 +66,7 @@ describe('filesLogic', () => {
       ]);
 
       // Our expectations are:
-      // 1. Pinned files only show up in he pinned section (not also the date-based section)
+      // 1. Pinned files only show up in the pinned section (not also the date-based section)
       // 2. Date-based sections are grouped properly
       // 3. Pinned files are sorted based on updatedAt
       // 4. Date-based sections are sorted based on createdAt

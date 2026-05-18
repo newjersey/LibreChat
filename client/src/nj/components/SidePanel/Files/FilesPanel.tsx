@@ -10,7 +10,7 @@ import icons from '@uswds/uswds/img/sprite.svg';
  * Our replacement for the built-in LibreChat files panel.
  *
  * Hooks into functionality from parent built-in files panel via constructor params, but otherwise
- * is pretty much a lone
+ * is pretty much does everything else on its own.
  */
 export default function FilesPanel({
   files,

@@ -13,14 +13,14 @@ export default function FilesSection({
   handleFileClick,
   showMoreText,
   emptyText,
-  isLastFileSection,
+  isLastVisibleSection,
 }: {
   title: string;
   files: TFile[];
   handleFileClick: (file: TFile) => void;
   showMoreText: string;
   emptyText?: string;
-  isLastFileSection?: boolean;
+  isLastVisibleSection?: boolean;
 }) {
   const [showAll, setShowAll] = useState<boolean>(false);
 
@@ -66,7 +66,7 @@ export default function FilesSection({
       )}
 
       {/* End of files indicator */}
-      {isLastFileSection && showingAll && (
+      {isLastVisibleSection && showingAll && (
         <div className="mb-3 mt-3 w-full text-center text-sm text-text-secondary">
           You&#39;ve reached the end
         </div>

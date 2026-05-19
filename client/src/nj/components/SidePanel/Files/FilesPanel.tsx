@@ -63,7 +63,7 @@ export default function FilesPanel({
         handleFileClick={handleFileClick}
         showMoreText="Show more pinned files"
         emptyText="Nothing pinned yet. To pin a file, hover over it and choose pin file from the menu."
-        isLastFileSection={!hasPreviousFiles && !hasYesterdayFiles && !hasTodayFiles}
+        isLastVisibleSection={!hasPreviousFiles && !hasYesterdayFiles && !hasTodayFiles}
       />
 
       {/* Date-based groups */}
@@ -72,7 +72,7 @@ export default function FilesPanel({
         files={groupedFiles.today}
         handleFileClick={handleFileClick}
         showMoreText="Show more files from today"
-        isLastFileSection={!hasPreviousFiles && !hasYesterdayFiles}
+        isLastVisibleSection={!hasPreviousFiles && !hasYesterdayFiles}
       />
 
       <FilesSection
@@ -80,7 +80,7 @@ export default function FilesPanel({
         files={groupedFiles.yesterday}
         handleFileClick={handleFileClick}
         showMoreText="Show more files from yesterday"
-        isLastFileSection={!hasPreviousFiles}
+        isLastVisibleSection={!hasPreviousFiles}
       />
 
       <FilesSection
@@ -88,7 +88,7 @@ export default function FilesPanel({
         files={groupedFiles.previous}
         handleFileClick={handleFileClick}
         showMoreText="Show more files"
-        isLastFileSection={true}
+        isLastVisibleSection={true}
       />
     </div>
   );

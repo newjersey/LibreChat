@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+// Overrides global authentication setup
+test.use({ storageState: undefined });
+
 const CONVO_START_RESPONSE = {
   streamId: 'mocked-stream-id',
   conversationId: 'mocked-conversation-id',
@@ -68,7 +71,15 @@ test('prompt submission', async ({ page }) => {
     });
   });
 
-  await page.goto('http://localhost:3080/', { timeout: 10000 });
+  // Login: user flow
+  await page.goto('http://localhost:3080/login');
+  await page.getByLabel('Email').fill('e2e-test@test.local');
+  await page.getByLabel('Password').fill('Test123!@');
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+  // Wait for navigation to chat page
+  await expect(page).toHaveURL(/c\/new/);
+  await page.goto('http://localhost:3080/c/new', { timeout: 10000 });
 
   // Submit a prompt
   const inputField = page.getByTestId('text-input');

@@ -71,7 +71,7 @@ for
 
 ### Running E2E tests
 
-Our tests live in: ./nj/e2e/\* and they can be run on their own with the following command:
+Our tests live in: `./nj/e2e/*` and they can be run on their own with the following command:
 
 1. Build everything
    - `$ npm run reinstall`
@@ -156,8 +156,7 @@ If either the template or the secret values have been updated, you can update th
 1. Navigate to the Actions tab in the repo
 2. Select "Render and upload env file"
 3. Select "Run Workflow" and select your target environment
-4. The workflow will get the environment-specific values from secrets, perform `envsubst`, upload the file to S3, and
-   redeploy the service.
+4. The workflow will get the environment-specific values from secrets, perform `envsubst`, upload the file to S3, and redeploy the service.
 
 #### Manually set release tag for prod (Rollback Strategy, DANGER)
 
@@ -200,5 +199,8 @@ Guardrail configs are managed per-environment through the AWS console. To manage
 
 ### Secrets Manager Connection String
 
-The connection string for DocumentDB lives in AWS Secrets Manager under the name `ai-assistant/docdb/uri`. If the
-DocumentDB secret is rotated, it must be updated here for LibreChat to maintain connection.
+The connection string for DocumentDB lives in AWS Secrets Manager under the name `ai-assistant/docdb/uri`. If the DocumentDB secret is rotated, it must be updated here for LibreChat to maintain connection.
+
+## Updating the New Updates widget
+
+The purpose of this widget is surfacing new updates and changes to the user. Information can be updated in `client/src/nj/components/NewUpdatesWidget.tsx`, and the env var `VITE_DISPLAY_UPDATE_WIDGET` must be set to `true`.

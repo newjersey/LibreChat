@@ -59,7 +59,11 @@ export default function FileCell({
   return (
     <button
       className="group flex w-full items-center gap-3 rounded p-2 hover:bg-surface-active-alt"
-      onClick={() => !isPopoverActive && !renaming && onFileClick(file)}
+      onClick={() => {
+        if (!isPopoverActive && !renaming) {
+          onFileClick(file);
+        }
+      }}
     >
       {/* TODO: Dynamic icon based on mimetype */}
       <div className="h-10 w-10 flex-shrink-0 rounded bg-gray-200" />

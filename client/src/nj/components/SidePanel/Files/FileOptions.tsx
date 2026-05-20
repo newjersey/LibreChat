@@ -1,11 +1,13 @@
 import { useId } from 'react';
 import * as Ariakit from '@ariakit/react';
-import { DropdownPopup } from '@librechat/client';
+import { DropdownPopup, useToastContext } from '@librechat/client';
 import { Ellipsis, Pin } from 'lucide-react';
 import type { MouseEvent } from 'react';
 import type { TFile } from 'librechat-data-provider';
 import { useLocalize } from '~/hooks';
 import { useUpdateFileMutation } from '~/nj/data-provider/file-mutations';
+import { logger } from '~/utils';
+import { NotificationSeverity } from '~/common';
 
 export default function FileOptions({
   file,
@@ -17,8 +19,18 @@ export default function FileOptions({
   setIsPopoverActive: (open: boolean) => void;
 }) {
   const localize = useLocalize();
+  const { showToast } = useToastContext();
   const menuId = useId();
-  const updateMutation = useUpdateFileMutation();
+  const updateMutation = useUpdateFileMutation({
+    onError: (err) => {
+      logger.error('Error pinning file', err);
+      showToast({
+        message: 'Failed to pin file',
+        severity: NotificationSeverity.ERROR,
+        showIcon: true,
+      });
+    },
+  });
 
   const dropdownItems = [
     {

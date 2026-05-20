@@ -82,7 +82,7 @@ test('prompt submission', async ({ page }) => {
   await page.goto('http://localhost:3080/c/new', { timeout: 10000 });
 
   // Submit a prompt
-  const inputField = page.getByTestId('text-input');
+  const inputField = page.getByLabel('Message input');
   await expect(inputField).toBeVisible({ timeout: 10000 });
   await inputField.fill('Can you tell me a joke?');
   await inputField.press('Enter');

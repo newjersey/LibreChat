@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { TFile } from 'librechat-data-provider';
 import icons from '@uswds/uswds/img/sprite.svg';
 import { useUpdateFileMutation } from '~/nj/data-provider/file-mutations';
 import RenameForm from '~/components/Conversations/RenameForm';
 import { useLocalize } from '~/hooks';
-import { cn } from '~/utils';
+import { cn, logger } from '~/utils';
 import FileOptions from './FileOptions';
+import { NotificationSeverity } from '~/common';
+import { useToastContext } from '@librechat/client';
 
 /**
  * Displays a file in `FilesPanel`.
@@ -18,17 +20,35 @@ export default function FileCell({
   onFileClick: (file: TFile) => void;
 }) {
   const localize = useLocalize();
-  const updateMutation = useUpdateFileMutation();
+  const { showToast } = useToastContext();
+  const updateMutation = useUpdateFileMutation({
+    onSuccess: () => {
+      setRenaming(false);
+    },
+    onError: (err) => {
+      logger.error('Error renaming file', err);
+      showToast({
+        message: 'Failed to rename file',
+        severity: NotificationSeverity.ERROR,
+        showIcon: true,
+      });
+    },
+  });
   const [isPopoverActive, setIsPopoverActive] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [filenameInput, setFilenameInput] = useState(file.filename);
+
+  useEffect(() => {
+    setFilenameInput(file.filename);
+  }, [file.filename]);
 
   const handleRenameSubmit = (newName: string) => {
     const trimmed = newName.trim();
     if (trimmed && trimmed !== file.filename) {
       updateMutation.mutate({ file_id: file.file_id, filename: trimmed });
+    } else {
+      setRenaming(false);
     }
-    setRenaming(false);
   };
 
   const handleRenameCancel = () => {

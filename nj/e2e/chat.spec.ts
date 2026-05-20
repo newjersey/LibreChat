@@ -73,9 +73,10 @@ test('prompt submission', async ({ page }) => {
 
   // Login: user flow
   await page.goto('http://localhost:3080/login');
-  await page.getByLabel('Email').fill('e2e-test@test.local');
-  await page.getByLabel('Password').fill('Test123!@');
-  await page.getByRole('button', { name: 'Continue' }).click();
+  const loginForm = page.getByLabel('Login form');
+  await loginForm.getByLabel('Email').fill('e2e-test@test.local');
+  await loginForm.getByLabel('Password').fill('Test123!@');
+  await loginForm.getByRole('button', { name: 'Continue' }).click();
 
   // Wait for navigation to chat page
   await expect(page).toHaveURL(/c\/new/);

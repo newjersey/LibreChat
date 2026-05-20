@@ -4,11 +4,11 @@ import { dataService, MutationKeys, QueryKeys } from 'librechat-data-provider';
 
 export const useUpdateFileMutation = (
   _options?: t.UpdateFileMutationOptions,
-): UseMutationResult<t.TFile, unknown, t.UpdateFileBody, unknown> => {
+): UseMutationResult<t.TFile, unknown, t.UpdateFileMetadataBody, unknown> => {
   const queryClient = useQueryClient();
   const { onSuccess, onError, ...options } = _options || {};
   return useMutation([MutationKeys.fileUpdate], {
-    mutationFn: (body: t.UpdateFileBody) => dataService.updateFile(body),
+    mutationFn: (body: t.UpdateFileMetadataBody) => dataService.updateFile(body),
     ...options,
     onSuccess: (data, vars, context) => {
       queryClient.setQueryData<t.TFile[] | undefined>([QueryKeys.files], (files) =>

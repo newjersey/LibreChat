@@ -11,14 +11,14 @@ export const updateFileSchema = z
     message: 'At least one of pinned or filename must be provided',
   });
 
-export type UpdateFileBody = {
+export type UpdateFileMetadataBody = {
   file_id: string;
   pinned?: boolean;
   filename?: string;
 };
 
 export type UpdateFileMutationOptions = {
-  onSuccess?: (data: TFile, variables: UpdateFileBody, context?: unknown) => void;
-  onMutate?: (variables: UpdateFileBody) => void | Promise<unknown>;
-  onError?: (error: unknown, variables: UpdateFileBody, context?: unknown) => void;
+  onSuccess?: (data: TFile, variables: UpdateFileMetadataBody, context?: unknown) => void;
+  onMutate?: (variables: UpdateFileMetadataBody) => void | Promise<unknown>;
+  onError?: (error: unknown, variables: UpdateFileMetadataBody, context?: unknown) => void;
 };

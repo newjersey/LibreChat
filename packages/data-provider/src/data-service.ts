@@ -724,7 +724,7 @@ export const deleteFiles = async (payload: {
     data: payload,
   });
 
-export const updateFile = (payload: nj.UpdateFileBody): Promise<f.TFile> =>
+export const updateFile = (payload: nj.UpdateFileMetadataBody): Promise<f.TFile> =>
   request.patch(endpoints.fileUpdate(payload.file_id), payload);
 
 /* Speech */
